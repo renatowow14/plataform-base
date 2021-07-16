@@ -70,7 +70,7 @@ module.exports = function(app) {
                 callback(result)
             })
 
-        } else if (queryObj.source == 'general') {
+        } else if (!queryObj.hasOwnProperty('source') || queryObj.source == 'general') {
             return Internal['client-general'].query(query, (err, result) => {
 
                 if (err !== null)

@@ -11,10 +11,10 @@ module.exports = function(app) {
 
 
     Controller.extent = function(request, response) {
-        var queryResult = request.queryResult
+        var queryResult = request.queryResult['extent']
         var result = {
-            'type': 'Feature',
-            'geometry': JSON.parse(queryResult[0]['geom'])
+            type: 'Feature',
+            geometry: JSON.parse(queryResult[0].geojson)
         }
 
         response.send(result)

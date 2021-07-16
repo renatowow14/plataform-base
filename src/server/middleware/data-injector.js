@@ -25,13 +25,13 @@ module.exports = function(app) {
         var controller = pathParts[2]
         var method = pathParts[3]
 
+
         if (controller in queries && method in queries[controller]) {
 
             var queriesOfController = queries[controller]
 
             var params = Internal.parseParams(request, queriesOfController)
             var methodQueries = queriesOfController[method](params)
-
 
             if (typeof methodQueries == "string") {
                 methodQueries = [{
@@ -51,6 +51,7 @@ module.exports = function(app) {
 
             var onComplete = function(err) {
                 var keys = Object.keys(result)
+
                 if (keys.length == 1 && !methodQueries[0].mantain) {
                     result = result[keys[0]]
                 }

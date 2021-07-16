@@ -15,7 +15,6 @@ module.exports = function(app) {
             condition = ' WHERE ' + msfilter;
         }
 
-        console.log(msfilter)
         return [{
                 source: 'lapig',
                 id: 'largest_cities',
