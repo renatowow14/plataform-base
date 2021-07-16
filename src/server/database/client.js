@@ -1,59 +1,88 @@
 const { Pool, Client } = require('pg')
 
-module.exports = function (app) {
+module.exports = function(app) {
 
-	var Internal = {}
-	var Client = {}
+    var Internal = {}
+    var Client = {}
 
-	const config = app.config;
-	Internal['pool'] = new Pool(config['pg'])
+    const config = app.config;
+    Internal['pool-lapig'] = new Pool(config['pg_lapig'])
 
-	Internal.prepareQuery = function (sqlQuery, params) {
-		Object.keys(params).forEach(function (name) {
-			sqlQuery = sqlQuery.replace("${" + name + "}%", "'" + params[name].toUpperCase() + "%'")
-			sqlQuery = sqlQuery.replace("$%{" + name + "}", "'%" + params[name] + "'")
-			sqlQuery = sqlQuery.replace("${" + name + "}", "'" + params[name] + "'")
-		})
+    Internal['pool-general'] = new Pool(config['pg_general'])
 
-		return sqlQuery
-	}
+    Internal.prepareQuery = function(sqlQuery, params) {
+        Object.keys(params).forEach(function(name) {
+            sqlQuery = sqlQuery.replace("${" + name + "}%", "'" + params[name].toUpperCase() + "%'")
+            sqlQuery = sqlQuery.replace("$%{" + name + "}", "'%" + params[name] + "'")
+            sqlQuery = sqlQuery.replace("${" + name + "}", "'" + params[name] + "'")
+        })
 
-	Client.init = function (callback) {
-		Internal['pool'].connect((err, client, release) => {
-			if (err)
-				return console.error('Error acquiring client', err.stack)
+        return sqlQuery
+    }
 
-			Internal['client'] = client
-			Internal['release'] = release
+    Client.init = function(callback) {
+        Internal['pool-lapig'].connect((err, client, release) => {
+            if (err)
+                return console.error('Error acquiring client', err.stack)
 
-			callback()
+            Internal['client-lapig'] = client
+            Internal['release-lapig'] = release
 
-		})
-	};
+            callback()
 
-	Client.query = function (sqlQuery, params, callback) {
-		const start = Date.now()
+        })
 
-		if (callback === undefined) {
-			callback = params
-			params = {}
-		}
+        Internal['pool-general'].connect((err, client, release) => {
+            if (err)
+                return console.error('Error acquiring client', err.stack)
 
-		query = Internal.prepareQuery(sqlQuery, params)
+            Internal['client-general'] = client
+            Internal['release-general'] = release
+
+            callback()
+
+        })
+    };
+
+    Client.query = function(queryObj, params, callback) {
+        const start = Date.now()
+
+        if (callback === undefined) {
+            callback = params
+            params = {}
+        }
+
+        query = Internal.prepareQuery(queryObj.sql, params)
+
+        if (queryObj.source == 'lapig') {
+
+            return Internal['pool-lapig'].query(query, (err, result) => {
+
+                if (err !== null)
+                    console.error(err)
+                else if (config['pg_lapig']['debug']) {
+                    const duration = Date.now() - start
+                    console.log('Executed query', { query, duration, rows: result.rowCount })
+                }
+                callback(result)
+            })
+
+        } else if (queryObj.source == 'general') {
+            return Internal['client-general'].query(query, (err, result) => {
+
+                if (err !== null)
+                    console.error(err)
+                else if (config['pg_general']['debug']) {
+                    const duration = Date.now() - start
+                    console.log('Executed query', { query, duration, rows: result.rowCount })
+                }
+                callback(result)
+            })
+        }
 
 
-		return Internal['pool'].query(query, (err, result) => {
 
-			if (err !== null)
-				console.error(err)
-			else if (config['pg']['debug']) {
-				const duration = Date.now() - start
-				console.log('Executed query', { query, duration, rows: result.rowCount })
-			}
-			callback(result)
-		})
+    }
 
-	}
-
-	return Client;
+    return Client;
 };

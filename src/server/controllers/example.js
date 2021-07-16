@@ -8,7 +8,10 @@ module.exports = function(app) {
 
         var rows = request.queryResult['largest_cities'];
 
-        response.send(rows);
+
+        var rows2 = request.queryResult['teste'];
+
+        response.send({ db1: rows, db2: rows2 });
         response.end();
 
     }

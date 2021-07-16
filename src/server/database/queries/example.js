@@ -17,11 +17,17 @@ module.exports = function(app) {
 
         console.log(msfilter)
         return [{
+                source: 'lapig',
                 id: 'largest_cities',
                 sql: "SELECT bioma, municipio,estado,cd_geocmu, uf, mun_ha FROM regions " + condition + " ORDER BY mun_ha DESC LIMIT ${amount}",
                 mantain: true
+            },
+            {
+                source: 'general',
+                id: 'teste',
+                sql: "SELECT true",
+                mantain: true
             }
-
         ]
     }
 

@@ -59,6 +59,7 @@ app.database.client.init(function() {
         .into(app);
 
     http.listen(app.config.port, function() {
+        console.log("ENTROU")
         console.log('Plataform Base Server @ [port %s] [pid %s]', app.config.port, process.pid.toString());
     });
 
