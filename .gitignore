@@ -21,3 +21,20 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+src/server/.env
+src/server/node_modules/
+src/client/node_modules/
+*.log
+*.sublime-project
+*.sublime-workspace
+*.pyc
+.idea
+.vscode
+*~
+*#
+*.pyc
+*.rdb
+*.sqlite
+src/client/dist/
+src/client/package-lock.json
+src/server/package-lock.json
