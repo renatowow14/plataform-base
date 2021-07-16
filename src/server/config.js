@@ -1,18 +1,12 @@
 const appRoot = require('app-root-path');
-const dotenv = require('dotenv');
-
-const result = dotenv.config();
-if (result.error) {
-    throw result.error;
-}
-const { parsed: env } = result;
+const env = process.env;
 
 module.exports = function(app) {
 
-    var appProducao = env.APP_PRODUCAO;
-    var appProducaocepf = env.APP_PRODUCAO;
+    const appProducao = env.APP_PRODUCAO;
+    const appProducaocepf = env.APP_PRODUCAO;
 
-    var config = {
+    let config = {
         "appRoot": appRoot,
         "clientDir": appRoot + env.CLIENT_DIR,
         "downloadDir": "/data/dados-lapig/download_atlas/",
@@ -49,7 +43,7 @@ module.exports = function(app) {
         "lapig-maps": env.LAPIG_MAPS
     };
 
-    if (process.env.NODE_ENV == 'prod') {
+    if (env.NODE_ENV === 'prod') {
         config['dbpath'] = env.DB_PATH
         config["pg_lapig"] = {
             "user": env.PG_USER,

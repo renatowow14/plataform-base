@@ -1,20 +1,21 @@
-var cluster = require('cluster');
-var http = require('http');
-/* var numCPUs = require('os').cpus().length; */
-var numCPUs = 16;
+require('dotenv').config();
+const cluster = require('cluster');
+
+let numCPUs = 16;
 
 if (cluster.isMaster) {
+
   if(process.env.NODE_ENV == 'dev') {
-    var numCPUs = 2
+    numCPUs = 8
   }
 
-  for (var i = 0; i < numCPUs; i++) {
-    var ENV_VAR = {}
+  for (let i = 0; i < numCPUs; i++) {
+    let ENV_VAR = {}
     if(i == 0) {
     	ENV_VAR = { 'PRIMARY_WORKER': 1 }
     }
 
-    var worker = cluster.fork(ENV_VAR);
+    let worker = cluster.fork(ENV_VAR);
   }
 
   cluster.on('exit', function(worker, code, signal) {

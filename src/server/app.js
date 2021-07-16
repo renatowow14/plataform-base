@@ -1,20 +1,15 @@
-var express = require('express'),
-    cluster = require('cluster'),
+const express = require('express'),
     load = require('express-load'),
-    path = require('path'),
     util = require('util'),
     compression = require('compression'),
     requestTimeout = require('express-timeout'),
     responseTime = require('response-time'),
-    timeout = require('connect-timeout'),
     bodyParser = require('body-parser'),
-    multer = require('multer'),
-    session = require('express-session'),
     parseCookie = require('cookie-parser');
 
-var app = express();
-var http = require('http').Server(app);
-var cookie = parseCookie('LAPIG')
+const app = express();
+const http = require('http').Server(app);
+const cookie = parseCookie('LAPIG')
 
 load('config.js', { 'verbose': false })
     .then('database')
@@ -29,12 +24,10 @@ app.database.client.init(function() {
     app.set('views', __dirname + '/templates');
     app.set('view engine', 'ejs');
 
-    var publicDir = path.join(__dirname, '');
-
     app.use(requestTimeout({
         'timeout': 2000 * 60 * 30,
         'callback': function(err, options) {
-            var response = options.res;
+            let response = options.res;
             if (err) {
                 util.log('Timeout: ' + err);
             }
@@ -43,10 +36,8 @@ app.database.client.init(function() {
     }));
 
     app.use(responseTime());
-    app.use(bodyParser.json({ limit: '1gb' }));
-    app.use(bodyParser({ limit: '1gb' }));
     app.use(bodyParser.urlencoded({ extended: true }));
-    // app.use(multer());
+    app.use(bodyParser.json({ limit: '1gb' }));
 
     app.use(function(error, request, response, next) {
         console.log('ServerError: ', error.stack);
@@ -58,13 +49,13 @@ app.database.client.init(function() {
         .then('routes')
         .into(app);
 
-    http.listen(app.config.port, function() {
-        console.log("ENTROU")
+    const httpServer = http.listen(app.config.port, function() {
         console.log('Plataform Base Server @ [port %s] [pid %s]', app.config.port, process.pid.toString());
     });
 
-    process.on('uncaughtException', function(err) {
-        console.error(err.stack);
-    });
-
+    [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach((event) => {
+        process.on(event, () => {
+            httpServer.close(() => process.exit())
+        })
+    })
 })
