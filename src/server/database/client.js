@@ -31,6 +31,9 @@ module.exports = function(app) {
             callback()
 
         })
+    };
+
+    Client.init_general = function(callback) {
 
         Internal['pool-general'].connect((err, client, release) => {
             if (err)

@@ -49,6 +49,8 @@ app.database.client.init(function() {
         .then('routes')
         .into(app);
 
+    app.database.client.init_general(function() {});
+
     const httpServer = http.listen(app.config.port, function() {
         console.log('Plataform Base Server @ [port %s] [pid %s]', app.config.port, process.pid.toString());
     });

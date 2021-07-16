@@ -25,7 +25,7 @@ module.exports = function(app) {
             {
                 source: 'general',
                 id: 'teste',
-                sql: "SELECT true",
+                sql: "SELECT * from regions_geom  LIMIT ${amount}",
                 mantain: true
             }
         ]
