@@ -55,9 +55,17 @@ app.database.client.init(function() {
         console.log('Plataform Base Server @ [port %s] [pid %s]', app.config.port, process.pid.toString());
     });
 
-    [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach((event) => {
-        process.on(event, () => {
-            httpServer.close(() => process.exit())
-        })
+    [`exit`,`uncaughtException`,].forEach((event) => {
+        if(event === 'uncaughtException'){
+            process.on(event, (e) => {
+                console.log(e)
+            })
+        } else {
+            process.on(event, (e) => {
+                console.log(e)
+                httpServer.close(() => process.exit())
+            })
+        }
+
     })
 })
