@@ -6,20 +6,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { MainComponent } from './components/main/main.component';
-import { LeftSideBarComponent } from './components/left-side-bar/left-side-bar.component';
-import { GeneralMapComponent } from './components/general-map/general-map.component';
-import { RightSideBarComponent } from './components/right-side-bar/right-side-bar.component';
-import { HotsiteComponent } from './hotsite/hotsite.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    MainComponent,
-    LeftSideBarComponent,
-    GeneralMapComponent,
-    RightSideBarComponent,
-    HotsiteComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -33,6 +23,6 @@ import { HotsiteComponent } from './hotsite/hotsite.component';
     })
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
