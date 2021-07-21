@@ -1,0 +1,9 @@
+@import "src/app/@core/styles/default_theme";
+@import "src/app/@core/styles/reponsive";
+
+h1{
+  color: $hotsite-h1-color;
+  @include media('>medium') {
+    color: $theme-color-secondary;
+  }
+}
