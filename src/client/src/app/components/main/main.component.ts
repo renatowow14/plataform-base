@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-main',
@@ -6,12 +6,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
+  public open:boolean;
+  public showLayers:boolean;
 
-  public display:boolean;
-
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
+    this.open = true;
+    this.showLayers = false;
   }
 
+  ngOnInit(): void {
+
+  }
+
+  onMenuSelected(item){
+    this.showLayers = item;
+  }
+
+
 }
+

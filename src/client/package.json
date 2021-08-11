@@ -21,6 +21,7 @@
     "@angular/service-worker": "~12.1.2",
     "@types/ol": "^6.5.3",
     "@types/proj4": "^2.5.1",
+    "ngx-drag-scroll": "^12.0.0-beta.1",
     "ol": "^6.6.1",
     "primeicons": "^4.1.0",
     "primeng": "^12.0.1",

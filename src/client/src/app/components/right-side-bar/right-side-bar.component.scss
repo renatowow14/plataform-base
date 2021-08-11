@@ -1,0 +1,11 @@
+@import "src/app/@core/styles/default_theme";
+@import "src/app/@core/styles/reponsive";
+
+.right-side-bar {
+  display: none;
+  float: right;
+  border-radius: 0 5px 5px 0;
+  height: $height;
+  width: $right-sb-width;
+  background: $success;
+}

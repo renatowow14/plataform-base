@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-general-map',
@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GeneralMapComponent implements OnInit {
 
+  @Input() displayLayers = true as boolean;
+
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
 }

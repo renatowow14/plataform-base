@@ -1,0 +1,82 @@
+@import url('https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css');
+@import "fonts";
+@import "default_theme";
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: $font-family-sans-serif;
+}
+//
+//::-webkit-scrollbar {
+//  width: 5px;
+//  margin-left: 10px;
+//}
+//
+//::-webkit-scrollbar-track {
+//  background-color: rgba(228, 228, 228, 0.09);
+//  border-radius: 30px;
+//}
+//
+//::-webkit-scrollbar-thumb {
+//  border-radius: 30px;
+//  border: 6px solid rgba(0, 0, 0, 0.18);
+//  border-left: 0;
+//  border-right: 0;
+//  background-color:  lighten($background-sidebar, 60%);
+//}
+
+button:after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120px;
+  height: 120px;
+  margin-left: -60px;
+  margin-top: -60px;
+  background: #3f51b5;
+  border-radius: 100%;
+  opacity: .6;
+
+  transform: scale(0);
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+  }
+  20% {
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+button:not(:active):after {
+  animation: ripple 1s ease-out;
+}
+
+/* fixes initial animation run, without user input, on page load.
+ */
+button:after {
+  visibility: hidden;
+}
+
+button:focus:after {
+  visibility: visible;
+}
+
+.footer{
+  drag-scroll{
+    .drag-scroll-content {
+      width: 100% !important;
+    }
+  }
+
+}

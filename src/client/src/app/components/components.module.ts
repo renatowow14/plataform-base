@@ -1,14 +1,17 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarModule } from 'primeng/sidebar';
-import { ComponentsRoutingModule } from './components-routing.module';
-
+import { ButtonModule } from 'primeng/button';
+import { ComponentsRoutingModule, routedComponents } from './components-routing.module';
+import { DragScrollModule } from 'ngx-drag-scroll';
 @NgModule({
-  declarations: [],
+  declarations: [ ...routedComponents],
   imports: [
     CommonModule,
     SidebarModule,
-    ComponentsRoutingModule
+    DragScrollModule,
+    ComponentsRoutingModule,
+    ButtonModule
   ]
 })
 export class ComponentsModule { }

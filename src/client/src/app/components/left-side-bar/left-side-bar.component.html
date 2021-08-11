@@ -1,1 +1,58 @@
-<p>left-side works!</p>
+<section class="left-side-bar ">
+  <div class="sidebar" >
+    <div [class]="open ? 'open ' : '' ">
+      <div class="logo-details">
+        <i class='bx bxl-c-plus-plus icon' (click)='toggleMenu()'></i>
+      </div>
+      <ul class="nav-list">
+        <drag-scroll class="nav-list-drag"  [scrollbar-hidden]="true" [drag-scroll-x-disabled]="true">
+          <li *ngFor="let item of menu" >
+            <div (click)="handleMenu(item.key)" >
+              <i class='{{item.icon}}'></i>
+              <span class="links_name">{{item.title}}</span>
+            </div>
+            <span class="tooltip">{{item.tooltip}}</span>
+          </li>
+        </drag-scroll>
+      </ul>
+      <ul class="nav-list footer">
+        <drag-scroll class="footer-drag" [scrollbar-hidden]="true" [drag-scroll-x-disabled]="true">
+          <li>
+            <div (click)="handleMenu('filter')" >
+              <i class='bx bx-search-alt'></i>
+              <span class="links_name">Filtrar</span>
+            </div>
+            <span class="tooltip">Filtrar</span>
+          </li>
+          <li [class]="lang == 'pt' ? 'active' : ''">
+            <div (click)="handleLang('pt')" >
+              <span class="links_name">PT</span>
+            </div>
+            <span class="tooltip">Filtrar</span>
+          </li>
+          <li [class]="lang == 'en' ? 'active' : ''">
+            <div (click)="handleLang('en')" >
+              <span class="links_name">EN</span>
+            </div>
+          </li>
+        </drag-scroll>
+      </ul>
+<!--      <div class="lang">-->
+<!--        <div>-->
+<!--          <p-button label="Filtrar" icon="pi pi-check"></p-button>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <button (click)="handleLang('pt')" pButton type="button" label="PT" [class]="lang == 'pt' ? 'active p-button-sm' : 'p-button-sm'"></button>-->
+<!--          <button (click)="handleLang('en')" pButton type="button" label="EN" [class]="lang == 'en' ? 'active p-button-sm' : 'p-button-sm'"></button>-->
+<!--        </div>-->
+<!--      </div>-->
+    </div>
+  </div>
+
+  <p-sidebar [(visible)]="layersSideBar">
+    <section class="layers">
+      Content
+    </section>
+  </p-sidebar>
+
+</section>

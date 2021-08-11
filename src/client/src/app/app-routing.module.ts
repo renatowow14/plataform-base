@@ -3,20 +3,20 @@ import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'map',
-    loadChildren: () => import('./components/components.module')
-      .then(m => m.ComponentsModule),
-  },
-  {
-    path: 'home',
+    path: '',
     loadChildren: () => import('./hotsite/hotsite.module')
       .then(m => m.HotsiteModule),
   },
   {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'prefix',
+    path: 'map',
+    loadChildren: () => import('./components/components.module')
+      .then(m => m.ComponentsModule),
   },
+  // {
+  //   path: '',
+  //   redirectTo: '',
+  //   pathMatch: 'prefix',
+  // },
   {
     path: '**',
     redirectTo: 'home',

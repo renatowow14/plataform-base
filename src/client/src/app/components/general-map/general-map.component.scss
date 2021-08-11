@@ -1,0 +1,8 @@
+@import "src/app/@core/styles/default_theme";
+@import "src/app/@core/styles/reponsive";
+
+.map {
+  height: $height;
+  width: $map-width;
+  background: $secondary;
+}

@@ -2,8 +2,8 @@
 @import "src/app/@core/styles/reponsive";
 
 h1{
-  color: $hotsite-h1-color;
+  color: $primary;
   @include media('>medium') {
-    color: $theme-color-secondary;
+    color: $accent;
   }
 }
