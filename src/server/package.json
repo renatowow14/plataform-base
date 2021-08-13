@@ -65,6 +65,7 @@
     },
     "devDependencies": {},
     "scripts": {
+        "start": "NODE_ENV=dev always app-cluster.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": "",

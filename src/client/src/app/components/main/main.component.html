@@ -1,4 +1,4 @@
 <section class="container">
-  <app-left-side-bar (onMenuSelected)="onMenuSelected($event)"></app-left-side-bar>
-  <app-general-map [displayLayers]="showLayers"></app-general-map>
+  <app-left-side-bar (onMenuSelected)="onMenuSelected($event)" (onSideBarToggle)="onSideBarToggle($event)"></app-left-side-bar>
+  <app-general-map [open]="open" [displayLayers]="showLayers"></app-general-map>
 </section>

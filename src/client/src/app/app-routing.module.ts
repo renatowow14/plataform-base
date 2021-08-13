@@ -3,12 +3,12 @@ import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'home',
     loadChildren: () => import('./hotsite/hotsite.module')
       .then(m => m.HotsiteModule),
   },
   {
-    path: 'map',
+    path: '',
     loadChildren: () => import('./components/components.module')
       .then(m => m.ComponentsModule),
   },

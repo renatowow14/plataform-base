@@ -1,5 +1,6 @@
 @import url('https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css');
-@import "fonts";
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,700;1,900&display=swap");
+
 @import "default_theme";
 
 
@@ -28,7 +29,7 @@
 //  background-color:  lighten($background-sidebar, 60%);
 //}
 
-button:after {
+li:after {
   content: '';
   display: block;
   position: absolute;
@@ -58,25 +59,29 @@ button:after {
   }
 }
 
-button:not(:active):after {
+li:not(:active):after {
   animation: ripple 1s ease-out;
 }
 
 /* fixes initial animation run, without user input, on page load.
  */
-button:after {
+li:after {
   visibility: hidden;
 }
 
-button:focus:after {
+li:focus:after {
   visibility: visible;
 }
 
-.footer{
-  drag-scroll{
-    .drag-scroll-content {
-      width: 100% !important;
-    }
+.map{
+  .p-sidebar-left{
+    left: 79px;
   }
+}
 
+.open {
+  .p-sidebar-left{
+    left: 108px;
+
+  }
 }

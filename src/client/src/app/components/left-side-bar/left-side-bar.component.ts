@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, ElementRef, Output} from '@angular/core';
 
 @Component({
   selector: 'app-left-side-bar',
@@ -7,6 +7,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 })
 export class LeftSideBarComponent implements OnInit {
 
+  @Output() onSideBarToggle = new EventEmitter<boolean>();
   @Output() onMenuSelected = new EventEmitter<boolean>();
   @Output() onChangeLng = new EventEmitter<any>();
 
@@ -16,7 +17,7 @@ export class LeftSideBarComponent implements OnInit {
   public lang: string;
   public menu: Menu[];
 
-  constructor() {
+  constructor(private el: ElementRef) {
     this.open = true;
     this.layersSideBar = false;
     this.lang = 'pt';
@@ -26,12 +27,6 @@ export class LeftSideBarComponent implements OnInit {
         icon: 'bx bx-grid-alt',
         title: 'Dashboard',
         tooltip:'Dashboard',
-      },
-      {
-        key: 'user',
-        icon: 'bx bx-user',
-        title: 'User',
-        tooltip:'User',
       },
       {
         key: 'user',
@@ -54,7 +49,7 @@ export class LeftSideBarComponent implements OnInit {
       {
         key: 'files',
         icon: 'bx bx-folder',
-        title: 'File Manager',
+        title: 'Files',
         tooltip:'Files',
       },
       {
@@ -84,6 +79,7 @@ export class LeftSideBarComponent implements OnInit {
 
   toggleMenu(){
     this.open = !this.open;
+    this.onSideBarToggle.emit(this.open);
   }
 
   handleLang(lng){
@@ -91,7 +87,10 @@ export class LeftSideBarComponent implements OnInit {
   }
 
   handleMenu(key){
-
+    console.log('key', key)
+    let menuOption = this.el.nativeElement.querySelector("li");
+    console.log(menuOption)
+    this.layersSideBar = !this.layersSideBar;
     this.onMenuSelected.emit(key);
   }
 }

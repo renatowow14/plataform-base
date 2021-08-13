@@ -8,6 +8,8 @@ import {Component, Input, OnInit} from '@angular/core';
 export class GeneralMapComponent implements OnInit {
 
   @Input() displayLayers = true as boolean;
+  @Input() open = true as boolean;
+  public displayLegend = false as boolean;
 
   constructor() { }
 

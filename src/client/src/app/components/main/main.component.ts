@@ -22,6 +22,9 @@ export class MainComponent implements OnInit {
     this.showLayers = item;
   }
 
+  onSideBarToggle(isOpen){
+    this.open = isOpen;
+  }
 
 }
 

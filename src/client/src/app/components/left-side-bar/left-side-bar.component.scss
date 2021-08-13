@@ -15,108 +15,37 @@
     z-index: 99;
     transition: all 0.5s ease;
 
-    .open {
-      padding: 6px 0 0 0;
-      width: 5rem;
-
-      .logo-details .logo_name {
-        opacity: 1;
-      }
-
-      .logo-details #btn {
-        text-align: right;
-        right: 0;
-        top: 10%;
-      }
-
-      li i {
-        font-size: 25px;
-        line-height: 38px;
-      }
-
-      li .tooltip {
-        display: none;
-      }
-
-      input {
-        padding: 0 20px 0 50px;
-        width: 100%;
-      }
-
-      .bx-search:hover {
-        background: $background-sidebar;
-        color: #FFF;
-      }
-
-      li.profile {
-        width: 250px;
-      }
-
-      li div {
-        padding: 8px;
-      }
-
-      li div .links_name {
-        display: block;
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      .profile #log_out {
-        width: 50px;
-        background: none;
-      }
-
-      ~ .home-section {
-        left: 250px;
-        width: calc(100% - 250px);
-      }
-
-      .footer{
-        &-drag{
-          height: 9rem;
-        }
-
-        drag-scroll{
-          .drag-scroll-content {
-            width: 100% !important;
-          }
-        }
-
-      }
-    }
-
     .logo-details {
       height: 60px;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
-    }
 
-    .logo-details .icon {
-      opacity: 1;
-      cursor: pointer;
-      transition: all 0.5s ease;
-    }
+      .icon {
+        opacity: 1;
+        cursor: pointer;
+        transition: all 0.5s ease;
+      }
 
-    .logo-details .logo_name {
-      color: #fff;
-      font-size: 20px;
-      font-weight: 600;
-      opacity: 0;
-      transition: all 0.5s ease;
-    }
+      .logo_name {
+        color: #fff;
+        font-size: 20px;
+        font-weight: 600;
+        opacity: 0;
+        transition: all 0.5s ease;
+      }
 
-    .logo-details #btn {
-      position: absolute;
-      top: 50%;
-      right: 23px;
-      transform: translateY(-50%);
-      font-size: 23px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.5s ease;
+      #btn {
+        position: absolute;
+        top: 50%;
+        right: 23px;
+        transform: translateY(-50%);
+        font-size: 23px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.5s ease;
+      }
     }
 
     i {
@@ -129,7 +58,7 @@
     }
 
     .nav-list {
-      &-drag{
+      &-drag {
         height: 75vh;
       }
     }
@@ -138,161 +67,171 @@
       position: relative;
       margin: 8px 0;
       list-style: none;
-    }
 
-    li .tooltip {
-      position: absolute;
-      top: -20px;
-      left: calc(100% + 15px);
-      z-index: 3;
-      background: #fff;
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 15px;
-      font-weight: 400;
-      opacity: 0;
-      white-space: nowrap;
-      pointer-events: none;
-      transition: 0s;
-    }
+      i {
+        line-height: 50px;
+        font-size: 25px;
+        border-radius: 12px;
+      }
 
-    li:hover .tooltip {
-      opacity: 1;
-      pointer-events: auto;
-      transition: all 0.4s ease;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-
-    input {
-      font-size: 15px;
-      color: #FFF;
-      font-weight: 400;
-      outline: none;
-      height: 50px;
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      transition: all 0.5s ease;
-      background: $background-sidebar;
-    }
-
-    .bx-search {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-      font-size: 22px;
-      background: $background-sidebar;
-      color: #FFF;
-    }
-
-    .bx-search:hover {
-      background: #FFF;
-      color: $background-sidebar;
-    }
-
-    li div {
-      display: flex;
-      height: 100%;
-      width: 100%;
-      padding: 0 0 10px 0;
-      border-radius: 12px;
-      align-items: center;
-      text-decoration: none;
-      transition: all 0.4s ease;
-      flex-direction: column;
-      background: lighten($background-sidebar, 10%);
-    }
-
-    li div:hover {
-      background: #FFF;
-      cursor: pointer;
-    }
-
-    li div .links_name {
-      color: #fff;
-      font-size: 12px;
-      font-weight: 400;
-      white-space: nowrap;
-      opacity: 0;
-      display: none;
-      pointer-events: none;
-      transition: 0.4s;
-    }
-
-    li div:hover .links_name,
-    li div:hover i {
-      transition: all 0.5s ease;
-      color: $background-sidebar;
-    }
-
-    li i {
-      line-height: 50px;
-      font-size: 25px;
-      border-radius: 12px;
-    }
-
-    .lang {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 90px;
-      left: 2px;
-      bottom: 5px;
-
-      background: $background-sidebar;
-      transition: all 0.5s ease;
-      overflow: hidden;
-
-      button {
-        font-size: 0.7rem;
+      div {
+        display: flex;
+        height: 100%;
         width: 100%;
-        margin: 3px;
-        color: white;
-        background: transparent;
-        border: transparent;
-      }
-
-      .active {
+        padding: 0 0 10px 0;
+        border-radius: 12px;
+        align-items: center;
+        text-decoration: none;
+        transition: all 0.4s ease;
+        flex-direction: column;
         background: lighten($background-sidebar, 10%);
+
+        &:hover {
+          background: #FFF;
+          cursor: pointer;
+        }
+
+        .links_name {
+          color: #fff;
+          font-size: 12px;
+          font-weight: 400;
+          white-space: nowrap;
+          opacity: 0;
+          display: none;
+          pointer-events: none;
+          transition: 0.4s;
+        }
+
+        .lng_name {
+          color: #fff;
+          font-size: 12px;
+          font-weight: 400;
+          white-space: nowrap;
+          opacity: 1;
+          pointer-events: none;
+          transition: 0.4s;
+        }
+
+        &:hover {
+          .links_name, i {
+            transition: all 0.5s ease;
+            color: $background-sidebar;
+          }
+        }
       }
-    }
-    .footer{
-      &-drag{
-        height: 6rem;
-        bottom: 7px;
+
+      .tooltip {
         position: absolute;
+        top: -20px;
+        left: calc(100% + 15px);
+        z-index: 3;
+        background: #fff;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 400;
+        opacity: 0;
+        white-space: nowrap;
+        pointer-events: none;
+        transition: 0s;
+      }
+
+      &:hover {
+        .tooltip {
+          opacity: 1;
+          pointer-events: auto;
+          transition: all 0.4s ease;
+          top: 50%;
+          transform: translateY(-50%);
+        }
       }
     }
 
-    .home-section {
-      position: relative;
-      background: #E4E9F7;
-      min-height: 100vh;
-      top: 0;
-      left: 78px;
-      width: calc(100% - 78px);
-      transition: all 0.5s ease;
-      z-index: 2;
-    }
+    .footer {
+      &-drag {
+        height: 6rem;
+        bottom: 8px;
+        position: absolute;
 
-    .home-section .text {
-      display: inline-block;
-      color: $background-sidebar;
-      font-size: 25px;
-      font-weight: 500;
-      margin: 18px
-    }
-
-    @media (max-width: 420px) {
-      li .tooltip {
-        display: none;
+        li {
+          width: calc(100% - 16px);
+        }
       }
     }
 
+    .open {
+      padding: 6px 0 0 0;
+      min-width: 5em;
+      width: 5rem;
+
+      .logo-details {
+        .logo_name {
+          opacity: 1;
+        }
+      }
+
+      .logo-details {
+        #btn {
+          text-align: right;
+          right: 0;
+          top: 10%;
+        }
+      }
+
+      li {
+        i {
+          font-size: 25px;
+          line-height: 38px;
+        }
+
+        .tooltip {
+          display: none;
+        }
+
+        .profile {
+          width: 250px;
+        }
+
+        div {
+          padding: 8px;
+
+          .links_name {
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+          }
+        }
+      }
+
+      .footer {
+        &-drag {
+          height: 9rem;
+
+          li {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    @include media('>phone'){
+      li {
+        .tooltip {
+          display: none;
+        }
+      }
+    }
+
+    @include media('<phone'){
+      .footer{
+        li {
+          .links_name{
+            display: block;
+          }
+        }
+      }
+    }
   }
 }
+

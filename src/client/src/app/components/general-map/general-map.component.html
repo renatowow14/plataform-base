@@ -1,9 +1,5 @@
-<section #map  class="map" >
-  <p-sidebar [appendTo]="map" [modal]="false" [(visible)]="displayLayers">
-    Content
-  </p-sidebar>
-
-  <p-sidebar [appendTo]="map" position="right" [modal]="false" [(visible)]="displayLayers">
-    Content
-  </p-sidebar>
+<section #map  class="map"  [class]="open ? 'open map' : 'map' " >
+  <p-sidebar [appendTo]="map" [modal]="false" [(visible)]="displayLayers"></p-sidebar>
+  <p-sidebar position="right" [appendTo]="map" [modal]="false" [(visible)]="displayLegend"></p-sidebar>
+  <button (click)="displayLegend = true" class="legend">Legenda</button>
 </section>
