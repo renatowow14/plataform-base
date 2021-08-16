@@ -1,11 +1,46 @@
 @import "src/app/@core/styles/default_theme";
 @import "src/app/@core/styles/reponsive";
 
-.right-side-bar {
-  display: none;
-  float: right;
-  border-radius: 0 5px 5px 0;
-  height: $height;
-  width: $right-sb-width;
-  background: $success;
+
+.legend{
+  position: fixed;
+  top: 45%;
+  right: -31px;
+  border: 0;
+  padding: 5px 12px;
+  font-size: 15px;
+  color: white;
+  background: $background-sidebar;
+  border-radius: 15px 15px 0 0;
+  z-index: 9;
+  transform: rotate(-90deg);
+  transition: all .5s ease;
+  cursor: pointer;
+  &:hover{
+    color: $background-sidebar;
+    background: white ;
+  }
+  
 }
+
+//Legendas
+.yellow {
+  background-color:yellow;
+}
+.green {
+  background-color: green;
+}
+.orange {
+  background-color: orange;
+}
+//Fim legendas
+
+//Switchs Buttons
+.inlineSwitchButton{
+  display: inline;
+}
+//End Switchs buttons
+
+
+
+
