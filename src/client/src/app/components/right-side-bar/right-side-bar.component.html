@@ -1,15 +1,13 @@
   <p-sidebar styleClass="rightSideMenu" position="right" [modal]="false" [(visible)]="displayOpcoes">
 
-   <!--  <p-tabMenu [model]="items" [activeItem]="activeItem"></p-tabMenu>  -->
-
     <p-tabView styleClass="tabViewrightSideMenu">
-    
+
         <p-tabPanel styleClass="tabPanelrightSideMenu" header="Legenda" >
           <div *ngFor="let item of Legendas" class="{{item.color}}">  {{item.nome}} </div>
           </p-tabPanel>
 
         <p-tabPanel  header="Mapa-Base">
-          <div *ngFor="let map of mapaBase"> 
+          <div *ngFor="let map of mapaBase">
             <p-inputSwitch [(ngModel)]="map.checked"> </p-inputSwitch>
             <p class="inlineSwitchButton"> {{map.nome}} </p>
             <br>
@@ -17,17 +15,16 @@
 
         </p-tabPanel>
           <p-tabPanel  header="Limites">
-            <div *ngFor="let limite of Limites"> 
+            <div *ngFor="let limite of Limites">
               <p-inputSwitch [(ngModel)]="limite.checked"> </p-inputSwitch>
               <p class="inlineSwitchButton"> {{limite.nome}} </p>
               <br>
             </div>
         </p-tabPanel>
 
-    </p-tabView> 
+    </p-tabView>
 
-  </p-sidebar> 
-  
+  </p-sidebar>
+
   <button  (click)="toggleMenu()" class="legend">Opções</button>
 
-  

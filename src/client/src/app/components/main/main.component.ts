@@ -7,19 +7,17 @@ import {Component, OnInit} from '@angular/core';
 })
 export class MainComponent implements OnInit {
   public open:boolean;
-  public showLayers:boolean;
+  public showLayers: boolean;
 
   constructor() {
     this.open = true;
     this.showLayers = false;
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   onMenuSelected(item){
-    this.showLayers = item;
+    this.showLayers = item.show;
   }
 
   onSideBarToggle(isOpen){

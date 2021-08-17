@@ -1,7 +1,6 @@
 @import "src/app/@core/styles/default_theme";
 @import "src/app/@core/styles/reponsive";
 
-
 .legend{
   position: fixed;
   top: 45%;
@@ -20,7 +19,7 @@
     color: $background-sidebar;
     background: white ;
   }
-  
+
 }
 
 //Legendas
@@ -41,6 +40,56 @@
 }
 //End Switchs buttons
 
+
+:host ::ng-deep .tabview-custom {
+  i, span {
+    vertical-align: middle;
+  }
+
+  span {
+    margin: 0 .5rem;
+  }
+}
+
+:host ::ng-deep .p-button {
+  margin-right: .25rem;
+}
+
+:host ::ng-deep .p-tabview p {
+  line-height: 1.5;
+  margin: 0;
+}
+
+.rightSideMenu {
+  width:auto !important;
+  background: $background-sidebar;
+  padding: 6px 14px;
+  border: none;
+  height:auto !important;
+  margin-top: 16% !important;
+  margin-right: 30px !important;
+}
+
+:host ::ng-deep .p-sidebar-right{
+  width:auto !important;
+  //background: $background-sidebar;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 15px;
+  height:auto !important;
+  margin-top: 16% !important;
+  margin-right: 30px !important;
+}
+
+.p-tabview-nav {
+  z-index: 10000 !important;
+  background: lighten($background-sidebar, 10%) !important;
+}
+
+.p-tabview-panels {
+  z-index: 10000 !important;
+  background: lighten($background-sidebar, 10%) !important;
+}
 
 
 

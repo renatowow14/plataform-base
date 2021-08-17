@@ -55,6 +55,7 @@
       font-size: 28px;
       text-align: center;
       line-height: 60px;
+      transition: all 0.5s ease;
     }
 
     .nav-list {
@@ -74,6 +75,18 @@
         border-radius: 12px;
       }
 
+      .menu-active {
+        background: #FFF !important;
+        color: $background-sidebar !important;
+        .links_name, i {
+          color: $background-sidebar;
+        }
+        .lng_name, i {
+          color: $background-sidebar;
+        }
+      }
+
+
       div {
         display: flex;
         height: 100%;
@@ -82,7 +95,7 @@
         border-radius: 12px;
         align-items: center;
         text-decoration: none;
-        transition: all 0.4s ease;
+        transition: all 0.5s ease;
         flex-direction: column;
         background: lighten($background-sidebar, 10%);
 
@@ -90,7 +103,6 @@
           background: #FFF;
           cursor: pointer;
         }
-
         .links_name {
           color: #fff;
           font-size: 12px;
@@ -99,7 +111,7 @@
           opacity: 0;
           display: none;
           pointer-events: none;
-          transition: 0.4s;
+          transition: all 0.5s ease;
         }
 
         .lng_name {
@@ -109,12 +121,14 @@
           white-space: nowrap;
           opacity: 1;
           pointer-events: none;
-          transition: 0.4s;
+          transition: all 0.5s ease;
         }
 
         &:hover {
           .links_name, i {
-            transition: all 0.5s ease;
+            color: $background-sidebar;
+          }
+          .lng_name, i {
             color: $background-sidebar;
           }
         }
@@ -134,7 +148,7 @@
         opacity: 0;
         white-space: nowrap;
         pointer-events: none;
-        transition: 0s;
+        transition: all 0.5s ease;
       }
 
       &:hover {
@@ -150,12 +164,20 @@
 
     .footer {
       &-drag {
-        height: 6rem;
+        height: 10rem;
         bottom: 8px;
         position: absolute;
-
         li {
           width: calc(100% - 16px);
+          .lng-active{
+            background: white !important;
+            .lng_name {
+              color: $background-sidebar !important;
+            }
+          }
+          .lng {
+            padding: 10px 0 10px 0;
+          }
         }
       }
     }
@@ -207,7 +229,6 @@
       .footer {
         &-drag {
           height: 9rem;
-
           li {
             width: 100%;
           }

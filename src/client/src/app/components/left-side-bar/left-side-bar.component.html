@@ -4,10 +4,10 @@
       <div class="logo-details">
         <i class='bx bxl-c-plus-plus icon' (click)='toggleMenu()'></i>
       </div>
-      <ul class="nav-list">
-        <drag-scroll class="nav-list-drag"  [scrollbar-hidden]="true" [drag-scroll-x-disabled]="true">
+      <ul #leftSidebar class="nav-list">
+        <drag-scroll class="nav-list-drag" [scrollbar-hidden]="true" [drag-scroll-x-disabled]="true">
           <li *ngFor="let item of menu" >
-            <div (click)="handleMenu(item.key)" >
+            <div (click)="handleMenu(item)"  [class]="item.show ? 'menu-active' : ''" >
               <i class='{{item.icon}}'></i>
               <span class="links_name">{{item.title}}</span>
             </div>
@@ -18,20 +18,20 @@
       <ul class="nav-list footer">
         <drag-scroll class="footer-drag" [scrollbar-hidden]="true" >
           <li>
-            <div (click)="handleMenu('filter')" >
+            <div (click)="handleMenu({key: 'filter'})" [class]="displayFilter ? 'menu-active' : ''">
               <i class='bx bx-search-alt'></i>
               <span class="links_name">Filtrar</span>
             </div>
             <span class="tooltip">Filtrar</span>
           </li>
           <li (click)="handleLang('pt')" >
-            <div  [class]="lang == 'pt' ? 'lng-active' : ''" >
+            <div  [class]="lang == 'pt' ? 'lng lng-active' : 'lng'" >
               <span class="lng_name">PT</span>
             </div>
             <span class="tooltip">Filtrar</span>
           </li>
           <li (click)="handleLang('en')" >
-            <div [class]="lang == 'en' ? 'lng-active' : ''" >
+            <div [class]="lang == 'en' ? 'lng lng-active' : 'lng'" >
               <span class="lng_name">EN</span>
             </div>
           </li>
@@ -39,4 +39,12 @@
       </ul>
     </div>
   </div>
+  <p-sidebar [appendTo]="leftSidebar" [modal]="false" [(visible)]="layersSideBar" (onHide)="layersSideBar = false" >
+    <div class="layers-sidebar-header">
+<!--      <h3>{{ 'left_sidebar_title' | translate }}</h3>-->
+    </div>
+    <div class="layers-sidebar-footer">
+
+    </div>
+  </p-sidebar>
 </section>

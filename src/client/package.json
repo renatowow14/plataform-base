@@ -19,6 +19,8 @@
     "@angular/platform-browser-dynamic": "~12.1.2",
     "@angular/router": "~12.1.2",
     "@angular/service-worker": "~12.1.2",
+    "@ngx-translate/core": "^13.0.0",
+    "@ngx-translate/http-loader": "^6.0.0",
     "@types/ol": "^6.5.3",
     "@types/proj4": "^2.5.1",
     "ngx-drag-scroll": "^12.0.0-beta.1",

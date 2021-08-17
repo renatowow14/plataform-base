@@ -12,24 +12,16 @@
 }
 
 //Right side menu of atlas
-.rightSideMenu {
-  width:auto !important;
-  background: $background-sidebar;
-  padding: 6px 14px;
-  border: none;
-  height:auto !important;        /* for IE as it does not support min-height */
-  margin-top:16% !important;
-  margin-right:30px !important;
-}
+
 
 .tabViewrightSideMenu{
-  background: $background-sidebar;
+  background-color: $background-sidebar !important;
 }
 
 .tabPanelrightSideMenu{
   background: $background-sidebar;
-
 }
+
 //End side menu of atlas
 
 
@@ -98,15 +90,19 @@ li:focus:after {
   visibility: visible;
 }
 
-.map{
+.left-side-bar {
   .p-sidebar-left{
     left: 79px;
+    .p-sidebar-close{
+    }
+  }
+}
+.left-side-bar {
+  .open {
+    .p-sidebar-left {
+      left: 108px;
+    }
   }
 }
 
-.open {
-  .p-sidebar-left{
-    left: 108px;
 
-  }
-}
