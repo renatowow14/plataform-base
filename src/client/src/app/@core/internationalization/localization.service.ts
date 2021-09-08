@@ -1,7 +1,7 @@
 import { Injectable, Optional, SkipSelf } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalizationServiceConfig } from './localization-config.service';
-
+import { PrimeNGConfig } from 'primeng/api';
 /**
  * Class representing the translation service.
  */
@@ -14,11 +14,13 @@ export class LocalizationService {
    * @param {LocalizationService} singleton - the localization service
    * @param {LocalizationServiceConfig} config - the localization config
    * @param {TranslateService} translateService - the translate service
+   * @param primengConfig
    */
   constructor(
     @Optional() @SkipSelf() private singleton: LocalizationService,
     private config: LocalizationServiceConfig,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private primengConfig: PrimeNGConfig
   ) {
     if (this.singleton) {
       throw new Error(
@@ -34,7 +36,14 @@ export class LocalizationService {
    */
   public initService(): Promise<void> {
     // language code same as file name.
-    this._localeId = localStorage.getItem('language') || 'pt';
+   const lng = localStorage.getItem('language');
+
+   if(lng){
+     this._localeId = lng;
+   } else {
+     let browserLang = this.translateService.getBrowserLang();
+     this._localeId = browserLang.match(/en|pt/) ? browserLang : 'en';
+   }
     return this.useLanguage(this._localeId);
   }
 
@@ -43,12 +52,15 @@ export class LocalizationService {
    * @returns {Promise<void>}
    */
   public useLanguage(lang: string): Promise<void> {
-    this.translateService.setDefaultLang(lang);
+    const self = this;
     return this.translateService
       .use(lang)
       .toPromise()
-      .catch(() => {
-        throw new Error('LocalizationService.init failed');
+      .then(r => {
+        self.translateService.get('primeng').subscribe(res => self.primengConfig.setTranslation(res));
+      })
+      .catch((e) => {
+        throw new Error('LocalizationService.init failed: '+ e.message);
       });
   }
 
@@ -60,5 +72,9 @@ export class LocalizationService {
    */
   public translate(key: string | string[], interpolateParams?: object): string {
     return this.translateService.instant(key, interpolateParams) as string;
+  }
+
+  public currentLang(){
+    return this.translateService.currentLang;
   }
 }

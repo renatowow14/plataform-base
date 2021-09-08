@@ -8,10 +8,11 @@ import {MenuItem} from 'primeng/api';
   styleUrls: ['./right-side-bar.component.scss']
 })
 export class RightSideBarComponent implements OnInit {
-  
+
   public Legendas: Legendas[];
   public mapaBase: mapaBase[];
   public Limites: Limites[];
+  public basemap: string;
 
   items: MenuItem[];
 
@@ -19,12 +20,13 @@ export class RightSideBarComponent implements OnInit {
 
   checked1: boolean = true;
   checked2: boolean = false;
-  
+
 
   activeIndex: number = 0;
 
   @Output() onMenuSelected = new EventEmitter<boolean>();
   @Output() onChangeLng = new EventEmitter<any>();
+  @Output() onChangeMap = new EventEmitter<any>();
 
   public display: boolean;
   public open: boolean;
@@ -33,13 +35,12 @@ export class RightSideBarComponent implements OnInit {
   public menu: Menu[];
 
   public displayOpcoes = false as boolean;
-  
-  constructor() {
 
+  constructor() {
+    this.basemap = 'mapbox';
   }
 
-  ngOnInit(): void {   
-  
+  ngOnInit(): void {
 
     //Limites
     this.Limites = [
@@ -61,15 +62,18 @@ export class RightSideBarComponent implements OnInit {
     this.mapaBase = [
         {
           nome: 'Geopolitico (MapBox)',
-          checked: this.checked2
+          key: 'mapbox',
+          checked: true
         },
         {
           nome: 'Google Maps',
-          checked: this.checked1
+          key: 'google',
+          checked: false
         },
         {
-          nome: 'Satélite',
-          checked: this.checked2
+          nome: 'Mosaico Planet',
+          key: 'planet',
+          checked: false
         }
     ];
 
@@ -112,6 +116,18 @@ export class RightSideBarComponent implements OnInit {
     this.onMenuSelected.emit(key);
   }
 
+  onChangeBaseMap(bmap){
+    this.mapaBase = this.mapaBase.map((b) => {
+      if(bmap !== b.key){
+        b.checked = false;
+      }
+      return b;
+    })
+    this.basemap = bmap;
+    this.onChangeMap.emit(this.basemap);
+    console.log(this.basemap)
+  }
+
 }
 
 export interface Legendas {
@@ -126,6 +142,7 @@ export interface Limites {
 
 export interface mapaBase {
   nome: string;
+  key:string;
   checked: boolean;
 }
 

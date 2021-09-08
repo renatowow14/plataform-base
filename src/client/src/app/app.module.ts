@@ -10,6 +10,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { OlMapsModule } from "./@core/ol-maps/ol-maps.module";
 import { ComponentsRoutingModule } from "./components/components-routing.module";
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';

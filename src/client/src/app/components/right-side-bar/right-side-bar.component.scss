@@ -72,13 +72,22 @@
 
 :host ::ng-deep .p-sidebar-right{
   width:auto !important;
-  //background: $background-sidebar;
+  background: lighten($background-sidebar, 75%) !important;
   padding: 6px 14px;
   border: none;
   border-radius: 15px;
   height:auto !important;
   margin-top: 16% !important;
   margin-right: 30px !important;
+  .p-sidebar-header {
+    padding: 0rem;
+    .p-sidebar-close{
+      width: 4rem;
+      &:hover{
+        background: transparent;
+      }
+    }
+  }
 }
 
 .p-tabview-nav {
@@ -89,6 +98,10 @@
 .p-tabview-panels {
   z-index: 10000 !important;
   background: lighten($background-sidebar, 10%) !important;
+}
+
+.toggle{
+  padding: 10px;
 }
 
 
