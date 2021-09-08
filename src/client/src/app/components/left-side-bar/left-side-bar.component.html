@@ -8,22 +8,20 @@
       <ul #leftSidebar class="nav-list">
         <drag-scroll class="nav-list-drag" [scrollbar-hidden]="true" [drag-scroll-x-disabled]="true">
           <li *ngFor="let item of menu" >
-            <div (click)="handleMenu(item)"  [class]="item.show ? 'menu-active' : ''" >
+            <div [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate " (click)="handleMenu(item)"  [class]="item.show ? 'menu-active' : ''" >
               <i class='{{item.icon}}'></i>
-              <span class="links_name">{{item.title}}</span>
+              <span class="links_name">{{'menu.'+item.key | translate}}</span>
             </div>
-            <span class="tooltip">{{item.tooltip}}</span>
           </li>
         </drag-scroll>
       </ul>
       <ul class="nav-list footer">
         <drag-scroll class="footer-drag" [scrollbar-hidden]="true" >
           <li>
-            <div (click)="handleMenu({key: 'filter'})" [class]="displayFilter ? 'menu-active' : ''">
-              <i class='bx bx-search-alt'></i>
-              <span class="links_name">Filtrar</span>
+            <div [pTooltip]="open ? '' : 'menu.filters_tooltip'  | translate " (click)="handleMenu({key: 'filters'})" [class]="displayFilter ? 'menu-active' : ''">
+              <i class='fg-map-search'></i>
+              <span class="links_name">{{'menu.filters'  | translate}}</span>
             </div>
-            <span class="tooltip">Filtrar</span>
           </li>
           <li (click)="handleLang('pt')" >
             <div  [class]="lang == 'pt' ? 'lng lng-active' : 'lng'" >
@@ -40,12 +38,58 @@
       </ul>
     </div>
   </div>
-  <p-sidebar [appendTo]="leftSidebar" [modal]="false" [(visible)]="layersSideBar" (onHide)="layersSideBar = false" >
-    <div class="layers-sidebar-header">
-<!--      <h3>{{ 'left_sidebar_title' | translate }}</h3>-->
-    </div>
-    <div class="layers-sidebar-footer">
+  <p-sidebar [appendTo]="leftSidebar" [modal]="false" [(visible)]="layersSideBar"  (onShow)="onSideBarShow()">
+    <h4 class="title">{{ layersTitle }}</h4>
+    <p-scrollPanel class="content"  [style]="{width: '100%', height: innerHeigth + 'px'}">
+      <div class="menu-item" *ngIf="currentMenu?.key == 'layers'">
+        <p-accordion [multiple]="true">
+          <p-accordionTab header="Header 1">
+            Content 1
+          </p-accordionTab>
+          <p-accordionTab header="Header 2">
+            Content 2
+          </p-accordionTab>
+          <p-accordionTab header="Header 3">
+            Content 3
+          </p-accordionTab>
+          <p-accordionTab header="Header 3">
+            Content 3
+          </p-accordionTab>
 
+          <p-accordionTab header="Header 3">
+            Content 3
+          </p-accordionTab>
+          <p-accordionTab header="Header 3">
+            Content 3
+          </p-accordionTab>
+          <p-accordionTab header="Header 3">
+            Content 3
+          </p-accordionTab>
+          <p-accordionTab header="Header 3">
+            Content 3
+          </p-accordionTab>
+          <p-accordionTab header="Header 3">
+            Content 3
+          </p-accordionTab>
+
+        </p-accordion>
+      </div>
+      <div class="menu-item" *ngIf="currentMenu?.key == 'statistics'">
+
+      </div>
+      <div class="menu-item" *ngIf="currentMenu?.key == 'area'">
+
+      </div>
+      <div class="menu-item" *ngIf="currentMenu?.key == 'filters'">
+        <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
+      </div>
+    </p-scrollPanel>
+    <div class="footer">
+      <div class="partners">
+        <i class='bx bxl-c-plus-plus icon' ></i>
+        <i class='bx bxl-c-plus-plus icon' ></i>
+        <i class='bx bxl-c-plus-plus icon' ></i>
+      </div>
     </div>
   </p-sidebar>
 </section>

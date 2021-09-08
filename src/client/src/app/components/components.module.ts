@@ -3,12 +3,21 @@ import { CommonModule } from '@angular/common';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
 import { TabMenuModule } from 'primeng/tabmenu';
-import {TabViewModule} from 'primeng/tabview';
-import {InputSwitchModule} from 'primeng/inputswitch';
-import {FormsModule} from '@angular/forms';
-import {CardModule} from 'primeng/card';
+import { TabViewModule } from 'primeng/tabview';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { FormsModule } from '@angular/forms';
+import { CardModule } from 'primeng/card';
+import { DropdownModule } from 'primeng/dropdown';
+import { AccordionModule } from 'primeng/accordion';
 import { ComponentsRoutingModule, routedComponents } from './components-routing.module';
 import { DragScrollModule } from 'ngx-drag-scroll';
+import { TranslateModule } from "@ngx-translate/core";
+import { TooltipModule } from 'primeng/tooltip';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { OlMapsModule } from "../@core/ol-maps/ol-maps.module";
+
 @NgModule({
   declarations: [ ...routedComponents],
   imports: [
@@ -18,10 +27,18 @@ import { DragScrollModule } from 'ngx-drag-scroll';
     TabViewModule,
     FormsModule,
     InputSwitchModule,
+    InputTextModule,
+    AutoCompleteModule,
     CardModule,
     DragScrollModule,
     ComponentsRoutingModule,
-    ButtonModule
+    ButtonModule,
+    DropdownModule,
+    TranslateModule,
+    TooltipModule,
+    AccordionModule,
+    ScrollPanelModule,
+    OlMapsModule,
   ]
 })
 export class ComponentsModule { }

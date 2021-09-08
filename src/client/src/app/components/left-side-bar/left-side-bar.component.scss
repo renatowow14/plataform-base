@@ -271,7 +271,7 @@
     height: 100%;
     width: $left-sb-width;
     background: $background-sidebar;
-    padding: 6px 14px;
+    padding: 6px 6px;
     z-index: 99;
     transition: all 0.5s ease;
 
@@ -330,7 +330,7 @@
       list-style: none;
 
       i {
-        line-height: 50px;
+        line-height: 43px;
         font-size: 25px;
         border-radius: 12px;
       }
@@ -338,9 +338,11 @@
       .menu-active {
         background: #FFF !important;
         color: $background-sidebar !important;
+
         .links_name, i {
           color: $background-sidebar;
         }
+
         .lng_name, i {
           color: $background-sidebar;
         }
@@ -363,6 +365,7 @@
           background: #FFF;
           cursor: pointer;
         }
+
         .links_name {
           color: #fff;
           font-size: 12px;
@@ -388,6 +391,7 @@
           .links_name, i {
             color: $background-sidebar;
           }
+
           .lng_name, i {
             color: $background-sidebar;
           }
@@ -427,14 +431,18 @@
         height: 10rem;
         bottom: 8px;
         position: absolute;
+
         li {
           width: calc(100% - 16px);
-          .lng-active{
+
+          .lng-active {
             background: white !important;
+
             .lng_name {
               color: $background-sidebar !important;
             }
           }
+
           .lng {
             padding: 10px 0 10px 0;
           }
@@ -489,6 +497,7 @@
       .footer {
         &-drag {
           height: 9rem;
+
           li {
             width: 100%;
           }
@@ -501,6 +510,80 @@
 }
 
  @include media('>=desktop') {
+
+  .close {
+    position: relative;
+    float: right;
+    z-index: 1020;
+    color: $background-sidebar !important;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 100px;
+    line-height: 37px !important;
+    font-size: 28px;
+    text-align: center;
+    transition: all 0.5s ease;
+    cursor: pointer !important;
+    &:hover {
+      color: $danger
+    }
+  }
+
+  .partners {
+    display: flex;
+    justify-content: space-around;
+
+    i {
+      color: $background-sidebar;
+    }
+  }  
+
+
+  .title{
+    padding-bottom: 15px;
+    padding-top: 15px;
+  }
+  .content{
+    .menu-item{
+
+    }
+  }
+
+
+  :host ::ng-deep .p-sidebar-left {
+    width: 25rem;
+    background: lighten($background-sidebar, 75%) !important;
+  
+    .p-sidebar-content {
+      h4 {
+        text-align: center;
+        padding: 10px 0 0 10px;
+      }
+    }
+    .p-sidebar-header {
+      padding: 0rem;
+      height: 3.5rem;
+      box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+      .p-sidebar-close{
+        width: 4rem;
+        &:hover{
+          background: transparent;
+        }
+      }
+  
+      .header {
+        transition: all 0.5s ease;
+        .logo {
+          max-width: 50%;
+          width: 100%;
+          padding: 10px;
+        }
+      }
+    }
+  
+    .p-sidebar-content {
+  
+    }
+  }
 
 .left-side-bar {
   border-radius: 5px 0 0 5px;
@@ -741,9 +824,7 @@
  }
 
 
-
-
-    @include media('>phone'){
+    @include media('>phone') {
       li {
         .tooltip {
           display: none;
@@ -751,14 +832,15 @@
       }
     }
 
-    @include media('<phone'){
-      .footer{
+    @include media('<phone') {
+      .footer {
         li {
-          .links_name{
+          .links_name {
             display: block;
           }
         }
       }
     }
  
+
 

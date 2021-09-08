@@ -8,7 +8,7 @@ import {Component, OnInit} from '@angular/core';
 export class MainComponent implements OnInit {
   public open:boolean;
   public showLayers: boolean;
-
+  public bmap : string = 'mapbox';
   constructor() {
     this.open = true;
     this.showLayers = false;
@@ -18,6 +18,10 @@ export class MainComponent implements OnInit {
 
   onMenuSelected(item){
     this.showLayers = item.show;
+  }
+
+  onChangeBaseMap(bmap){
+    this.bmap = bmap;
   }
 
   onSideBarToggle(isOpen){

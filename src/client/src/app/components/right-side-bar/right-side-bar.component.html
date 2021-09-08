@@ -7,15 +7,15 @@
           </p-tabPanel>
 
         <p-tabPanel  header="Mapa-Base">
-          <div *ngFor="let map of mapaBase">
-            <p-inputSwitch styleClass="inputSwitchClass" [(ngModel)]="map.checked"> </p-inputSwitch>
+          <div class="toggle" *ngFor="let map of mapaBase">
+            <p-inputSwitch  styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(map.key)" [(ngModel)]="map.checked"> </p-inputSwitch>
             <p class="inlineSwitchButton"> {{map.nome}} </p>
             <br>
           </div>
 
         </p-tabPanel>
           <p-tabPanel  header="Limites">
-            <div *ngFor="let limite of Limites">
+            <div class="toggle" *ngFor="let limite of Limites">
               <p-inputSwitch [(ngModel)]="limite.checked"> </p-inputSwitch>
               <p class="inlineSwitchButton"> {{limite.nome}} </p>
               <br>

@@ -1,12 +1,12 @@
-import {Component, EventEmitter, OnInit, ElementRef, Output} from '@angular/core';
-import { LocalizationService } from "../../@core/internationalization/localization.service";
+import {Component, EventEmitter, OnInit, Renderer2, ElementRef, Output, HostListener} from '@angular/core';
+import {LocalizationService} from "../../@core/internationalization/localization.service";
 
 @Component({
   selector: 'app-left-side-bar',
   templateUrl: './left-side-bar.component.html',
   styleUrls: ['./left-side-bar.component.scss']
 })
-export class LeftSideBarComponent implements OnInit {
+export class LeftSideBarComponent implements OnInit{
 
   @Output() onSideBarToggle = new EventEmitter<boolean>();
   @Output() onMenuSelected = new EventEmitter<any>();
@@ -14,107 +14,144 @@ export class LeftSideBarComponent implements OnInit {
 
   public displayFilter: boolean;
   public open: boolean;
+  public innerHeigth: number;
   public layersSideBar: boolean;
+  public layersTitle: string;
   public lang: string;
   public menu: Menu[];
+  public currentMenu: Menu;
+  public descriptor: any;
 
-  constructor(private el: ElementRef, private localizationService: LocalizationService) {
+  public textSearch: string;
+  public results: string[];
+
+  constructor(private el: ElementRef, private localizationService: LocalizationService, private renderer: Renderer2) {
     this.open = true;
     this.layersSideBar = false;
-    this.lang = 'pt';
     this.menu = [
       {
         index: 0,
-        key: 'dashboard',
-        icon: 'bx bx-grid-alt',
-        title: 'Dashboard',
-        tooltip:'Dashboard',
+        key: 'layers',
+        icon: 'fg-layers',
         show: false
       },
       {
         index: 1,
-        key: 'user',
-        icon: 'bx bx-user',
-        title: 'User',
-        tooltip:'User',
+        key: 'statistics',
+        icon: 'bx bx-bar-chart-alt',
         show: false
       },
       {
         index: 2,
-        key: 'messages',
-        icon: 'bx bx-chat',
-        title: 'Messages',
-        tooltip:'Messages',
-        show: false
-      },
-      {
-        index: 3,
-        key: 'analytics',
-        icon: 'bx bx-pie-chart-alt-2',
-        title: 'Analytics',
-        tooltip:'Analytics',
-        show: false
-      },
-      {
-        index: 4,
-        key: 'files',
-        icon: 'bx bx-folder',
-        title: 'Files',
-        tooltip:'Files',
-        show: false
-      },
-      {
-        index: 5,
-        key: 'order',
-        icon: 'bx bx-cart-alt',
-        title: 'Order',
-        tooltip:'Order',
-        show: false
-      },
-      {
-        index: 6,
-        key: 'setting',
-        icon: 'bx bx-cog',
-        title: 'Setting',
-        tooltip:'Setting',
-        show: false
-      },
-      {
-        index: 7,
-        key: 'saved',
-        icon: 'bx bx-heart',
-        title: 'Saved',
-        tooltip:'Saved',
+        key: 'area',
+        icon: 'fg-polygon-hole-pt',
         show: false
       }
     ];
     this.displayFilter = false;
-  }
+    this.descriptor = {
+      "groups": []
+    }
+    this.currentMenu = {
+      index: 0,
+      key: 'layers',
+      icon: 'fg-layers',
+      show: false
+    }
+
+    }
 
   ngOnInit(): void {
-
+    this.lang = this.localizationService.currentLang();
+    this.innerHeigth = window.innerHeight - 160;
+    // this.http.get('service/map/descriptor?lang=' + this.language).subscribe(result => {
+    //   this.descriptor = result
+    //   this.regionFilterDefault = this.descriptor.regionFilterDefault;
+    //
+    //   for (let groups of this.descriptor.groups) {
+    //
+    //     for (let layers of groups.layers) {
+    //       if (layers.types) {
+    //         for (let types of layers.types) {
+    //           this.layersTypes.push(types)
+    //         }
+    //       } else {
+    //         this.layersTypes.push(layers);
+    //       }
+    //       // this.layersTypes.sort(function (e1, e2) {
+    //       // 	return (e2.order - e1.order)
+    //       // });
+    //
+    //       this.layersNames.push(layers);
+    //     }
+    //
+    //   }
+    //   for (let basemap of this.descriptor.basemaps) {
+    //     for (let types of basemap.types) {
+    //       this.basemapsNames.push(types)
+    //     }
+    //   }
+    //
+    //   for (let limits of this.descriptor.limits) {
+    //     for (let types of limits.types) {
+    //       this.limitsNames.push(types)
+    //     }
+    //   }
+    //
+    //   this.createMap();
+    //   this.updateCharts();
+    //   this.addPoints();
+    // });
   }
 
-  toggleMenu(){
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.innerHeigth = window.innerHeight - 160;
+  }
+
+  toggleMenu() {
     this.open = !this.open;
     this.onSideBarToggle.emit(this.open);
   }
 
-  handleLang(lng){
+  handleLang(lng) {
     this.lang = lng;
+    this.localizationService.useLanguage(this.lang).then(r => {
+      this.layersTitle = this.localizationService.translate('menu.'+this.currentMenu.key);
+    });
   }
 
-  handleMenu(menu){
-    this.menu.map(m => { return m.show = false});
-    this.displayFilter = false;
-    if(menu.key == 'filter'){
+  onSideBarShow(){
+    const div = this.renderer.createElement('div');
+    const img = this.renderer.createElement('img');
+    this.renderer.addClass(div, 'header');
+    this.renderer.addClass(img, 'logo');
+    this.renderer.setProperty(img, 'src', '../../../assets/logos/logo.svg')
+    this.renderer.setProperty(img, 'alt', 'Logo')
+    this.renderer.appendChild(div, img);
+    this.renderer.insertBefore(this.el.nativeElement.querySelector(".p-sidebar-header"), div, this.el.nativeElement.querySelector(".p-sidebar-close"))
+  }
+
+  handleMenu(menu) {
+    this.menu.map(m => {
+      return m.show = false
+    });
+    this.currentMenu = menu;
+    this.layersTitle = this.localizationService.translate('menu.'+menu.key);
+
+    if (menu.key == 'filters') {
       this.displayFilter = !this.displayFilter;
     } else {
       this.menu[menu.index].show = true;
     }
 
-    this.layersSideBar = !this.layersSideBar;
+    this.layersSideBar = true;
     this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key});
+  }
+  search(event) {
+    // this.mylookupservice.getResults(event.query).then(data => {
+    //   this.results = data;
+    // });
   }
 }
 
@@ -122,7 +159,5 @@ export interface Menu {
   index: number;
   key: string;
   icon: string;
-  title: string;
-  tooltip: string;
   show: boolean;
 }
