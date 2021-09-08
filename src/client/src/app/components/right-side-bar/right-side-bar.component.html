@@ -3,12 +3,12 @@
     <p-tabView styleClass="tabViewrightSideMenu">
 
         <p-tabPanel styleClass="tabPanelrightSideMenu" header="Legenda" >
-          <div *ngFor="let item of Legendas" class="{{item.color}}">  {{item.nome}} </div>
+          <div  class="font-legenda" *ngFor="let item of Legendas" class="{{item.color}}"> {{item.nome}} </div>
           </p-tabPanel>
 
         <p-tabPanel  header="Mapa-Base">
           <div *ngFor="let map of mapaBase">
-            <p-inputSwitch [(ngModel)]="map.checked"> </p-inputSwitch>
+            <p-inputSwitch styleClass="inputSwitchClass" [(ngModel)]="map.checked"> </p-inputSwitch>
             <p class="inlineSwitchButton"> {{map.nome}} </p>
             <br>
           </div>

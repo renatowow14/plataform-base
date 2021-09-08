@@ -1,6 +1,69 @@
 @import "src/app/@core/styles/default_theme";
 @import "src/app/@core/styles/reponsive";
 
+
+@include media('>=phone' , '<=tablet') {
+  
+  :host ::ng-deep .p-sidebar-right{
+    width:280px;
+    //background: $background-sidebar;
+    border: none;
+    border-radius: 15px;
+    /* height:auto !important; */
+    height: 200px !important;
+    margin-top: 47% !important;
+    margin-right: 30px !important;
+  }
+  
+  :host ::ng-deep .p-tabview-nav-link { 
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+     box-shadow: none !important;
+     z-index: 10000 !important;
+     /* background: lighten($background-sidebar, 10%) !important; 
+     color:white !important;
+     outline-color:white !important;*/
+  
+   /*outline-color: transparent;
+     outline-style: none;
+     outline: 0 none !important;
+     outline-offset: 0 !important;
+     box-shadow: 0 0 0 0 !important;
+     border:none !important;
+     border-right: none !important; */
+     
+    font-size: 10px; /*redução do texto do header */
+  }
+
+  :host ::ng-deep .p-inputswitch { /* redução do espaço acoplado ao inputSwitch */
+    width:50px;
+    height:15px;
+  }
+
+  :host ::ng-deep .p-sidebar-header {
+    padding: 7px ; /* redução do padding padrão do header no modo mobile, padding original:16 */
+  }
+
+  :host ::ng-deep .p-inputswitch-slider { /* redução do sliding do inputSwitch */
+    width:40px ;
+    height:15px ;
+  }
+
+  :host ::ng-deep .p-inputswitch .p-inputswitch-slider:before { /* redução da bolinha do inputSwitch e correção da altura */
+    width: 10px ;
+    height:10px ;
+    margin-top: -5px ;
+  }
+
+  .inlineSwitchButton{ /* redução da fonte de texto dos switch buttons */
+    font-size:11px;
+  }
+
+  .font-legenda{ /* redução da fonte da legenda */
+    font-size: 14px;;
+  }
+
+
 .legend{
   position: fixed;
   top: 45%;
@@ -27,7 +90,7 @@
   background-color:yellow;
 }
 .green {
-  background-color: green;
+  background-color: rgb(68, 238, 68);
 }
 .orange {
   background-color: orange;
@@ -51,14 +114,210 @@
   }
 }
 
-:host ::ng-deep .p-button {
-  margin-right: .25rem;
+.rightSideMenu {
+  width:auto !important;
+  background: $background-sidebar;
+  padding: 6px 14px;
+  border: none;
+  height:auto !important;
+  margin-top: 16% !important;
+  margin-right: 30px !important;
 }
 
-:host ::ng-deep .p-tabview p {
-  line-height: 1.5;
-  margin: 0;
+
+/* :host ::ng-deep .p-tabview-nav {
+  background: lighten($background-sidebar, 10%) !important;
 }
+
+:host ::ng-deep .p-tabview-panels {
+  background: lighten($background-sidebar, 10%) !important;
+}
+*/
+
+ }
+
+ @include media('>=tablet', '<=desktop') {
+
+  .legend{
+    position: fixed;
+    top: 45%;
+    right: -31px;
+    border: 0;
+    padding: 5px 12px;
+    font-size: 15px;
+    color: white;
+    background: $background-sidebar;
+    border-radius: 15px 15px 0 0;
+    z-index: 9;
+    transform: rotate(-90deg);
+    transition: all .5s ease;
+    cursor: pointer;
+    &:hover{
+      color: $background-sidebar;
+      background: white ;
+    }
+  
+  }
+  
+  //Legendas
+  .yellow {
+    background-color:yellow;
+  }
+  .green {
+    background-color: rgb(68, 238, 68);
+  }
+  .orange {
+    background-color: orange;
+  }
+  //Fim legendas
+  
+  //Switchs Buttons
+  .inlineSwitchButton{
+    display: inline;
+  }
+  //End Switchs buttons
+  
+  
+  :host ::ng-deep .tabview-custom {
+    i, span {
+      vertical-align: middle;
+    }
+  
+    span {
+      margin: 0 .5rem;
+    }
+  }
+  
+  
+  :host ::ng-deep .p-tabview-nav-link {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+     box-shadow: none !important;
+     z-index: 10000 !important;
+  
+     /* background: lighten($background-sidebar, 10%) !important; 
+     color:white !important;
+     outline-color:white !important;*/
+  
+   /*outline-color: transparent;
+     outline-style: none;
+     outline: 0 none !important;
+     outline-offset: 0 !important;
+     box-shadow: 0 0 0 0 !important;
+     border:none !important;
+     border-right: none !important; */
+  }
+  
+  
+  
+  .rightSideMenu {
+    width:auto !important;
+    background: $background-sidebar;
+    padding: 6px 14px;
+    border: none;
+    height:auto !important;
+    margin-top: 16% !important;
+    margin-right: 30px !important;
+  }
+  
+  
+  :host ::ng-deep .p-sidebar-right{
+    width:auto;
+    //background: $background-sidebar;
+  
+    border: none;
+    border-radius: 15px;
+   /* height:auto ; */
+    height: 280px;
+    margin-top: 16%;
+    margin-right: 30px ;
+  }
+  
+  /* :host ::ng-deep .p-tabview-nav {
+    background: lighten($background-sidebar, 10%) !important;
+  }
+  
+  :host ::ng-deep .p-tabview-panels {
+    background: lighten($background-sidebar, 10%) !important;
+  }
+  */
+
+ }
+
+
+ @include media('>=desktop') {
+
+
+.legend{
+  position: fixed;
+  top: 45%;
+  right: -31px;
+  border: 0;
+  padding: 5px 12px;
+  font-size: 15px;
+  color: white;
+  background: $background-sidebar;
+  border-radius: 15px 15px 0 0;
+  z-index: 9;
+  transform: rotate(-90deg);
+  transition: all .5s ease;
+  cursor: pointer;
+  &:hover{
+    color: $background-sidebar;
+    background: white ;
+  }
+
+}
+
+//Legendas
+.yellow {
+  background-color:yellow;
+}
+.green {
+  background-color: rgb(68, 238, 68);
+}
+.orange {
+  background-color: orange;
+}
+//Fim legendas
+
+//Switchs Buttons
+.inlineSwitchButton{
+  display: inline;
+}
+//End Switchs buttons
+
+
+:host ::ng-deep .tabview-custom {
+  i, span {
+    vertical-align: middle;
+  }
+
+  span {
+    margin: 0 .5rem;
+  }
+}
+
+
+:host ::ng-deep .p-tabview-nav-link {
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+   box-shadow: none !important;
+
+   /* background: lighten($background-sidebar, 10%) !important; 
+   color:white !important;
+   outline-color:white !important;*/
+
+ /*outline-color: transparent;
+   outline-style: none;
+   outline: 0 none !important;
+   outline-offset: 0 !important;
+   box-shadow: 0 0 0 0 !important;
+   border:none !important;
+   border-right: none !important; */
+}
+
+
 
 .rightSideMenu {
   width:auto !important;
@@ -70,26 +329,29 @@
   margin-right: 30px !important;
 }
 
+
 :host ::ng-deep .p-sidebar-right{
-  width:auto !important;
+  width:auto;
   //background: $background-sidebar;
-  padding: 6px 14px;
+
   border: none;
   border-radius: 15px;
-  height:auto !important;
-  margin-top: 16% !important;
-  margin-right: 30px !important;
+ /* height:auto ; */
+  height: 280px;
+  margin-top: 16%;
+  margin-right: 30px ;
 }
 
-.p-tabview-nav {
-  z-index: 10000 !important;
+/* :host ::ng-deep .p-tabview-nav {
   background: lighten($background-sidebar, 10%) !important;
 }
 
-.p-tabview-panels {
-  z-index: 10000 !important;
+:host ::ng-deep .p-tabview-panels {
   background: lighten($background-sidebar, 10%) !important;
 }
+*/
 
+}
+  
 
 
