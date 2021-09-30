@@ -21,52 +21,16 @@ module.exports = function(app) {
         return [{
             source: 'general',
             id: 'search',
-            sql: "SELECT distinct text, value, type FROM regions_geom WHERE unaccent(text) ILIKE unaccent(${key}%) AND type NOT in ('country') LIMIT 10",
+            sql: "SELECT distinct text, value, type FROM regions_geom WHERE unaccent(text) ILIKE unaccent(${textRegion}%) AND type NOT in ('country') LIMIT 10",
             mantain: true
         }]
 
     }
 
     Query.searchregion = function() {
-        return "SELECT text, value, type FROM regions_geom WHERE unaccent(value) ILIKE unaccent(${key}) AND type = (${type}) LIMIT 10";
+        return "SELECT text, value, type FROM regions_geom WHERE unaccent(value) ILIKE unaccent(${textRegion}) AND type = (${type}) LIMIT 10";
     }
 
-    Query.fieldPoints = function(params) {
-        var msfilter = params['msfilter'];
-        var condition;
-        if (msfilter) {
-            condition = ' WHERE ' + msfilter;
-        }
-
-        var colums = "id, cobertura, obs, data, periodo, horario, altura, homoge, invasoras, gado, qtd_cupins, forrageira, solo_exp";
-
-        return "SELECT ST_AsGeoJSON(geom) geojson," + colums + " FROM pontos_campo_parada " + condition;
-    }
-
-    Query.downloadCSV = function(params) {
-        var layer = params['layer'];
-        var filterRegion = params['filterRegion'];
-        var year = params['year'];
-        var columnsCSV = "cd_geouf,cd_geocmu,regiao,uf,estado,municipio,bioma, " + params['columnsCSV']
-        var filter = ' WHERE ' + filterRegion;
-
-        if (year != undefined && year != '')
-            filter = ' WHERE ' + filterRegion + ' AND year=' + year;
-
-        if (layer == 'pontos_campo_parada' || layer == 'pontos_campo_sem_parada' || layer == 'pontos_tvi_treinamento' || layer == 'pontos_tvi_validacao') {
-            columnsCSV = '*'
-            filter = ' WHERE ' + filterRegion;
-        }
-
-        if (params['columnsCSV'] == '') {
-            columnsCSV = '*'
-            filter = '';
-        }
-
-        console.log('_____query______: ', "SELECT " + columnsCSV + " FROM " + layer + filter)
-        return "SELECT " + columnsCSV + " FROM " + layer + filter;
-
-    }
 
     // Query.downloadCSV = function(params) {
     // 	var layer = params.layer;
