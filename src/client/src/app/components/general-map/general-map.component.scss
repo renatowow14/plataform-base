@@ -3,22 +3,10 @@
 
 @include media('>=desktop') {
 
-  .map {
-    height: $height;
-    width: $map-width;
-    background: $secondary;
-  }
-
 }
 
 @include media('>=phone' , '<=tablet') {
 
-  .map {
-    height: $height;
-    width: $map-width;
-    background: $secondary;
-    padding-bottom:100px;
-  }
 
 }
 

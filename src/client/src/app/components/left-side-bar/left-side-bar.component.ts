@@ -17,6 +17,7 @@ export class LeftSideBarComponent implements OnInit{
   public open: boolean;
   public innerHeigth: number;
   public layersSideBar: boolean;
+  public layersSideBarMobile: boolean;
   public layersTitle: string;
   public lang: string;
   public menu: Menu[];
@@ -31,6 +32,7 @@ export class LeftSideBarComponent implements OnInit{
 
     this.open = true;
     this.layersSideBar = false;
+    this.layersSideBarMobile = false;
     this.menu = [
       {
         index: 0,
@@ -174,7 +176,8 @@ export class LeftSideBarComponent implements OnInit{
     this.renderer.insertBefore(this.el.nativeElement.querySelector(".p-sidebar-header"), div, this.el.nativeElement.querySelector(".p-sidebar-close"));
   }
 
-  handleMenu(menu) {
+  handleMenu(menu, mobile = false) {
+    
     this.menu.map(m => {
       return m.show = false
     });
@@ -186,10 +189,20 @@ export class LeftSideBarComponent implements OnInit{
     } else {
       this.menu[menu.index].show = true;
     }
+    if (mobile) {
+      this.layersSideBarMobile = true;
+      this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
+      console.log(menu);
 
-    this.layersSideBar = true;
-    this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key});
+    }else{
+      this.layersSideBar = true;
+      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
+      console.log(menu);
+    }
+    
+;
   }
+  
   search(event) {
     // this.mylookupservice.getResults(event.query).then(data => {
     //   this.results = data;
