@@ -116,7 +116,7 @@ module.exports = function(app) {
                         display: false
                     }
                 }
-            },
+            }
             // {
             //     "id": "uso_solo_mapbiomas",
             //     "title": "MapBiomas",
@@ -142,37 +142,6 @@ module.exports = function(app) {
             //         }
             //     }
             // },
-            {
-                "id": "agricultura_agrosatelite",
-                "title": languageJson["charts_title_layer"]["agrosatelite"][language],
-                "getText": function(chart) {
-
-                    var indicatorHigh = chart.indicators[0];
-
-                    for (let indicator of chart.indicators) {
-
-                        if (Number(indicator.value) > Number(indicatorHigh.value)) {
-                            indicatorHigh = indicator
-                        }
-
-                    }
-                    var parttext = languageJson["charts_text"]["agrosatelite"];
-                    var percentual_area_ha = ((indicatorHigh.value * 100) / indicatorHigh.area_mun);
-
-                    var text = parttext["part1"][language] + indicatorHigh.label + parttext["part2"][language] + indicatorHigh.classe +
-                        parttext["part3"][language] + numberFormat(parseFloat(indicatorHigh.value)) +
-                        parttext["part4"][language] + Math.round(percentual_area_ha) + parttext["part5"][language]
-
-                    return text
-                },
-                "data": Internal.getDataSets(request, 'agricultura_agrosatelite'),
-                "type": 'line',
-                "options": {
-                    legend: {
-                        display: false
-                    }
-                }
-            },
         ]
 
         for (let chart of chartResult) {
@@ -187,64 +156,58 @@ module.exports = function(app) {
 
     }
 
+    Controller.deforestation = function(request, response) {
+        var language = request.param('lang')
+        var typeRegion = request.param('typeRegion');
+        var textRegion = request.param('textRegion');
 
-    Controller.regionreport = function(request, response) {
+        var region = languageJson["charts_regions"]["biome"][language]
 
-        var type = request.param('type')
-        var region = request.param('region')
+        if (typeRegion == 'municipio' || typeRegion == 'estado') {
+            if (typeRegion == 'municipio')
+                typeRegionTranslate = language == 'pt' ? 'municipio' : 'municipality';
+            else if (typeRegion == 'estado')
+                typeRegionTranslate = language == 'pt' ? 'estado' : 'state';
 
-        let sizeSrc = 768;
-        let sizeThumb = 400;
-
-        var queryBox = request.query['box_region'];
-
-        let regionfilter = {
-            msfilter: "",
-            msregion: ""
+            region = languageJson["charts_regions"]["o_municipio_estado"][language] + typeRegionTranslate + languageJson["charts_regions"]["de_municipio_estado"][language] + textRegion
+        } else if (typeRegion == 'região de fronteira') {
+            region = languageJson["charts_regions"]["region_fronteira"][language] + textRegion
         }
-        if (type == 'municipio') {
-            regionfilter = {
-                msfilter: "cd_geocmu",
-                msregion: "municipio"
+
+        var chartResult = [{
+                "id": "prodes",
+                "title": "PRODES",
+                "getText": function(chart) {
+
+
+                    return "Qualquer texto"
+                },
+                "type": 'line',
+                "options": {
+                    legend: {
+                        display: false
+                    }
+                }
             }
-        } else if (type = 'estado') {
-            regionfilter = {
-                msfilter: "uf",
-                msregion: "uf"
-            }
+
+        ]
+
+
+        for (let chart of chartResult) {
+
+            chart['indicators'] = request.queryResult[chart.id]
+            chart['text'] = chart.getText(chart)
+
         }
 
-        let anual_statistic = [];
-        for (let y = 1985; y <= 2018; y++) {
-            let box = queryBox[0]['bbox'].replace("BOX(", "")
-                .replace(")", "")
-                .split(" ")
-                .join(",");
-            let ano = Number(y);
-            anual_statistic.push({
-                box: box,
-                year: ano,
-                imgLarge: app.config.ows_host + "/ows?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&layers=uso_solo_mapbiomas,regions_cepf_realce_maior&bbox=" + box + "&TRANSPARENT=TRUE&srs=EPSG:4674&width=" +
-                    sizeSrc + "&height=" + sizeSrc + "&format=image/png&styles=&ENHANCE=TRUE&MSFILTER=" + regionfilter.msfilter + " ilike '" + region + "' and year = " + ano + "&MSREGION=type='" + regionfilter.msregion + "' and text ilike '" + region + "'",
-                imgSmall: app.config.ows_host + "/ows?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&layers=uso_solo_mapbiomas,regions_cepf_realce_maior&bbox=" + box + "&TRANSPARENT=TRUE&srs=EPSG:4674&width=" +
-                    sizeThumb + "&height=" + sizeThumb + "&format=image/png&styles=&ENHANCE=TRUE&MSFILTER=" + regionfilter.msfilter + " ilike '" + region + "' and year = " + ano + "&MSREGION=type='" + regionfilter.msregion + "' and text ilike '" + region + "'"
-            });
-        }
-
-
-        var legendas = {
-            legendTerraclass: app.config.ows_host + "/ows?TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer=uso_solo_mapbiomas&format=image/png",
-            legendRegion: app.config.ows_host + "/ows?TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer=regions_cepf_realce_maior&format=image/png"
-        }
-
-
-        response.send({
-            anual_statistic: anual_statistic,
-            legendas: legendas,
-        });
+        response.send(chartResult)
         response.end();
 
+
     };
+
+
+
 
     return Controller;
 }

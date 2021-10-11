@@ -46,43 +46,6 @@ module.exports = function(app) {
         response.end()
     }
 
-    Controller.fieldPoints = function(request, response) {
-
-        var result = []
-            // var diretorioFotos = config.fotoDir;
-        var queryResult = request.queryResult
-
-        queryResult.forEach(function(row) {
-
-            result.push({
-                'type': 'Feature',
-                'geometry': JSON.parse(row['geojson']),
-                'properties': {
-                    'id': row['id'],
-                    // 'foto': fs.readdirSync(diretorioFotos + row['id']),
-                    'cobertura': row['cobertura'],
-                    'obs': row['obs'],
-                    'data': row['data'],
-                    'periodo': row['periodo'],
-                    'horario': row['horario'],
-                    'altura': row['altura'],
-                    'homoge': row['homoge'],
-                    'invasoras': row['invasoras'],
-                    'gado': row['gado'],
-                    'qtd_cupins': row['qtd_cupins'],
-                    'forrageira': row['forrageira'],
-                    'solo_exp': row['solo_exp']
-                }
-            })
-        })
-
-        response.send({
-            "type": "FeatureCollection",
-            "features": result
-        })
-        response.end();
-    }
-
     Controller.descriptor = function(request, response) {
         var language = request.param('lang')
 
