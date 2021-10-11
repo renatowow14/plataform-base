@@ -49,8 +49,8 @@ export class OlMapMarkerComponent implements OnInit, OnDestroy {
     const text = new Style({
       text: new Text({
         text: this.text,
-        font: 'bold 12px arial',
-        offsetY: 8,
+        font: 'normal 12px Montserrat',
+        offsetY: 20,
         fill: new Fill({color: 'rgb(0,0,0)'}),
         stroke: new Stroke({color: 'rgb(255,255,255)', width: 1})
       })

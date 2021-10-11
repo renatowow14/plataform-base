@@ -19,7 +19,7 @@ export class LocalizationService {
   constructor(
     @Optional() @SkipSelf() private singleton: LocalizationService,
     private config: LocalizationServiceConfig,
-    private translateService: TranslateService,
+    public translateService: TranslateService,
     private primengConfig: PrimeNGConfig
   ) {
     if (this.singleton) {

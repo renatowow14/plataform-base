@@ -5,33 +5,25 @@ import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-right-side-bar',
-  templateUrl: './right-side-bar.component.html',  
+  templateUrl: './right-side-bar.component.html',
   styleUrls: ['./right-side-bar.component.scss']
 })
 export class RightSideBarComponent implements OnInit {
 
   public Legendas: Legendas[];
-  public mapaBase: mapaBase[];
-  public Limites: Limites[];
-  public basemap: string;
+  public mapaBase: Layer[];
+  public Limites: Layer[];
+  public basemap: any;
+  public limit: any;
 
   items: MenuItem[];
-
   activeItem: MenuItem;
 
-  checked1: boolean = true;
-  checked2: boolean = false;
-
-
-  activeIndex: number = 0;
-
-  @Output() onMenuSelected = new EventEmitter<boolean>();
-  @Output() onChangeLng = new EventEmitter<any>();
   @Output() onChangeMap = new EventEmitter<any>();
+  @Output() onChangeLimits = new EventEmitter<any>();
 
   public display: boolean;
   public open: boolean;
-  public layersSideBar: boolean;
   public lang: string;
   public menu: Menu[];
 
@@ -44,36 +36,32 @@ export class RightSideBarComponent implements OnInit {
   ngOnInit(): void {
 
     //Limites
-    this.Limites = [
-      {
-        nome: 'Municipios',
-        checked: this.checked2
-      },
-      {
-        nome: 'Cerrados',
-        checked: this.checked1
-      },
-      {
-        nome: 'Estados',
-        checked: this.checked1
-      }
-  ];
+    this.Limites = [];
 
       //Map-Base
     this.mapaBase = [
         {
           nome: 'Geopolitico (MapBox)',
           key: 'mapbox',
+          type: 'bmap',
           checked: true
         },
         {
           nome: 'Google Maps',
           key: 'google',
+          type: 'bmap',
           checked: false
         },
         {
           nome: 'Mosaico Planet',
           key: 'planet',
+          type: 'bmap',
+          checked: false
+        },
+        {
+          nome: 'Stadia Dark',
+          key: 'stadia',
+          type: 'bmap',
           checked: false
         }
     ];
@@ -112,11 +100,6 @@ export class RightSideBarComponent implements OnInit {
     this.lang = lng;
   }
 
-  handleMenu(key){
-
-    this.onMenuSelected.emit(key);
-  }
-
   onChangeBaseMap(bmap){
     this.mapaBase = this.mapaBase.map((b) => {
       if(bmap !== b.key){
@@ -124,10 +107,20 @@ export class RightSideBarComponent implements OnInit {
       }
       return b;
     })
-    this.basemap = bmap;
+    this.basemap = this.mapaBase.find(b => bmap === b.key);
     this.onChangeMap.emit(this.basemap);
-    console.log(this.basemap)
   }
+
+  // onChangeLimit(limit){
+  //   this.mapaBase = this.mapaBase.map((b) => {
+  //     if(bmap !== b.key){
+  //       b.checked = false;
+  //     }
+  //     return b;
+  //   })
+  //   this.basemap = this.mapaBase.find(b => bmap === b.key);
+  //   this.onChangeLimit.emit(this.basemap);
+  // }
 
 }
 
@@ -136,14 +129,10 @@ export interface Legendas {
   color: string;
 }
 
-export interface Limites {
-  nome: string;
-  checked: boolean;
-}
-
-export interface mapaBase {
+export interface Layer {
   nome: string;
   key:string;
+  type: string;
   checked: boolean;
 }
 

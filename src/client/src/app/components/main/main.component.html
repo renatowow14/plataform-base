@@ -1,6 +1,18 @@
-<section class="container">
-  <app-left-side-bar (onMenuSelected)="onMenuSelected($event)" (onSideBarToggle)="onSideBarToggle($event)"></app-left-side-bar>
-  <app-general-map [open]="open" [displayLayers]="showLayers" [basemap]="bmap"></app-general-map>
-  <app-right-side-bar (onChangeMap)="onChangeBaseMap($event)" ></app-right-side-bar>
-</section>
+<section id="main" class="container">
+  <app-left-side-bar
+    (onMenuSelected)="onMenuSelected($event)"
+    (onMenuToggle)="onMenuToggle($event)"
+    (onSideBarToggle)="onSideBarToggle($event)"
+  ></app-left-side-bar>
 
+  <app-general-map
+    [openMenu]="openMenu"
+    [displayLayers]="showLayers"
+    [basemap]="bmap"
+  ></app-general-map>
+
+  <app-right-side-bar
+    (onChangeMap)="onChangeBaseMap($event)"
+    (onChangeLimits)="onChangeLimit($event)"
+  ></app-right-side-bar>
+</section>

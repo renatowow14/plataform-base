@@ -2,13 +2,13 @@
 @import "src/app/@core/styles/reponsive";
 
 @include media('>=desktop') {
-  
+
   .map {
     height: $height;
     width: $map-width;
     background: $secondary;
   }
-  
+
 }
 
 @include media('>=phone' , '<=tablet') {
@@ -21,3 +21,94 @@
   }
 
 }
+
+.map-container {
+  height: $height;
+  width: $map-width;
+  background: transparent;
+  transition: all 0.8s ease !important;
+  .open-layers{
+    padding-left: 401px;
+  }
+}
+
+:host ::ng-deep .map{
+
+  .coordinates {
+    z-index: 101;
+    position: absolute;
+    bottom: 20px;
+    right: 1em;
+    .coordinates-container{
+      display: flex;
+      color: black;
+      width: 15.5em;
+      background:rgba($primary, 0.6);
+      transition: all 0.5s ease;
+      border-radius: 5px;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
+      i{
+        color: white;
+        font-size: 18px;
+        padding: 1px;
+        background: $primary;
+        line-height: 2em;
+        width: 2em;
+        transition: all 0.5s ease;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        &:hover{
+          cursor: pointer;
+        }
+        &:before{
+          font-size: 25px;
+          padding: 6px;
+        }
+      }
+      .mouse-position{
+        text-align: center;
+        width: 14.5em;
+        color: white;
+        font-size: 14px;
+      }
+    }
+  }
+  .search-point {
+    z-index: 101;
+    position: absolute;
+    bottom: 4.3em;
+    right: 1em;
+    .search-point-container{
+      display: flex;
+      color: black;
+      width: 23.8em;
+      padding: 8px;
+      background: white;
+      transition: all 0.5s ease;
+      border-radius: 5px;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
+      input{
+        width: 10em;
+        padding: 0.5rem;
+      }
+      i{
+        color: $primary;
+        transition: all 0.8s ease;
+        padding: 8px;
+        border-radius: 50px;
+        &:hover {
+          cursor: pointer;
+          background: rgba($primary, 0.2);
+        }
+      }
+    }
+  }
+}
+
+
+
+

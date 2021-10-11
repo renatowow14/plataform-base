@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { OlMapComponent } from './ol-map/ol-map.component';
-import { OlBasemapsComponent } from './ol-basemaps/ol-basemaps.component';
+import { OlLayerComponent } from './ol-layer/ol-layer.component';
 import { OlMapMarkerComponent } from './ol-map-marker/ol-map-marker.component';
 import { OlControlComponent } from './ol-control/ol-control.component';
 
 const COMPONENTS = [
   OlMapComponent,
-  OlBasemapsComponent,
+  OlLayerComponent,
   OlMapMarkerComponent,
   OlControlComponent
 ];
@@ -16,6 +16,9 @@ const COMPONENTS = [
 @NgModule({
   declarations: COMPONENTS,
   exports: COMPONENTS,
+  providers: [
+    OlMapComponent
+  ],
   imports: [
     CommonModule
   ]

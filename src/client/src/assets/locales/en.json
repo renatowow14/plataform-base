@@ -2,6 +2,10 @@
   "left_sidebar":{
     "title": "Menu"
   },
+  "map": {
+    "coordinates": "Coordinates",
+    "find_point": "Find point"
+  },
   "menu": {
     "layers": "Layers",
     "layers_tooltip": "Layers",
@@ -12,6 +16,11 @@
     "filters": "Filters",
     "filters_tooltip": "Filters",
     "options": "Options"
+  },
+  "options": {
+    "basemaps": "Basemaps",
+    "legend": "Legend",
+    "limits": "Limits"
   },
   "primeng": {
     "startsWith": "Starts with",

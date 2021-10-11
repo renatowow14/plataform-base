@@ -1,5 +1,3 @@
-
-
 <section class="left-side-bar desktop">
   <div class="sidebar" >
     <div [class]="open ? 'open ' : '' ">
@@ -17,7 +15,7 @@
         </drag-scroll>
       </ul>
       <ul class="nav-list footer">
-        <drag-scroll class="footer-drag" [scrollbar-hidden]="true" >
+        <div class="footer-drag"  >
           <li>
             <div [pTooltip]="open ? '' : 'menu.filters_tooltip'  | translate " (click)="handleMenu({key: 'filters'})" [class]="displayFilter ? 'menu-active' : ''">
               <i class='fg-map-search'></i>
@@ -35,51 +33,40 @@
               <span class="lng_name">EN</span>
             </div>
           </li>
-        </drag-scroll>
+        </div>
       </ul>
     </div>
   </div>
-  <p-sidebar [appendTo]="leftSidebar" [modal]="false" [(visible)]="layersSideBar"  (onShow)="onSideBarShow()">
+  <p-sidebar
+    [appendTo]="leftSidebar"
+    [modal]="false"
+    [transitionOptions]="'350ms cubic-bezier(0, 0, 0.2, 1)'"
+    [(visible)]="layersSideBar"
+    (onShow)="onSideBarShow()"
+    (visibleChange)="onSideBarToggle.emit(layersSideBar)"
+
+  >
     <h4 class="title">{{ layersTitle }}</h4>
     <p-scrollPanel class="content"  [style]="{width: '100%', height: innerHeigth + 'px'}">
       <div class="menu-item" *ngIf="currentMenu?.key == 'layers'">
         <p-accordion [multiple]="true">
-          <p-accordionTab header="Header 1">
-            Content 1
+          <p-accordionTab header="Produção Agrícola e Agropecuária">
+            Produção Agrícola e Agropecuária
           </p-accordionTab>
-          <p-accordionTab header="Header 2">
-            Content 2
+          <p-accordionTab header="Uso de Agrotóxicos">
+            Uso de Agrotóxicos
           </p-accordionTab>
-          <p-accordionTab header="Header 3">
-            Content 3
+          <p-accordionTab header="Intoxicações por Agrotóxico de Uso Agrícola">
+            Intoxicações por Agrotóxico de Uso Agrícola
           </p-accordionTab>
-          <p-accordionTab header="Header 3">
-            Content 3
+          <p-accordionTab header="Comparações Brasil X União Europeia">
+            Comparações Brasil X União Europeia
           </p-accordionTab>
-
-          <p-accordionTab header="Header 3">
-            Content 3
-          </p-accordionTab>
-          <p-accordionTab header="Header 3">
-            Content 3
-          </p-accordionTab>
-          <p-accordionTab header="Header 3">
-            Content 3
-          </p-accordionTab>
-          <p-accordionTab header="Header 3">
-            Content 3
-          </p-accordionTab>
-          <p-accordionTab header="Header 3">
-            Content 3
-          </p-accordionTab>
-
         </p-accordion>
       </div>
       <div class="menu-item" *ngIf="currentMenu?.key == 'statistics'">
-
       </div>
       <div class="menu-item" *ngIf="currentMenu?.key == 'area'">
-
       </div>
       <div class="menu-item" *ngIf="currentMenu?.key == 'filters'">
         <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
@@ -100,23 +87,23 @@
 
   <ul #leftSidebarMobile class="nav-list">
     <li class="navtab-item" *ngFor="let item of menu" >
-   
+
       <div align="center"  [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate " (click)="handleMenu(item)"   >
         <i style="font-size:28px;width:90px;" class='svg {{item.icon}}'></i>
         <span class="links_name">{{'menu.'+item.key | translate}}</span>
       </div>
 
     </li>
-   
- 
+
+
   </ul>
 
-  
+
 
 </nav>
 
 <p-sidebar [appendTo]="leftSidebarMobile" [modal]="false" [(visible)]="layersSideBar"  (onShow)="onSideBarShowMobile()">
-  
+
   <h4 class="title">{{ layersTitle }}</h4>
   <p-scrollPanel class="content"  [style]="{width: '100%', height: innerHeigth + 'px'}">
     <div class="menu-item" *ngIf="currentMenu?.key == 'layers'">
@@ -147,7 +134,7 @@
       <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
     </div>
     <div class="menu-item" *ngIf="currentMenu?.key == 'options'">
-   
+
     </div>
   </p-scrollPanel>
   <div class="footer">

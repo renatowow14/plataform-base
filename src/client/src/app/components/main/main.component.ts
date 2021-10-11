@@ -1,4 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, SimpleChanges} from '@angular/core';
+import {MapService} from "../services/map.service";
+import {LocalizationService} from "../../@core/internationalization/localization.service";
 
 @Component({
   selector: 'app-main',
@@ -6,15 +8,28 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
-  public open:boolean;
+  public openMenu:boolean;
   public showLayers: boolean;
+  public descriptor = {} as any;
   public bmap : string = 'mapbox';
-  constructor() {
-    this.open = true;
+  public limit : any;
+
+  constructor(
+    private mapService: MapService,
+    private localizationService: LocalizationService
+  ) {
+    this.openMenu = true;
     this.showLayers = false;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.mapService.getDescriptor(this.localizationService.currentLang()).subscribe(descriptor => {
+      this.descriptor = descriptor;
+      console.log(this.descriptor)
+    }, error => {
+      console.log(error)
+    });
+  }
 
   onMenuSelected(item){
     this.showLayers = item.show;
@@ -24,8 +39,16 @@ export class MainComponent implements OnInit {
     this.bmap = bmap;
   }
 
+  onChangeLimit(limit){
+    this.limit = limit;
+  }
+
   onSideBarToggle(isOpen){
-    this.open = isOpen;
+    this.showLayers = isOpen;
+  }
+
+  onMenuToggle(isOpen){
+    this.openMenu = isOpen;
   }
 
 }

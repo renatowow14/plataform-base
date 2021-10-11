@@ -3,14 +3,14 @@
 
 
 @include media('>=phone' , '<=tablet') {
-  
+
   .legend {
     display:none;
   }
-  
+
   :host ::ng-deep .p-sidebar-right{
     width:280px;
-    //background: $background-sidebar;
+    //background: $primary;
     border: none;
     border-radius: 15px;
     /* height:auto !important; */
@@ -18,16 +18,16 @@
     margin-top: 47% !important;
     margin-right: 30px !important;
   }
-  
-  :host ::ng-deep .p-tabview-nav-link { 
+
+  :host ::ng-deep .p-tabview-nav-link {
     -moz-box-shadow: none !important;
     -webkit-box-shadow: none !important;
      box-shadow: none !important;
      z-index: 10000 !important;
-     /* background: lighten($background-sidebar, 10%) !important; 
+     /* background: lighten($primary, 10%) !important;
      color:white !important;
      outline-color:white !important;*/
-  
+
    /*outline-color: transparent;
      outline-style: none;
      outline: 0 none !important;
@@ -35,7 +35,7 @@
      box-shadow: 0 0 0 0 !important;
      border:none !important;
      border-right: none !important; */
-     
+
     font-size: 10px; /*redução do texto do header */
   }
 
@@ -76,14 +76,14 @@
   padding: 5px 12px;
   font-size: 15px;
   color: white;
-  background: $background-sidebar;
+  background: $primary;
   border-radius: 15px 15px 0 0;
   z-index: 9;
   transform: rotate(-90deg);
   transition: all .5s ease;
   cursor: pointer;
   &:hover{
-    color: $background-sidebar;
+    color: $primary;
     background: white ;
   }
 
@@ -120,7 +120,7 @@
 
 .rightSideMenu {
   width:auto !important;
-  background: $background-sidebar;
+  background: $primary;
   padding: 6px 14px;
   border: none;
   height:auto !important;
@@ -130,11 +130,11 @@
 
 
 /* :host ::ng-deep .p-tabview-nav {
-  background: lighten($background-sidebar, 10%) !important;
+  background: lighten($primary, 10%) !important;
 }
 
 :host ::ng-deep .p-tabview-panels {
-  background: lighten($background-sidebar, 10%) !important;
+  background: lighten($primary, 10%) !important;
 }
 */
 
@@ -150,19 +150,19 @@
     padding: 5px 12px;
     font-size: 15px;
     color: white;
-    background: $background-sidebar;
+    background: $primary;
     border-radius: 15px 15px 0 0;
     z-index: 9;
     transform: rotate(-90deg);
     transition: all .5s ease;
     cursor: pointer;
     &:hover{
-      color: $background-sidebar;
+      color: $primary;
       background: white ;
     }
-  
+
   }
-  
+
   //Legendas
   .yellow {
     background-color:yellow;
@@ -174,35 +174,35 @@
     background-color: orange;
   }
   //Fim legendas
-  
+
   //Switchs Buttons
   .inlineSwitchButton{
     display: inline;
   }
   //End Switchs buttons
-  
-  
+
+
   :host ::ng-deep .tabview-custom {
     i, span {
       vertical-align: middle;
     }
-  
+
     span {
       margin: 0 .5rem;
     }
   }
-  
-  
+
+
   :host ::ng-deep .p-tabview-nav-link {
     -moz-box-shadow: none !important;
     -webkit-box-shadow: none !important;
      box-shadow: none !important;
      z-index: 10000 !important;
-  
-     /* background: lighten($background-sidebar, 10%) !important; 
+
+     /* background: lighten($primary, 10%) !important;
      color:white !important;
      outline-color:white !important;*/
-  
+
    /*outline-color: transparent;
      outline-style: none;
      outline: 0 none !important;
@@ -211,24 +211,24 @@
      border:none !important;
      border-right: none !important; */
   }
-  
-  
-  
+
+
+
   .rightSideMenu {
     width:auto !important;
-    background: $background-sidebar;
+    background: $primary;
     padding: 6px 14px;
     border: none;
     height:auto !important;
     margin-top: 16% !important;
     margin-right: 30px !important;
   }
-  
-  
+
+
   :host ::ng-deep .p-sidebar-right{
     width:auto;
-    //background: $background-sidebar;
-  
+    //background: $primary;
+
     border: none;
     border-radius: 15px;
    /* height:auto ; */
@@ -236,13 +236,13 @@
     margin-top: 16%;
     margin-right: 30px ;
   }
-  
+
   /* :host ::ng-deep .p-tabview-nav {
-    background: lighten($background-sidebar, 10%) !important;
+    background: lighten($primary, 10%) !important;
   }
-  
+
   :host ::ng-deep .p-tabview-panels {
-    background: lighten($background-sidebar, 10%) !important;
+    background: lighten($primary, 10%) !important;
   }
   */
 
@@ -260,14 +260,14 @@
   padding: 5px 12px;
   font-size: 15px;
   color: white;
-  background: $background-sidebar;
+  background: $primary;
   border-radius: 15px 15px 0 0;
   z-index: 9;
   transform: rotate(-90deg);
   transition: all .5s ease;
   cursor: pointer;
   &:hover{
-    color: $background-sidebar;
+    color: $primary;
     background: white ;
   }
 
@@ -308,7 +308,7 @@
   -webkit-box-shadow: none !important;
    box-shadow: none !important;
 
-   /* background: lighten($background-sidebar, 10%) !important; 
+   /* background: lighten($primary, 10%) !important;
    color:white !important;
    outline-color:white !important;*/
 
@@ -325,7 +325,7 @@
 
 .rightSideMenu {
   width:auto !important;
-  background: $background-sidebar;
+  background: $primary;
   padding: 6px 14px;
   border: none;
   height:auto !important;
@@ -336,7 +336,7 @@
 
 :host ::ng-deep .p-sidebar-right{
   width:auto;
-  background: lighten($background-sidebar, 75%) !important;
+  background: lighten($primary, 75%) !important;
   padding: 6px 14px;
   border: none;
   border-radius: 15px;
@@ -361,11 +361,11 @@
 }
 
 /* :host ::ng-deep .p-tabview-nav {
-  background: lighten($background-sidebar, 10%) !important;
+  background: lighten($primary, 10%) !important;
 }
 
 :host ::ng-deep .p-tabview-panels {
-  background: lighten($background-sidebar, 10%) !important;
+  background: lighten($primary, 10%) !important;
 }
 */
 

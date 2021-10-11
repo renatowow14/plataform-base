@@ -2,6 +2,10 @@
   "left_sidebar":{
     "title": "Menu"
   },
+  "map": {
+    "coordinates": "Coordenadas",
+    "find_point": "Localizar ponto"
+  },
   "menu": {
     "layers": "Camadas",
     "layers_tooltip": "Camadas do Mapa",
@@ -12,6 +16,11 @@
     "filters": "Filtros",
     "filters_tooltip": "Filtros",
     "options": "Opções"
+  },
+  "options": {
+    "basemaps": "Mapa Base",
+    "legend": "Legenda",
+    "limits": "Limites"
   },
   "primeng": {
     "startsWith": "Starts with",

@@ -12,19 +12,19 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px lighten($background-sidebar, 60%);
+  box-shadow: inset 0 0 5px lighten($primary, 60%);
   border-radius: 10px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background:  lighten($background-sidebar, 40%);
+  background:  lighten($primary, 40%);
   border-radius: 20px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: lighten($background-sidebar, 30%);
+  background: lighten($primary, 30%);
   cursor:pointer;
 }
 
@@ -56,7 +56,7 @@
 //  border: 6px solid rgba(0, 0, 0, 0.18);
 //  border-left: 0;
 //  border-right: 0;
-//  background-color:  lighten($background-sidebar, 60%);
+//  background-color:  lighten($primary, 60%);
 //}
 
 li:after {
@@ -89,31 +89,39 @@ li:after {
     background-color: unset;
   }
   button {
-    background-color: lighten($background-sidebar, 20%);
+    background-color: lighten($primary, 20%);
+
     &:focus {
-      background-color: lighten($background-sidebar, 40%);
+      background-color: lighten($primary, 40%);
     }
 
     &:hover {
-      background-color: lighten($background-sidebar, 40%);
+      background-color: lighten($primary, 40%);
     }
   }
 }
 
+.ol-scale-bar {
+  bottom: 21px !important;
+}
+.ol-scale-text, .ol-scale-step-text {
+  text-shadow: unset !important;
+}
+
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-  color: $background-sidebar !important;;
+  color: $primary !important;;
 }
 
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
-  background: rgba($background-sidebar, 0.5) !important;
+  background: rgba($primary, 0.5) !important;
 }
 
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
-  background: $background-sidebar !important;
+  background: $primary !important;
 }
 
 .ol-scale-line {
-  background-color: lighten($background-sidebar, 50%);
+  background-color: lighten($primary, 50%);
 }
 
 .p-scrollpanel{
@@ -136,6 +144,10 @@ li:after {
       left: 93px;
     }
   }
+}
+
+.ol-layer{
+  transition: all 0.8s ease !important;
 }
 
 

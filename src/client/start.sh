@@ -1,2 +1,2 @@
 #!/bin/bash
-ng serve
+npm run start

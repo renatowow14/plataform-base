@@ -3,12 +3,13 @@ import {LocalizationService} from "../../@core/internationalization/localization
 
 @Component({
   selector: 'app-left-side-bar',
-  templateUrl: './left-side-bar.component.html', 
+  templateUrl: './left-side-bar.component.html',
   styleUrls: ['./left-side-bar.component.scss']
 })
 export class LeftSideBarComponent implements OnInit{
 
   @Output() onSideBarToggle = new EventEmitter<boolean>();
+  @Output() onMenuToggle = new EventEmitter<boolean>();
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onChangeLng = new EventEmitter<any>();
 
@@ -27,7 +28,7 @@ export class LeftSideBarComponent implements OnInit{
 
   constructor(private el: ElementRef, private localizationService: LocalizationService, private renderer: Renderer2) {
 
-    
+
     this.open = true;
     this.layersSideBar = false;
     this.menu = [
@@ -54,7 +55,7 @@ export class LeftSideBarComponent implements OnInit{
         key: 'options',
         icon: 'fg-polygon-hole-pt',
         show: false
-      }        
+      }
 
 
     ];
@@ -72,9 +73,9 @@ export class LeftSideBarComponent implements OnInit{
     }
 
   ngOnInit(): void {
-    
 
-    
+
+
     let navtab = document.querySelector("nav.navtab");
     let navtabItems = document.querySelectorAll("li.navtab-item");
     navtabItems.forEach((navtabItem, activeIndex) =>
@@ -87,7 +88,7 @@ export class LeftSideBarComponent implements OnInit{
           );
       })
 
-      
+
 );
 
 
@@ -140,7 +141,7 @@ export class LeftSideBarComponent implements OnInit{
 
   toggleMenu() {
     this.open = !this.open;
-    this.onSideBarToggle.emit(this.open);
+    this.onMenuToggle.emit(this.open);
   }
 
   handleLang(lng) {
@@ -170,7 +171,7 @@ export class LeftSideBarComponent implements OnInit{
     this.renderer.setProperty(img, 'src', '../../../assets/logos/logo.svg')
     this.renderer.setProperty(img, 'alt', 'Logo')
     this.renderer.appendChild(div, img);
-    this.renderer.insertBefore(this.el.nativeElement.querySelector(".p-sidebar-header"), div, this.el.nativeElement.querySelector(".p-sidebar-close"))
+    this.renderer.insertBefore(this.el.nativeElement.querySelector(".p-sidebar-header"), div, this.el.nativeElement.querySelector(".p-sidebar-close"));
   }
 
   handleMenu(menu) {

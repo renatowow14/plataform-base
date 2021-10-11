@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OlBasemapsComponent } from './ol-basemaps.component';
+import { OlLayerComponent } from './ol-layer.component';
 
-describe('OlBasemapsComponent', () => {
-  let component: OlBasemapsComponent;
-  let fixture: ComponentFixture<OlBasemapsComponent>;
+describe('OlLayerComponent', () => {
+  let component: OlLayerComponent;
+  let fixture: ComponentFixture<OlLayerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OlBasemapsComponent ]
+      declarations: [ OlLayerComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OlBasemapsComponent);
+    fixture = TestBed.createComponent(OlLayerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

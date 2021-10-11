@@ -17,7 +17,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { TooltipModule } from 'primeng/tooltip';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { OlMapsModule } from "../@core/ol-maps/ol-maps.module";
-
+import {InputNumberModule} from 'primeng/inputnumber';
 @NgModule({
   declarations: [ ...routedComponents],
   imports: [
@@ -39,6 +39,7 @@ import { OlMapsModule } from "../@core/ol-maps/ol-maps.module";
     AccordionModule,
     ScrollPanelModule,
     OlMapsModule,
+    InputNumberModule
   ]
 })
 export class ComponentsModule { }

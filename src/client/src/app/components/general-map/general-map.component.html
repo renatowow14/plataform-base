@@ -1,22 +1,47 @@
-<section #map  class="map" [class]="open ? 'open map' : 'map' " >
-  <ol-map
-    [lat]="-16.6958288"
-    [lon]="-49.4443537"
-    [zoom]="4.6"
-    [basemap]="basemap"
-    [width]="'100%'"
-    [height]="'100%'"
-  >
-    <ol-control control="FullScreen">
-    </ol-control>
-    <ol-control control="ScaleLine">
-    </ol-control>
-    <ol-control control="Zoom">
-    </ol-control>
-    <ol-map-marker
-      [lat]="-31.4152767257574"
-      [lon]="-64.18438352450316"
+<section class="" [class]="openMenu ? 'open map-container' : 'map-container' ">
+  <div [class]="displayLayers ? 'open-layers' : '' ">
+    <ol-map
+      [lat]="-16.6958288"
+      [lon]="-49.4443537"
+      [zoom]="4.6"
+      [width]="'100%'"
+      [height]="'100%'"
+      (onReady)="setMap($event)"
     >
-    </ol-map-marker>
-  </ol-map>
+      <ol-control control="FullScreen" [options]="{ source:'main'}">
+      </ol-control>
+      <ol-control control="ScaleLine" [options]="options">
+      </ol-control>
+      <ol-control control="mouseposition" [options]="mousePositionOptions">
+      </ol-control>
+      <ol-control control="Zoom">
+      </ol-control>
+
+      <!-- add graticule-->
+      <ol-layer [layer]="graticule"></ol-layer>
+      <!-- add layers-->
+      <ol-layer *ngFor="let bmap of bmaps" [layer]="bmap.layer"></ol-layer>
+
+      <ol-map-marker  *ngIf="!showFormPoint && lat && lon" [lat]="lat" [lon]="lon" [text]="'Lat: ' + lat + '\nLon: ' + lon"></ol-map-marker>
+      <div *ngIf="showFormPoint" class="search-point">
+        <div class="search-point-container">
+           <span class="p-float-label">
+              <input type="number" id="lat" pInputText [(ngModel)]="lat" >
+              <label for="lat">Latitude</label>
+           </span>
+          <span class="p-float-label">
+              <input type="number" id="lon" pInputText [(ngModel)]="lon" >
+              <label for="lat">Longitude</label>
+           </span>
+          <i (click)="searchPoint()" class='fg-location-on fg-lg'></i>
+        </div>
+      </div>
+      <div class="coordinates">
+        <div class="coordinates-container">
+          <i (click)="showFormPoint = !showFormPoint" [pTooltip]="'map.find_point' | translate" class='fg-search-poi fg-lg'></i>
+          <div id="coordinates-label" class="mouse-position"></div>
+        </div>
+      </div>
+    </ol-map>
+  </div>
 </section>
