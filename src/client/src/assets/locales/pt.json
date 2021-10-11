@@ -10,7 +10,8 @@
     "area": "Área",
     "area_tooltip": "Área de Interesse",
     "filters": "Filtros",
-    "filters_tooltip": "Filtros"
+    "filters_tooltip": "Filtros",
+    "options": "Opções"
   },
   "primeng": {
     "startsWith": "Starts with",

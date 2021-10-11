@@ -2,9 +2,10 @@ import { Component, EventEmitter, OnInit, Output, Input} from '@angular/core';
 import {MenuItem} from 'primeng/api';
 
 
+
 @Component({
   selector: 'app-right-side-bar',
-  templateUrl: './right-side-bar.component.html',
+  templateUrl: './right-side-bar.component.html',  
   styleUrls: ['./right-side-bar.component.scss']
 })
 export class RightSideBarComponent implements OnInit {
@@ -103,7 +104,7 @@ export class RightSideBarComponent implements OnInit {
   this.activeItem = this.items[0];
 
   }
-  toggleMenu(){
+  displayOp(){
     this.displayOpcoes = !this.displayOpcoes;
   }
 

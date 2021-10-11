@@ -35,6 +35,10 @@
   font-family: $font-family-sans-serif;
 }
 
+.p-sidebar-left {
+  z-index: 1003 !important;
+}
+
 
 //
 //::-webkit-scrollbar {

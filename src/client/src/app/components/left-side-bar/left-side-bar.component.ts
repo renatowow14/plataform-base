@@ -3,7 +3,7 @@ import {LocalizationService} from "../../@core/internationalization/localization
 
 @Component({
   selector: 'app-left-side-bar',
-  templateUrl: './left-side-bar.component.html',
+  templateUrl: './left-side-bar.component.html', 
   styleUrls: ['./left-side-bar.component.scss']
 })
 export class LeftSideBarComponent implements OnInit{
@@ -26,6 +26,8 @@ export class LeftSideBarComponent implements OnInit{
   public results: string[];
 
   constructor(private el: ElementRef, private localizationService: LocalizationService, private renderer: Renderer2) {
+
+    
     this.open = true;
     this.layersSideBar = false;
     this.menu = [
@@ -46,7 +48,15 @@ export class LeftSideBarComponent implements OnInit{
         key: 'area',
         icon: 'fg-polygon-hole-pt',
         show: false
-      }
+      },
+      {
+        index: 3,
+        key: 'options',
+        icon: 'fg-polygon-hole-pt',
+        show: false
+      }        
+
+
     ];
     this.displayFilter = false;
     this.descriptor = {
@@ -62,6 +72,25 @@ export class LeftSideBarComponent implements OnInit{
     }
 
   ngOnInit(): void {
+    
+
+    
+    let navtab = document.querySelector("nav.navtab");
+    let navtabItems = document.querySelectorAll("li.navtab-item");
+    navtabItems.forEach((navtabItem, activeIndex) =>
+      navtabItem.addEventListener("click", () => {
+        navtabItems.forEach(navtabItem => navtabItem.classList.remove("active"));
+        navtabItem.classList.add("active");
+          (navtab as HTMLElement).style.setProperty(
+            "--active-index",
+            `${activeIndex}`
+          );
+      })
+
+      
+);
+
+
     this.lang = this.localizationService.currentLang();
     this.innerHeigth = window.innerHeight - 160;
     // this.http.get('service/map/descriptor?lang=' + this.language).subscribe(result => {
@@ -122,6 +151,18 @@ export class LeftSideBarComponent implements OnInit{
   }
 
   onSideBarShow(){
+    const div = this.renderer.createElement('div');
+    const img = this.renderer.createElement('img');
+    this.renderer.addClass(div, 'header');
+    this.renderer.addClass(img, 'logo');
+    this.renderer.setProperty(img, 'src', '../../../assets/logos/logo.svg')
+    this.renderer.setProperty(img, 'alt', 'Logo')
+    this.renderer.appendChild(div, img);
+    this.renderer.insertBefore(this.el.nativeElement.querySelector(".p-sidebar-header"), div, this.el.nativeElement.querySelector(".p-sidebar-close"))
+  }
+
+
+  onSideBarShowMobile(){
     const div = this.renderer.createElement('div');
     const img = this.renderer.createElement('img');
     this.renderer.addClass(div, 'header');

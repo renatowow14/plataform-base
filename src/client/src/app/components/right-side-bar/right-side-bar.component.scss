@@ -4,6 +4,10 @@
 
 @include media('>=phone' , '<=tablet') {
   
+  .legend {
+    display:none;
+  }
+  
   :host ::ng-deep .p-sidebar-right{
     width:280px;
     //background: $background-sidebar;
