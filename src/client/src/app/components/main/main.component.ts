@@ -1,5 +1,6 @@
-import {Component, OnInit, SimpleChanges} from '@angular/core';
+import {Component, AfterViewInit, ChangeDetectorRef} from '@angular/core';
 import {MapService} from "../services/map.service";
+import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 
 @Component({
@@ -7,28 +8,30 @@ import {LocalizationService} from "../../@core/internationalization/localization
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements AfterViewInit {
   public openMenu:boolean;
   public showLayers: boolean;
   public descriptor = {} as any;
   public bmap : string = 'mapbox';
   public limit : any;
+  public map: Map;
 
   constructor(
     private mapService: MapService,
-    private localizationService: LocalizationService
+    private localizationService: LocalizationService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.openMenu = true;
     this.showLayers = false;
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.mapService.getDescriptor(this.localizationService.currentLang()).subscribe(descriptor => {
       this.descriptor = descriptor;
-      console.log(this.descriptor)
     }, error => {
       console.log(error)
     });
+    this.cdRef.detectChanges();
   }
 
   onMenuSelected(item){
@@ -50,6 +53,12 @@ export class MainComponent implements OnInit {
   onMenuToggle(isOpen){
     this.openMenu = isOpen;
   }
+
+  setMap(map){
+    this.map = map;
+    this.cdRef.detectChanges();
+  }
+
 
 }
 

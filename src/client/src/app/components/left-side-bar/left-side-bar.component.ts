@@ -1,4 +1,15 @@
-import {Component, EventEmitter, OnInit, Renderer2, ElementRef, Output, HostListener} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  AfterViewInit,
+  Renderer2,
+  ElementRef,
+  Output,
+  HostListener,
+  Input,
+  SimpleChanges
+} from '@angular/core';
+import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 
 @Component({
@@ -6,8 +17,8 @@ import {LocalizationService} from "../../@core/internationalization/localization
   templateUrl: './left-side-bar.component.html',
   styleUrls: ['./left-side-bar.component.scss']
 })
-export class LeftSideBarComponent implements OnInit{
-
+export class LeftSideBarComponent implements AfterViewInit {
+  @Input() map: Map;
   @Output() onSideBarToggle = new EventEmitter<boolean>();
   @Output() onMenuToggle = new EventEmitter<boolean>();
   @Output() onMenuSelected = new EventEmitter<any>();
@@ -24,6 +35,7 @@ export class LeftSideBarComponent implements OnInit{
   public menuMobile: Menu[];
   public currentMenu: Menu;
   public descriptor: any;
+  public expendGroup: boolean;
 
   public textSearch: string;
   public results: string[];
@@ -81,8 +93,6 @@ export class LeftSideBarComponent implements OnInit{
         icon: 'fg-map-options-alt',
         show: false
       }
-
-
     ];
     this.displayFilter = false;
     this.descriptor = {
@@ -94,31 +104,28 @@ export class LeftSideBarComponent implements OnInit{
       icon: 'fg-layers',
       show: false
     }
+    this.expendGroup = false;
 
-    }
+  }
 
-  ngOnInit(): void {
-
-
-
+  ngAfterViewInit(): void {
     let navtab = document.querySelector("nav.navtab");
     let navtabItems = document.querySelectorAll("li.navtab-item");
     navtabItems.forEach((navtabItem, activeIndex) =>
       navtabItem.addEventListener("click", () => {
         navtabItems.forEach(navtabItem => navtabItem.classList.remove("active"));
         navtabItem.classList.add("active");
-          (navtab as HTMLElement).style.setProperty(
-            "--active-index",
-            `${activeIndex}`
-          );
+        (navtab as HTMLElement).style.setProperty(
+          "--active-index",
+          `${activeIndex}`
+        );
       })
-
-
-);
-
-
+    );
     this.lang = this.localizationService.currentLang();
-    this.innerHeigth = window.innerHeight - 160;
+    this.innerHeigth = window.innerHeight - 170;
+  }
+
+  ngOnInit(): void {
     // this.http.get('service/map/descriptor?lang=' + this.language).subscribe(result => {
     //   this.descriptor = result
     //   this.regionFilterDefault = this.descriptor.regionFilterDefault;
@@ -159,24 +166,30 @@ export class LeftSideBarComponent implements OnInit{
     // });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.innerHeigth = window.innerHeight - 160;
+    this.innerHeigth = window.innerHeight - 170;
   }
 
   toggleMenu() {
     this.open = !this.open;
     this.onMenuToggle.emit(this.open);
+    if(this.map){
+      setTimeout(() => { this.map.updateSize() }, 300);
+    }
   }
 
   handleLang(lng) {
     this.lang = lng;
     this.localizationService.useLanguage(this.lang).then(r => {
-      this.layersTitle = this.localizationService.translate('menu.'+this.currentMenu.key);
+      this.layersTitle = this.localizationService.translate('menu.' + this.currentMenu.key);
     });
   }
 
-  onSideBarShow(){
+  onSideBarShow() {
     const div = this.renderer.createElement('div');
     const img = this.renderer.createElement('img');
     this.renderer.addClass(div, 'header');
@@ -188,7 +201,7 @@ export class LeftSideBarComponent implements OnInit{
   }
 
 
-  onSideBarShowMobile(){
+  onSideBarShowMobile() {
     const div = this.renderer.createElement('div');
     const img = this.renderer.createElement('img');
     this.renderer.addClass(div, 'header');
@@ -200,12 +213,12 @@ export class LeftSideBarComponent implements OnInit{
   }
 
   handleMenu(menu, mobile = false) {
-    
+
     this.menu.map(m => {
       return m.show = false
     });
     this.currentMenu = menu;
-    this.layersTitle = this.localizationService.translate('menu.'+menu.key);
+    this.layersTitle = this.localizationService.translate('menu.' + menu.key);
 
     if (menu.key == 'filters') {
       this.displayFilter = !this.displayFilter;
@@ -216,18 +229,20 @@ export class LeftSideBarComponent implements OnInit{
       this.layersSideBarMobile = true;
      // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
 
-    }else{
+    } else {
       this.layersSideBar = true;
-      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key});
-    } 
-
-  
+      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
+    }
   }
-  
+
   search(event) {
     // this.mylookupservice.getResults(event.query).then(data => {
     //   this.results = data;
     // });
+  }
+
+  setMap(map) {
+    this.map = map;
   }
 }
 

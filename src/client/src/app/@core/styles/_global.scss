@@ -4,7 +4,7 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 3px;
   transition: all 0.5s ease;
   cursor:pointer;
   border-radius: 20px;
@@ -18,14 +18,16 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
+  transition: all 0.5s ease;
   background:  lighten($primary, 40%);
   border-radius: 20px;
 }
 
+
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: lighten($primary, 30%);
-  cursor:pointer;
+  cursor:pointer !important;
 }
 
 * {

@@ -18,8 +18,10 @@ export class GeneralMapComponent implements OnInit {
 
   @Input()  displayLayers = true as boolean;
   @Input()  openMenu = true as boolean;
-  @Output() onHide = new EventEmitter<any>();
   @Input()  basemap: any;
+  @Output() onHide = new EventEmitter<any>();
+  @Output() mapInstance = new EventEmitter<Map>();
+
 
   public innerHeigth: number;
   public descriptor = {} as any;
@@ -167,14 +169,13 @@ export class GeneralMapComponent implements OnInit {
         return this.formataCoordenada(c);
       },
       className: 'mouse-position',
-      target:'coordinates-label',
-      undefinedHTML: '----------------------------------'
+      placeholder: false,
+      target:'coordinates-label'
     }
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes)
     if(this.map && changes.hasOwnProperty('basemap')){
       const bmap = changes.basemap.currentValue;
       this.map.getLayers().forEach(layer => {
@@ -202,6 +203,7 @@ export class GeneralMapComponent implements OnInit {
 
   setMap(map){
     this.map = map;
+    this.mapInstance.emit(map);
   }
 
   hideLayers(){
