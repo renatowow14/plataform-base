@@ -65,6 +65,9 @@
 
   :host ::ng-deep .p-sidebar-left {
     width: 100%;
+    height:calc(100% - 100px);
+
+   
     position: fixed;
     background: lighten($background-sidebar, 75%) !important;
   
@@ -115,7 +118,7 @@
   --navtab-overlay-width: calc(var(--navtab-item-width) + 30px); */
   --active-index: 0;
   display: grid;
-
+  z-index:9999;
   position: fixed;
   left: 0;
   bottom: 0;
@@ -228,7 +231,7 @@
 
  @include media('>=tablet', '<=desktop') {
 
-  .desktop {
+  .mobile {
     display:none;
   }
 

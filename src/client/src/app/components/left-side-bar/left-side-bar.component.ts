@@ -21,6 +21,7 @@ export class LeftSideBarComponent implements OnInit{
   public layersTitle: string;
   public lang: string;
   public menu: Menu[];
+  public menuMobile: Menu[];
   public currentMenu: Menu;
   public descriptor: any;
 
@@ -51,11 +52,33 @@ export class LeftSideBarComponent implements OnInit{
         key: 'area',
         icon: 'fg-polygon-hole-pt',
         show: false
+      }
+
+    ];
+
+    this.menuMobile = [
+      {
+        index: 0,
+        key: 'layers',
+        icon: 'fg-layers',
+        show: false
+      },
+      {
+        index: 1,
+        key: 'statistics',
+        icon: 'bx bx-bar-chart-alt',
+        show: false
+      },
+      {
+        index: 2,
+        key: 'area',
+        icon: 'fg-polygon-hole-pt',
+        show: false
       },
       {
         index: 3,
         key: 'options',
-        icon: 'fg-polygon-hole-pt',
+        icon: 'fg-map-options-alt',
         show: false
       }
 
@@ -189,18 +212,16 @@ export class LeftSideBarComponent implements OnInit{
     } else {
       this.menu[menu.index].show = true;
     }
-    if (mobile) {
+     if (mobile) {
       this.layersSideBarMobile = true;
-      this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
-      console.log(menu);
+     // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
 
     }else{
       this.layersSideBar = true;
-      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
-      console.log(menu);
-    }
-    
-;
+      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key});
+    } 
+
+  
   }
   
   search(event) {
