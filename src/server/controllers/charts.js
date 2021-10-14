@@ -70,7 +70,7 @@ module.exports = function(app) {
 
         var chartResult = [{
                 "id": "uso_solo_terraclass",
-                "title": "Terraclas",
+                "title": "Terraclass",
                 "getText": function(chart) {
 
                     var label = chart['indicators'][0]["label"]
