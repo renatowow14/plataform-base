@@ -46,245 +46,58 @@
     [(visible)]="layersSideBar"
     (onShow)="onSideBarShow()"
     (visibleChange)="onSideBarToggle.emit(layersSideBar)"
-
   >
     <h4 class="title">{{ layersTitle }}</h4>
     <div class="content" [style]="{width: '100%', height: innerHeigth + 'px'}">
       <div class="menu-item" *ngIf="currentMenu?.key == 'layers'">
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
+        <div *ngFor="let group of descriptor.groups">
+          <div [class]="group.group_expanded ? 'group-card group-card-active' :'group-card'">
+            <div (click)="group.group_expanded = !group.group_expanded" class="abstract">
+              <span>
+                <i class='bx bxs-layer'></i>
+                <div class="group-label">{{group.label}}</div>
+              </span>
+              <i [class]="group.group_expanded ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+            </div>
+            <div class="details">
+              <div class="details-inner">
+                <div *ngFor="let layer of group.layers; let i = index" class="layer-card">
+                  <div class="layer-card-header">
+                    <p-inputSwitch [(ngModel)]="layer.visible"></p-inputSwitch>
+                    <h5>{{layer.label}}</h5>
+                    <i class='bx bxs-info-circle' ></i>
+                  </div>
+                  <div class="layer-card-body">
+                    <div class="layer-card-thumbnail">
+                      <img alt="{{layer.label}}" src="https://ows.lapig.iesa.ufg.br/ows?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&layers=uso_solo_terraclass,regions_cepf_realce_maior&bbox=-53.2607485164173,-19.45694323783,-45.8974523191428,-12.3861700574049&TRANSPARENT=TRUE&srs=EPSG:4674&width=400&height=400&format=image/png&styles=&ENHANCE=TRUE&MSFILTER=uf%20ilike%20%27go%27&MSREGION=type=%27uf%27%20and%20text%20ilike%20%27go%27">
+                    </div>
+                    <div class="layer-card-content">
+                      <div *ngIf="layer.hasOwnProperty('types')">
+                        <span class="p-float-label">
+                          <p-dropdown id="types-{{i}}" *ngIf="layer.types.length > 0" [options]="layer.types" [(ngModel)]="layer.selectedType" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                          <label for="types-{{i}}">{{layer.typeLabel}}</label>
+                        </span>
+                        <span *ngIf="layer.types.hasOwnProperty('times')" class="p-float-label">
+                          <p-dropdown id="types-times-{{i}}" *ngIf="layer.types.times.length > 0" [options]="layer.types.times" [(ngModel)]="layer.timeSelected" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                          <label for="types-times-{{i}}">{{layer.timeLabel}}</label>
+                        </span>
+                      </div>
+                      <span class="p-float-label" *ngIf="layer.hasOwnProperty('times')">
+                          <p-dropdown id="times-{{i}}" *ngIf="layer.times.length > 0" [options]="layer.times" [(ngModel)]="layer.timeSelected" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                          <label for="times-{{i}}">{{layer.timeLabel}}</label>
+                      </span>
+                      <div class="ol-layer-options-transparency">
+<!--                        <input (mousemove)="onChangeTransparency()" class="range" type="range" min="0" max="100" [(ngModel)]="layerOpacity">-->
+                        <input  class="range" type="range" min="0" max="100" >
+                        <br> <span>Transparência</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-          <div (click)="expendGroup = !expendGroup" class="abstract">
-            <h3>This is what you see by default.</h3>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <h3>Details</h3>
-              <p>This additional content gets revealed on hover.</p>
-            </div>
-          </div>
-        </div>
-        <!--        <p-accordion [multiple]="true">-->
-        <!--          <p-accordionTab header="Produção Agrícola e Agropecuária">-->
-        <!--            Produção Agrícola e Agropecuária-->
-        <!--          </p-accordionTab>-->
-        <!--          <p-accordionTab header="Uso de Agrotóxicos">-->
-        <!--            Uso de Agrotóxicos-->
-        <!--          </p-accordionTab>-->
-        <!--          <p-accordionTab header="Intoxicações por Agrotóxico de Uso Agrícola">-->
-        <!--            Intoxicações por Agrotóxico de Uso Agrícola-->
-        <!--          </p-accordionTab>-->
-        <!--          <p-accordionTab header="Comparações Brasil X União Europeia">-->
-        <!--            Comparações Brasil X União Europeia-->
-        <!--          </p-accordionTab>-->
-        <!--        </p-accordion>-->
       </div>
       <div class="menu-item" *ngIf="currentMenu?.key == 'statistics'">
       </div>
@@ -309,22 +122,25 @@
 <nav class="navtab mobile">
 
   <ul #leftSidebarMobile class="nav-list">
-    <li class="navtab-item" *ngFor="let item of menuMobile" >
+    <li class="navtab-item" *ngFor="let item of menuMobile">
     <li class="navtab-item" *ngFor="let item of menu">
 
-    <div align="center"  [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate " (click)="handleMenu(item, true)"   >
-      <div align="center" [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate " (click)="handleMenu(item)">
-        <i style="font-size:28px;width:90px;" class='svg {{item.icon}}'></i>
-        <span class="links_name">{{'menu.' + item.key | translate}}</span>
+      <div align="center" [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate "
+           (click)="handleMenu(item, true)">
+        <div align="center" [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate "
+             (click)="handleMenu(item)">
+          <i style="font-size:28px;width:90px;" class='svg {{item.icon}}'></i>
+          <span class="links_name">{{'menu.' + item.key | translate}}</span>
+        </div>
       </div>
-    </div>
     </li>
   </ul>
 
 </nav>
 
 
-<p-sidebar [appendTo]="leftSidebarMobile" [modal]="false" [(visible)]="layersSideBarMobile"  (onShow)="onSideBarShowMobile()">
+<p-sidebar [appendTo]="leftSidebarMobile" [modal]="false" [(visible)]="layersSideBarMobile"
+           (onShow)="onSideBarShowMobile()">
   <h4 class="title">{{ layersTitle }}</h4>
   <p-scrollPanel class="content" [style]="{width: '100%', height: innerHeigth + 'px'}">
     <div class="menu-item" *ngIf="currentMenu?.key == 'layers'">

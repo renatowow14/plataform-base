@@ -11,14 +11,18 @@ import {
 } from '@angular/core';
 import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
+import { MenuItem } from 'primeng/api'
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-left-side-bar',
   templateUrl: './left-side-bar.component.html',
-  styleUrls: ['./left-side-bar.component.scss']
+  styleUrls: ['./left-side-bar.component.scss'],
+  providers: [MessageService]
 })
 export class LeftSideBarComponent implements AfterViewInit {
   @Input() map: Map;
+  @Input() descriptor: any;
   @Output() onSideBarToggle = new EventEmitter<boolean>();
   @Output() onMenuToggle = new EventEmitter<boolean>();
   @Output() onMenuSelected = new EventEmitter<any>();
@@ -34,13 +38,20 @@ export class LeftSideBarComponent implements AfterViewInit {
   public menu: Menu[];
   public menuMobile: Menu[];
   public currentMenu: Menu;
-  public descriptor: any;
   public expendGroup: boolean;
 
   public textSearch: string;
   public results: string[];
 
-  constructor(private el: ElementRef, private localizationService: LocalizationService, private renderer: Renderer2) {
+  public groupLayers: any[];
+  public
+
+  constructor(
+    private el: ElementRef,
+    private localizationService: LocalizationService,
+    private renderer: Renderer2,
+    private messageService: MessageService
+  ) {
 
 
     this.open = true;
@@ -65,9 +76,7 @@ export class LeftSideBarComponent implements AfterViewInit {
         icon: 'fg-polygon-hole-pt',
         show: false
       }
-
     ];
-
     this.menuMobile = [
       {
         index: 0,
@@ -95,9 +104,7 @@ export class LeftSideBarComponent implements AfterViewInit {
       }
     ];
     this.displayFilter = false;
-    this.descriptor = {
-      "groups": []
-    }
+
     this.currentMenu = {
       index: 0,
       key: 'layers',
@@ -125,48 +132,13 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.innerHeigth = window.innerHeight - 170;
   }
 
-  ngOnInit(): void {
-    // this.http.get('service/map/descriptor?lang=' + this.language).subscribe(result => {
-    //   this.descriptor = result
-    //   this.regionFilterDefault = this.descriptor.regionFilterDefault;
-    //
-    //   for (let groups of this.descriptor.groups) {
-    //
-    //     for (let layers of groups.layers) {
-    //       if (layers.types) {
-    //         for (let types of layers.types) {
-    //           this.layersTypes.push(types)
-    //         }
-    //       } else {
-    //         this.layersTypes.push(layers);
-    //       }
-    //       // this.layersTypes.sort(function (e1, e2) {
-    //       // 	return (e2.order - e1.order)
-    //       // });
-    //
-    //       this.layersNames.push(layers);
-    //     }
-    //
-    //   }
-    //   for (let basemap of this.descriptor.basemaps) {
-    //     for (let types of basemap.types) {
-    //       this.basemapsNames.push(types)
-    //     }
-    //   }
-    //
-    //   for (let limits of this.descriptor.limits) {
-    //     for (let types of limits.types) {
-    //       this.limitsNames.push(types)
-    //     }
-    //   }
-    //
-    //   this.createMap();
-    //   this.updateCharts();
-    //   this.addPoints();
-    // });
-  }
-
   ngOnChanges(changes: SimpleChanges) {
+    console.log('LEFT SIDE BAR', changes);
+    if (changes.hasOwnProperty('descriptor')) {
+      if (changes.descriptor) {
+
+      }
+    }
   }
 
   @HostListener('window:resize', ['$event'])
@@ -177,8 +149,10 @@ export class LeftSideBarComponent implements AfterViewInit {
   toggleMenu() {
     this.open = !this.open;
     this.onMenuToggle.emit(this.open);
-    if(this.map){
-      setTimeout(() => { this.map.updateSize() }, 300);
+    if (this.map) {
+      setTimeout(() => {
+        this.map.updateSize()
+      }, 300);
     }
   }
 
@@ -225,9 +199,9 @@ export class LeftSideBarComponent implements AfterViewInit {
     } else {
       this.menu[menu.index].show = true;
     }
-     if (mobile) {
+    if (mobile) {
       this.layersSideBarMobile = true;
-     // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
+      // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
 
     } else {
       this.layersSideBar = true;
@@ -243,6 +217,30 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   setMap(map) {
     this.map = map;
+  }
+
+  layerMenu(layer) {
+    let menu: MenuItem[];
+    menu = [
+      {
+        label: 'File',
+        icon: 'pi pi-fw pi-plus'
+      },
+      {
+        label: 'File',
+        icon: 'pi pi-fw pi-plus'
+      },
+      {
+        label: 'File',
+        icon: 'pi pi-fw pi-plus'
+      },
+      {
+        label: 'File',
+        icon: 'pi pi-fw pi-plus'
+      }
+    ];
+
+    return menu
   }
 }
 

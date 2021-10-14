@@ -50,7 +50,7 @@ export class OlMapComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.loading = true;
+
   }
 
   ngAfterViewInit(): void {
@@ -69,10 +69,10 @@ export class OlMapComponent implements OnInit, AfterViewInit {
 
     this.onReady.emit(this.map);
 
-    this.map.on('postrender', function(){
-      console.log('aiuhasuidhuaishd')
-      self.loading = false;
-    });
+    // this.map.on('postrender', function(){
+    //   console.log('aiuhasuidhuaishd')
+    //   self.loading = false;
+    // });
   }
 
   private setSize() {

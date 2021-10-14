@@ -19,6 +19,8 @@ export class RightSideBarComponent implements OnInit {
   items: MenuItem[];
   activeItem: MenuItem;
 
+  @Input() descriptor: any;
+
   @Output() onChangeMap = new EventEmitter<any>();
   @Output() onChangeLimits = new EventEmitter<any>();
 

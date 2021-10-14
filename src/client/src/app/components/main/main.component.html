@@ -1,12 +1,14 @@
 <section id="main" class="container">
   <app-left-side-bar
     [map]="map"
+    [descriptor]="descriptor"
     (onMenuSelected)="onMenuSelected($event)"
     (onMenuToggle)="onMenuToggle($event)"
     (onSideBarToggle)="onSideBarToggle($event)"
   ></app-left-side-bar>
 
   <app-general-map
+    [descriptor]="descriptor"
     [openMenu]="openMenu"
     [displayLayers]="showLayers"
     [basemap]="bmap"
@@ -14,6 +16,7 @@
   ></app-general-map>
 
   <app-right-side-bar
+    [descriptor]="descriptor"
     (onChangeMap)="onChangeBaseMap($event)"
     (onChangeLimits)="onChangeLimit($event)"
   ></app-right-side-bar>

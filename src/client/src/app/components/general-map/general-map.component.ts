@@ -1,8 +1,8 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import TileLayer from "ol/layer/Tile";
-import { BingMaps, XYZ } from "ol/source";
-import { Graticule } from "ol/layer";
-import { Stroke }  from "ol/style";
+import {BingMaps, XYZ} from "ol/source";
+import {Graticule} from "ol/layer";
+import {Stroke} from "ol/style";
 import Map from 'ol/Map';
 import {Coordinate, createStringXY, toStringHDMS} from "ol/coordinate";
 import {toLonLat} from "ol/proj";
@@ -16,22 +16,24 @@ import {LocalizationService} from "../../@core/internationalization/localization
 
 export class GeneralMapComponent implements OnInit {
 
-  @Input()  displayLayers = true as boolean;
-  @Input()  openMenu = true as boolean;
-  @Input()  basemap: any;
+  @Input() displayLayers = true as boolean;
+  @Input() openMenu = true as boolean;
+  @Input() descriptor: any;
+  @Input() basemap: any;
   @Output() onHide = new EventEmitter<any>();
   @Output() mapInstance = new EventEmitter<Map>();
 
 
   public innerHeigth: number;
-  public descriptor = {} as any;
   public options: any = {}
   public bmaps = [] as any[];
+  public layers = [] as any[];
+  public limits = [] as any[];
   public graticule: Graticule;
   public map: Map;
   public mousePositionOptions: any;
   public showFormPoint: boolean;
-  public lat:number;
+  public lat: number;
   public lon: number;
   private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(8);
 
@@ -43,11 +45,11 @@ export class GeneralMapComponent implements OnInit {
       bar: true,
       text: true,
       minWidth: 100,
-    }
+    };
     this.bmaps = [
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'mapbox',
             type: 'bmap',
             visible: true,
@@ -62,7 +64,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'bing',
             type: 'bmap',
             visible: false,
@@ -78,7 +80,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'google',
             type: 'bmap',
             visible: false,
@@ -92,7 +94,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'estradas',
             type: 'bmap',
             visible: false,
@@ -108,7 +110,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'relevo',
             type: 'bmap',
             visible: false,
@@ -123,7 +125,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'planet',
             type: 'bmap',
             visible: false,
@@ -131,14 +133,13 @@ export class GeneralMapComponent implements OnInit {
           source: new XYZ({
             url:
               'https://tiles{0-3}.planet.com/basemaps/v1/planet-tiles/global_quarterly_2021q2_mosaic/gmap/{z}/{x}/{y}.png?api_key=d6f957677fbf40579a90fb3a9c74be1a',
-
           }),
           visible: false
         })
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'stadia',
             type: 'bmap',
             visible: false,
@@ -151,7 +152,7 @@ export class GeneralMapComponent implements OnInit {
           visible: false
         })
       }
-    ]
+    ];
     this.graticule = new Graticule({
       // the style to use for the lines, optional.
       zIndex: 10001,
@@ -170,24 +171,26 @@ export class GeneralMapComponent implements OnInit {
       },
       className: 'mouse-position',
       placeholder: false,
-      target:'coordinates-label'
+      target: 'coordinates-label'
     }
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.map && changes.hasOwnProperty('basemap')){
+    if (this.map && changes.hasOwnProperty('basemap')) {
       const bmap = changes.basemap.currentValue;
       this.map.getLayers().forEach(layer => {
         const properties = layer.getProperties();
-        if(properties.key == bmap.key && properties.type == bmap.type){
+        if (properties.key == bmap.key && properties.type == bmap.type) {
           layer.setVisible(true);
-        } else if(properties.type == bmap.type){
+        } else if (properties.type == bmap.type) {
           layer.setVisible(false);
         }
       })
     }
-    setTimeout(() => { this.map.updateSize() });
+
+    setTimeout(() => {
+      this.map.updateSize()
+    });
   }
 
   ngOnInit(): void {
@@ -197,21 +200,23 @@ export class GeneralMapComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.innerHeigth = window.innerHeight;
-    setTimeout(() => { this.map.updateSize() });
+    setTimeout(() => {
+      this.map.updateSize()
+    });
   }
 
 
-  setMap(map){
+  setMap(map) {
     this.map = map;
     this.mapInstance.emit(map);
   }
 
-  hideLayers(){
+  hideLayers() {
     this.onHide.emit();
   }
 
-  searchPoint(){
-    if(this.lat && this.lon){
+  searchPoint() {
+    if (this.lat && this.lon) {
       this.showFormPoint = !this.showFormPoint;
     }
   }

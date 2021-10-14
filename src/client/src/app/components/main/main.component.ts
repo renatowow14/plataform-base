@@ -1,4 +1,4 @@
-import {Component, AfterViewInit, ChangeDetectorRef} from '@angular/core';
+import {Component, AfterViewInit, ChangeDetectorRef, Output, EventEmitter} from '@angular/core';
 import {MapService} from "../services/map.service";
 import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
@@ -11,10 +11,10 @@ import {LocalizationService} from "../../@core/internationalization/localization
 export class MainComponent implements AfterViewInit {
   public openMenu:boolean;
   public showLayers: boolean;
-  public descriptor = {} as any;
   public bmap : string = 'mapbox';
   public limit : any;
   public map: Map;
+  public descriptor: any;
 
   constructor(
     private mapService: MapService,
@@ -23,6 +23,9 @@ export class MainComponent implements AfterViewInit {
   ) {
     this.openMenu = true;
     this.showLayers = false;
+    this.descriptor = {};
+
+
   }
 
   ngAfterViewInit(): void {
@@ -58,7 +61,5 @@ export class MainComponent implements AfterViewInit {
     this.map = map;
     this.cdRef.detectChanges();
   }
-
-
 }
 
