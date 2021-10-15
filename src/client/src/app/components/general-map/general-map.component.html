@@ -23,7 +23,8 @@
       <!-- add basemaps-->
       <ol-layer *ngFor="let bmap of bmaps" [layer]="bmap.layer"></ol-layer>
 
-<!--      <ol-layer *ngFor="let bmap of bmaps" [layer]="bmap.layer"></ol-layer>-->
+      <!-- add layers-->
+      <ol-layer *ngFor="let layer of layers" [layer]="layer"></ol-layer>
 
       <ol-map-marker  *ngIf="!showFormPoint && lat && lon" [lat]="lat" [lon]="lon" [text]="'Lat: ' + lat + '\nLon: ' + lon"></ol-map-marker>
       <div *ngIf="showFormPoint" class="search-point">

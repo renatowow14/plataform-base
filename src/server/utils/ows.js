@@ -1,13 +1,13 @@
-var config = require('../config.js')
+const config = require('../config.js')
 
 module.exports = class Ows {
 
     constructor(
         typeShape
     ) {
-        this._url = config["ows_host"];
+        this._url = process.env.OWS;
 
-        if (typeShape == 'shp') {
+        if (typeShape === 'shp') {
             this._request = "GetFeature";
             this._service = "wfs";
             this._version = "1.0.0";
@@ -19,7 +19,7 @@ module.exports = class Ows {
             this._width = 1;
             this._height = 1;
             this._typeShape = typeShape;
-        } else if (typeShape == 'tif') {
+        } else if (typeShape === 'tif') {
             this._request = "GetCoverage";
             this._service = "wcs";
             this._version = "2.0.0";
@@ -142,7 +142,7 @@ module.exports = class Ows {
         url += (this._typeName != null || this._typeName != undefined) ? "&" + this.typeNameLabel + "=" + this._typeName : "";
         url += (this._outPutFormat != null || this._outPutFormat != undefined) ? "&" + this.typeOutputFormat + "=" + this._outPutFormat : "";
 
-        if (this._typeShape == 'shp') {
+        if (this._typeShape === 'shp') {
             if (this._msFilter.length > 0) {
 
                 url += "&MSFILTER=";
@@ -151,13 +151,13 @@ module.exports = class Ows {
 
                 this._msFilter.forEach(function(item, index) {
                     if (index < length) {
-                        if (item._attr == "default") {
+                        if (item._attr === "default") {
                             url += item._value + "%20AND%20";
                         } else {
                             url += item._attr + "=" + item._value + "%20AND%20";
                         }
                     } else {
-                        if (item._attr == "default") {
+                        if (item._attr === "default") {
                             url += item._value
                         } else {
                             url += item._attr + "=" + item._value;
@@ -165,10 +165,9 @@ module.exports = class Ows {
                     }
                 });
             }
-            url += (this._width != null || this._width != undefined) ? "&WIDTH=" + this._width : "";
-            url += (this._height != null || this._height != undefined) ? "&HEIGHT=" + this._height : "";
+            url += (this._width != null || this._width !== undefined) ? "&WIDTH=" + this._width : "";
+            url += (this._height != null || this._height !== undefined) ? "&HEIGHT=" + this._height : "";
         }
-
 
         console.log("URL - ", url)
         return url;

@@ -21,7 +21,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ImageModule } from 'primeng/image';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
-
+import { DialogModule } from 'primeng/dialog';
 @NgModule({
   declarations: [ ...routedComponents],
   imports: [
@@ -46,7 +46,8 @@ import { MenuModule } from 'primeng/menu';
     InputNumberModule,
     ImageModule,
     MenuModule,
-    ToastModule
+    ToastModule,
+    DialogModule
   ]
 })
 export class ComponentsModule { }

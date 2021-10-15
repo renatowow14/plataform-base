@@ -57,43 +57,70 @@
                 <i class='bx bxs-layer'></i>
                 <div class="group-label">{{group.label}}</div>
               </span>
-              <i [class]="group.group_expanded ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+              <i [class]="group.group_expanded ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
             </div>
             <div class="details">
               <div class="details-inner">
                 <div *ngFor="let layer of group.layers; let i = index" class="layer-card">
                   <div class="layer-card-header">
-                    <p-inputSwitch [(ngModel)]="layer.visible"></p-inputSwitch>
+                    <p-inputSwitch (onChange)="changeLayerVisibility(layer)" [id]=layer.id (ngModelChange)="layer.visible = !layer.visible" [(ngModel)]="layer.visible"></p-inputSwitch>
                     <h5>{{layer.label}}</h5>
-                    <i class='bx bxs-info-circle' ></i>
+                    <i *ngIf="enableMetadata(layer)" class='bx bxs-info-circle' (click)="showMetadata(layer)"></i>
                   </div>
-                  <div class="layer-card-body">
-                    <div class="layer-card-thumbnail">
-                      <img alt="{{layer.label}}" src="https://ows.lapig.iesa.ufg.br/ows?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&layers=uso_solo_terraclass,regions_cepf_realce_maior&bbox=-53.2607485164173,-19.45694323783,-45.8974523191428,-12.3861700574049&TRANSPARENT=TRUE&srs=EPSG:4674&width=400&height=400&format=image/png&styles=&ENHANCE=TRUE&MSFILTER=uf%20ilike%20%27go%27&MSREGION=type=%27uf%27%20and%20text%20ilike%20%27go%27">
-                    </div>
+                  <div class="layer-card-body" *ngIf="layer.visible">
+<!--                    <div class="layer-card-thumbnail">-->
+<!--                      <img alt="{{layer.label}}" src="https://ows.lapig.iesa.ufg.br/ows?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&layers=uso_solo_terraclass,regions_cepf_realce_maior&bbox=-53.2607485164173,-19.45694323783,-45.8974523191428,-12.3861700574049&TRANSPARENT=TRUE&srs=EPSG:4674&width=400&height=400&format=image/png&styles=&ENHANCE=TRUE&MSFILTER=uf%20ilike%20%27go%27&MSREGION=type=%27uf%27%20and%20text%20ilike%20%27go%27">-->
+<!--                    </div>-->
                     <div class="layer-card-content">
-                      <div *ngIf="layer.hasOwnProperty('types')">
-                        <span class="p-float-label">
-                          <p-dropdown id="types-{{i}}" *ngIf="layer.types.length > 0" [options]="layer.types" [(ngModel)]="layer.selectedType" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
-                          <label for="types-{{i}}">{{layer.typeLabel}}</label>
+                      <div *ngIf="layer.types">
+                        <span class="p-float-label" *ngFor="let type of layer.types" [hidden]="type.value != layer.selectedType">
+                          <p-dropdown id="types-{{type.value}}" *ngIf="layer.types.length > 0" [options]="layer.types" [(ngModel)]="layer.selectedType" (onChange)="changeLayerVisibility(type)" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                          <label for="types-{{type.value}}" >{{type.typeLabel}}</label>
                         </span>
-                        <span *ngIf="layer.types.hasOwnProperty('times')" class="p-float-label">
-                          <p-dropdown id="types-times-{{i}}" *ngIf="layer.types.times.length > 0" [options]="layer.types.times" [(ngModel)]="layer.timeSelected" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
-                          <label for="types-times-{{i}}">{{layer.timeLabel}}</label>
+                        <span *ngFor="let type of layer.types" [hidden]="type.value != layer.selectedType" class="p-float-label">
+                          <p-dropdown id="types-times-{{type.value}}" *ngIf="type.times" [options]="type.times" [(ngModel)]="type.timeSelected" (onChange)="changeLayerVisibility(type, true)" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                          <label for="types-times-{{type.value}}">{{type.timeLabel}}</label>
                         </span>
                       </div>
-                      <span class="p-float-label" *ngIf="layer.hasOwnProperty('times')">
-                          <p-dropdown id="times-{{i}}" *ngIf="layer.times.length > 0" [options]="layer.times" [(ngModel)]="layer.timeSelected" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                      <span class="p-float-label" *ngIf="layer.times">
+                          <p-dropdown id="times-{{i}}" *ngIf="layer.times.length > 0" [options]="layer.times" [(ngModel)]="layer.timeSelected" (onChange)="changeLayerVisibility(layer, true)" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
                           <label for="times-{{i}}">{{layer.timeLabel}}</label>
                       </span>
-                      <div class="ol-layer-options-transparency">
-<!--                        <input (mousemove)="onChangeTransparency()" class="range" type="range" min="0" max="100" [(ngModel)]="layerOpacity">-->
-                        <input  class="range" type="range" min="0" max="100" >
+                      <div class="layer-transparency">
+                        <input (mousemove)="onChangeTransparency(layer, $event)" class="range" type="range" min="0" max="100" value="0">
                         <br> <span>Transparência</span>
                       </div>
                     </div>
+                    <div class="layer-exports" *ngIf="layer.downloadSHP || layer.downloadCSV">
+                      <div *ngIf="loadingDownload" class="loader"></div>
+                      <button pButton pRipple type="button" label="SHP" (click)="download('shp', layer, $event)" *ngIf="layer.downloadSHP && !loadingDownload" class="p-button-raised p-button-text"></button>
+                      <button pButton pRipple type="button" label="CSV" (click)="download('csv', layer, $event)" *ngIf="layer.downloadCSV && !loadingDownload" class="p-button-raised p-button-text"></button>
+                    </div>
                   </div>
                 </div>
+                <p-dialog
+                  [maximizable]="true"
+                  [baseZIndex]="10000"
+                  [draggable]="false"
+                  [resizable]="false"
+                  [appendTo]="'body'"
+                  [modal]="true"
+                  [header]="metadata.title"
+                  [(visible)]="displayMetadata"
+                  [style]="{width: '50vw'}"
+                >
+                  <table>
+                    <tbody>
+                    <tr class="table-row" *ngFor="let data of metadata.data">
+                      <td class="title-row"><b>{{data.title}}</b></td>
+                      <td *ngIf="!isDetails(data.title); else linkDetails" class="content-row">{{data.description}}</td>
+                      <ng-template #linkDetails>
+                        <td class="content-row" [innerHTML]="data.description"></td>
+                      </ng-template>
+                    </tr>
+                    </tbody>
+                  </table>
+                </p-dialog>
               </div>
             </div>
           </div>
