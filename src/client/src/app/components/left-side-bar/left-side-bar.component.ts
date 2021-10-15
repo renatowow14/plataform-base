@@ -12,6 +12,7 @@ import {
 import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 import { MenuItem } from 'primeng/api'
+import {Menu, Metadata} from "../interfaces";
 import {MessageService} from "primeng/api";
 
 @Component({
@@ -23,10 +24,14 @@ import {MessageService} from "primeng/api";
 export class LeftSideBarComponent implements AfterViewInit {
   @Input() map: Map;
   @Input() descriptor: any;
+  @Input() loadingDownload: any;
   @Output() onSideBarToggle = new EventEmitter<boolean>();
   @Output() onMenuToggle = new EventEmitter<boolean>();
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onChangeLng = new EventEmitter<any>();
+  @Output() onLayerChangeVisibility = new EventEmitter<any>();
+  @Output() onLayerChangeTransparency = new EventEmitter<any>();
+  @Output() onDownload = new EventEmitter<any>();
 
   public displayFilter: boolean;
   public open: boolean;
@@ -44,7 +49,9 @@ export class LeftSideBarComponent implements AfterViewInit {
   public results: string[];
 
   public groupLayers: any[];
-  public
+
+  public metadata: any;
+  public displayMetadata:boolean;
 
   constructor(
     private el: ElementRef,
@@ -52,8 +59,8 @@ export class LeftSideBarComponent implements AfterViewInit {
     private renderer: Renderer2,
     private messageService: MessageService
   ) {
-
-
+    this.metadata = {};
+    this.displayMetadata = false;
     this.open = true;
     this.layersSideBar = false;
     this.layersSideBarMobile = false;
@@ -133,10 +140,9 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('LEFT SIDE BAR', changes);
     if (changes.hasOwnProperty('descriptor')) {
       if (changes.descriptor) {
-
+        this.descriptor = changes.descriptor.currentValue;
       }
     }
   }
@@ -160,6 +166,7 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.lang = lng;
     this.localizationService.useLanguage(this.lang).then(r => {
       this.layersTitle = this.localizationService.translate('menu.' + this.currentMenu.key);
+      this.onChangeLng.emit()
     });
   }
 
@@ -218,35 +225,67 @@ export class LeftSideBarComponent implements AfterViewInit {
   setMap(map) {
     this.map = map;
   }
+  enableMetadata(layer){
+    let enable = false;
 
-  layerMenu(layer) {
-    let menu: MenuItem[];
-    menu = [
-      {
-        label: 'File',
-        icon: 'pi pi-fw pi-plus'
-      },
-      {
-        label: 'File',
-        icon: 'pi pi-fw pi-plus'
-      },
-      {
-        label: 'File',
-        icon: 'pi pi-fw pi-plus'
-      },
-      {
-        label: 'File',
-        icon: 'pi pi-fw pi-plus'
-      }
-    ];
+    if(layer.hasOwnProperty('types')){
+      const seleted = layer.types.find(type => {
+        return type.value = layer.selectedType;
+      });
+      enable = seleted.hasOwnProperty('metadata');
+    }else{
+      enable = layer.hasOwnProperty('metadata')
+    }
 
-    return menu
+    return enable && layer.visible;
   }
-}
 
-export interface Menu {
-  index: number;
-  key: string;
-  icon: string;
-  show: boolean;
+  formatMetadata(metadata){
+    let dt:any = {
+      title: '',
+      data: []
+    };
+    Object.getOwnPropertyNames(metadata).forEach(col =>{
+      if(col == 'title'){
+        dt.title = metadata[col];
+      }
+      dt.data.push({title: this.localizationService.translate('metadata.'+col), description: metadata[col]})
+    });
+    return dt;
+  }
+
+  showMetadata(layer){
+    this.metadata = null;
+    if(layer.hasOwnProperty('types')) {
+      const seleted = layer.types.find(type => {
+        return type.value == layer.selectedType;
+      });
+      if(seleted.metadata){
+        this.metadata = this.formatMetadata(seleted.metadata);
+        this.displayMetadata = true;
+      }else{
+        this.metadata = null;
+        this.displayMetadata = false;
+      }
+    } else {
+      this.metadata = this.formatMetadata(layer.metadata);
+      this.displayMetadata = true;
+    }
+  }
+
+  isDetails(data){
+    return (data == "Detalhes" || data == "Details") ? true : false;
+  }
+
+  download(type, layer, ev){
+    this.onDownload.emit({tipo: type, layer: layer, e: ev});
+  }
+
+  onChangeTransparency(layer, ev){
+    this.onLayerChangeTransparency.emit({layer: layer, opacity: ev.target.value})
+  }
+
+  changeLayerVisibility(layer, updateSource = false){
+    this.onLayerChangeVisibility.emit({layer: layer, updateSource: updateSource})
+  }
 }

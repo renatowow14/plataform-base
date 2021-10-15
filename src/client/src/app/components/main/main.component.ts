@@ -29,12 +29,16 @@ export class MainComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.getDescriptor();
+    this.cdRef.detectChanges();
+  }
+
+  getDescriptor(){
     this.mapService.getDescriptor(this.localizationService.currentLang()).subscribe(descriptor => {
       this.descriptor = descriptor;
     }, error => {
       console.log(error)
     });
-    this.cdRef.detectChanges();
   }
 
   onMenuSelected(item){
@@ -55,6 +59,10 @@ export class MainComponent implements AfterViewInit {
 
   onMenuToggle(isOpen){
     this.openMenu = isOpen;
+  }
+
+  onChangeLanguage(){
+    this.getDescriptor();
   }
 
   setMap(map){

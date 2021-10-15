@@ -99,13 +99,14 @@ module.exports = function(app) {
                         id: "satelite",
                         label: languageJson["descriptor"]["imagens"]["layers"]["satelite"]["label"][language],
                         visible: false,
-                        selectedType: "landsat",
+                        selectedType: "planet",
                         types: [{
                             value: "planet",
                             Viewvalue: "Planet",
                             order: 10,
                             opacity: 1,
                             timeLabel: languageJson["typelabel_layer"]["year"][language],
+                            typeLabel: languageJson["typelabel_layer"]["type"][language],
                             timeSelected: "global_quarterly_2021q1_mosaic",
                             timeHandler: "layername",
                             times: [{

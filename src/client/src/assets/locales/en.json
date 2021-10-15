@@ -17,6 +17,24 @@
     "filters_tooltip": "Filters",
     "options": "Options"
   },
+  "metadata": {
+    "title": "Metadata",
+    "description": "Description",
+    "format": "Format",
+    "region": "Region",
+    "period": "Period",
+    "data": "Date",
+    "scale": "Scale",
+    "system_coordinator": "System Coordinator",
+    "cartographic_projection": "Cartographic projection",
+    "cod_caracter": "Character encoding",
+    "coordinates": "Reference and Coordinate Systems",
+    "projection": "Cartographic projection",
+    "caracter": "Character encoding",
+    "fonte": "Source",
+    "update": "Update",
+    "contato": "Contact"
+  },
   "options": {
     "basemaps": "Basemaps",
     "legend": "Legend",

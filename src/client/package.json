@@ -24,6 +24,7 @@
     "@ngx-translate/http-loader": "^6.0.0",
     "@types/ol": "^6.5.3",
     "@types/proj4": "^2.5.1",
+    "file-saver": "^2.0.5",
     "font-gis": "^1.0.3",
     "lodash-es": "^4.17.21",
     "ngx-drag-scroll": "^12.0.0-beta.1",
