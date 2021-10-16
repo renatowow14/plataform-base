@@ -1,5 +1,6 @@
-import {Component, EventEmitter, OnInit, Renderer2, ElementRef, Output, HostListener} from '@angular/core';
+import {Component, EventEmitter, OnInit, Renderer2, ElementRef, Output, HostListener, Input} from '@angular/core';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
+import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-left-side-bar',
@@ -12,15 +13,30 @@ export class LeftSideBarComponent implements OnInit{
   @Output() onMenuToggle = new EventEmitter<boolean>();
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onChangeLng = new EventEmitter<any>();
+  @Output() onChangeMap = new EventEmitter<any>();
+  @Output() onChangeLimits = new EventEmitter<any>();
 
-  public displayFilter: boolean;
+  public Legendas: Legendas[];
+  public mapaBase: Layer[];
+  public Limites: Layer[];
+  public basemap: any;
+  public limit: any;
+
+  items: MenuItem[];
+  activeItem: MenuItem;
+
+
+
+  public display: boolean;
   public open: boolean;
+  public lang: string;
+  public menu: Menu[];
+  public displayOpcoes = false as boolean;
+  public displayFilter: boolean;
   public innerHeigth: number;
   public layersSideBar: boolean;
   public layersSideBarMobile: boolean;
   public layersTitle: string;
-  public lang: string;
-  public menu: Menu[];
   public menuMobile: Menu[];
   public currentMenu: Menu;
   public descriptor: any;
@@ -29,8 +45,7 @@ export class LeftSideBarComponent implements OnInit{
   public results: string[];
 
   constructor(private el: ElementRef, private localizationService: LocalizationService, private renderer: Renderer2) {
-
-
+    this.basemap = 'mapbox';
     this.open = true;
     this.layersSideBar = false;
     this.layersSideBarMobile = false;
@@ -51,6 +66,12 @@ export class LeftSideBarComponent implements OnInit{
         index: 2,
         key: 'area',
         icon: 'fg-polygon-hole-pt',
+        show: false
+      },
+      {
+        index: 3,
+        key: 'options',
+        icon: 'fg-map-options-alt',
         show: false
       }
 
@@ -99,7 +120,61 @@ export class LeftSideBarComponent implements OnInit{
 
   ngOnInit(): void {
 
+    //Limites
+    this.Limites = [];
 
+      //Map-Base
+    this.mapaBase = [
+        {
+          nome: 'Geopolitico (MapBox)',
+          key: 'mapbox',
+          type: 'bmap',
+          checked: true
+        },
+        {
+          nome: 'Google Maps',
+          key: 'google',
+          type: 'bmap',
+          checked: false
+        },
+        {
+          nome: 'Mosaico Planet',
+          key: 'planet',
+          type: 'bmap',
+          checked: false
+        },
+        {
+          nome: 'Stadia Dark',
+          key: 'stadia',
+          type: 'bmap',
+          checked: false
+        }
+    ];
+
+    //Legendas
+    this.Legendas = [
+      {
+        nome: '<= 5km²',
+        color: 'green'
+      },
+      {
+        nome: '5 - 15 km²',
+        color: 'orange'
+      },
+      {
+        nome: '15 - 25 km²',
+        color: 'yellow'
+      }
+  ];
+
+    //titulos do menu
+    this.items = [
+      {label: 'Legenda', icon: 'pi pi-fw pi-home'},
+      {label: 'Mapa-Base', icon: 'pi pi-fw pi-calendar'},
+      {label: 'Limites', icon: 'pi pi-fw pi-pencil'},
+  ];
+
+  this.activeItem = this.items[0];
 
     let navtab = document.querySelector("nav.navtab");
     let navtabItems = document.querySelectorAll("li.navtab-item");
@@ -157,6 +232,24 @@ export class LeftSideBarComponent implements OnInit{
     //   this.updateCharts();
     //   this.addPoints();
     // });
+  }
+
+
+  displayOp(){
+    this.displayOpcoes = !this.displayOpcoes;
+  }
+
+
+  onChangeBaseMap(bmap){
+    this.mapaBase = this.mapaBase.map((b) => {
+      if(bmap !== b.key){
+        b.checked = false;
+      }
+      return b;
+    })
+    this.basemap = this.mapaBase.find(b => bmap === b.key);
+    this.onChangeMap.emit(this.basemap);
+
   }
 
   @HostListener('window:resize', ['$event'])
@@ -229,6 +322,19 @@ export class LeftSideBarComponent implements OnInit{
     //   this.results = data;
     // });
   }
+}
+
+
+export interface Legendas {
+  nome: string;
+  color: string;
+}
+
+export interface Layer {
+  nome: string;
+  key:string;
+  type: string;
+  checked: boolean;
 }
 
 export interface Menu {

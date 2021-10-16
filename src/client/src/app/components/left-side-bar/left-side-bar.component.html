@@ -71,6 +71,39 @@
       <div class="menu-item" *ngIf="currentMenu?.key == 'filters'">
         <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
       </div>
+      <div class="menu-item" *ngIf="currentMenu?.key == 'options'">
+        <p-tabView >
+  
+         <!--  <p-tabPanel styleClass="tabPanelrightSideMenu" header="{{'options.legend' | translate}}">
+            <div class="font-legenda" *ngFor="let item of Legendas" class="{{item.color}}"> {{item.nome}} </div>
+          </p-tabPanel> -->
+      
+          <p-tabPanel header="{{'options.basemaps' | translate}}">
+            <div class="toggle" *ngFor="let map of mapaBase">
+              <p-inputSwitch styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(map.key)"
+                             [(ngModel)]="map.checked"></p-inputSwitch>
+              <p class="inlineSwitchButton"> {{map.nome}} </p>
+              <br> <br>
+            </div>
+      
+          </p-tabPanel>
+          <p-tabPanel header="{{'options.limits' | translate}}">
+            <div class="toggle" *ngFor="let limite of Limites">
+              <p-inputSwitch [(ngModel)]="limite.checked"></p-inputSwitch>
+              <p class="inlineSwitchButton"> {{limite.nome}} </p>
+              <br>
+            </div>
+          </p-tabPanel>      
+          <p-tabPanel header="{{'options.limits' | translate}}">
+            <div class="toggle" *ngFor="let limite of Limites">
+              <p-inputSwitch [(ngModel)]="limite.checked"></p-inputSwitch>
+              <p class="inlineSwitchButton"> {{limite.nome}} </p>
+              <br>
+            </div>
+          </p-tabPanel>   
+      
+        </p-tabView>
+      </div>
     </p-scrollPanel>
     <div class="footer">
       <div class="partners">
@@ -133,7 +166,7 @@
       <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
     </div>
     <div class="menu-item" *ngIf="currentMenu?.key == 'options'">
-
+     
     </div>
   </p-scrollPanel>
   <div class="footer">
