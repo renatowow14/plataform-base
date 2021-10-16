@@ -26,6 +26,7 @@ export class GeneralMapComponent implements OnInit {
 
   @Input() displayLayers = true as boolean;
   @Input() openMenu = true as boolean;
+  @Input() showRightSideBar  = false as boolean;
   @Input() descriptor: Descriptor;
   @Input() basemap: any;
   @Output() onHide = new EventEmitter<any>();
@@ -555,6 +556,18 @@ export class GeneralMapComponent implements OnInit {
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.selectedLayers, event.previousIndex, event.currentIndex);
     this.updateZIndex();
+  }
+
+  handleSideBars() {
+    let classes = "";
+    if (this.displayLayers) {
+      classes += 'open-layers '
+    }
+    if(this.showRightSideBar) {
+      classes += 'open-layers-right'
+    }
+
+    return classes;
   }
 
 }

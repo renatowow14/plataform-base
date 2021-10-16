@@ -17,6 +17,7 @@
   <app-general-map
     #generalMap
     [descriptor]="descriptor"
+    [showRightSideBar]="rightSideBar.displayOptions"
     [openMenu]="openMenu"
     [displayLayers]="showLayers"
     [basemap]="bmap"
@@ -24,6 +25,7 @@
   ></app-general-map>
 
   <app-right-side-bar
+    #rightSideBar
     [descriptor]="descriptor"
     (onChangeMap)="onChangeBaseMap($event)"
     (onChangeLimits)="onChangeLimit($event)"
