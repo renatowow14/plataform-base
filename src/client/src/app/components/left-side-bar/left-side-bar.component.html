@@ -86,7 +86,7 @@
                           <p-dropdown id="times-{{i}}" *ngIf="layer.times.length > 0" [options]="layer.times" [(ngModel)]="layer.timeSelected" (onChange)="changeLayerVisibility(layer, true)" optionLabel="Viewvalue" optionValue="value"></p-dropdown>
                           <label for="times-{{i}}">{{layer.timeLabel}}</label>
                       </span>
-                      <div class="layer-transparency">
+                      <div *ngIf="layer.typeLayer !== 'raster'" class="layer-transparency">
                         <input (mousemove)="onChangeTransparency(layer, $event)" class="range" type="range" min="0" max="100" value="0">
                         <br> <span>Transparência</span>
                       </div>

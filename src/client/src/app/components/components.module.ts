@@ -22,6 +22,7 @@ import { ImageModule } from 'primeng/image';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
   declarations: [ ...routedComponents],
   imports: [
@@ -47,7 +48,8 @@ import { DialogModule } from 'primeng/dialog';
     ImageModule,
     MenuModule,
     ToastModule,
-    DialogModule
+    DialogModule,
+    DragDropModule
   ]
 })
 export class ComponentsModule { }

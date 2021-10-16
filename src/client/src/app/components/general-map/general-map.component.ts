@@ -10,9 +10,10 @@ import {toLonLat} from "ol/proj";
 import * as Proj from 'ol/proj';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import { Descriptor } from "../interfaces";
+import { Descriptor, Control } from "../interfaces";
 import { DownloadService } from "../services";
 import { saveAs } from 'file-saver';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-general-map',
@@ -33,6 +34,7 @@ export class GeneralMapComponent implements OnInit {
   public options: any = {}
   public bmaps = [] as any[];
   public layers = [] as any[];
+  public selectedLayers = [] as any[];
   public limits = [] as any[];
   public graticule: Graticule;
   public map: Map;
@@ -41,6 +43,8 @@ export class GeneralMapComponent implements OnInit {
   public loadingDown: boolean;
   public lat: number;
   public lon: number;
+
+  public mapControls: Control;
 
   public layersTypes: any[];
   public layersNames: any[];
@@ -59,7 +63,7 @@ export class GeneralMapComponent implements OnInit {
   private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(8);
 
   constructor(
-    private localizationService: LocalizationService,
+    public localizationService: LocalizationService,
     private downloadService: DownloadService
   ) {
     this.showFormPoint = false;
@@ -69,6 +73,13 @@ export class GeneralMapComponent implements OnInit {
     this.basemapsNames = [];
     this.limitsNames = [];
     this.layersTMS = {};
+
+    this.mapControls = {
+      swipe: false,
+      search: false,
+      drawArea: false,
+      measure: false
+    }
 
     this.defaultRegion = {
       type: 'bioma',
@@ -259,6 +270,15 @@ export class GeneralMapComponent implements OnInit {
   }
 
   onChangeDescriptor(){
+    // this.map.getLayers().forEach(layer => {
+    //   if(layer){
+    //     const properties = layer.getProperties();
+    //     if (properties.type === 'layer') {
+    //       this.map.removeLayer(layer)
+    //     }
+    //   }
+    // });
+
     this.regionFilterDefault = this.descriptor.regionFilterDefault;
 
     for (let groups of this.descriptor.groups) {
@@ -319,32 +339,36 @@ export class GeneralMapComponent implements OnInit {
 
     let filters: any[] = []
 
-    if (layer.timeHandler == 'msfilter' && layer.times) {
-      filters.push(layer.timeSelected)
+    if (layer.value == "planet") {
+      result.push(`https://tiles.planet.com/basemaps/v1/planet-tiles/${layer.timeSelected}/gmap/{z}/{x}/{y}.png?api_key=d6f957677fbf40579a90fb3a9c74be1a`);
+    } else {
+      if (layer.timeHandler == 'msfilter' && layer.times) {
+        filters.push(layer.timeSelected)
+      }
+      if (layer.layerfilter)
+        filters.push(layer.layerfilter)
+      if (this.regionFilterDefault)
+        filters.push(this.regionFilterDefault)
+      if (layer.regionFilter && this.msFilterRegion)
+        filters.push(this.msFilterRegion)
+
+      let msfilter = '&MSFILTER=' + filters.join(' AND ')
+
+
+      let layername = layer.value
+
+      if (layer.value == "uso_solo_mapbiomas") {
+        this.year = layer.timeSelected
+      }
+
+      if (layer.timeHandler == 'layername')
+        layername = layer.timeSelected
+
+      for (let url of this.urls) {
+        result.push(url + "?layers=" + layername + msfilter + "&mode=tile&tile={x}+{y}+{z}" + "&tilemode=gmap" + "&map.imagetype=png");
+      }
+
     }
-    if (layer.layerfilter)
-      filters.push(layer.layerfilter)
-    if (this.regionFilterDefault)
-      filters.push(this.regionFilterDefault)
-    if (layer.regionFilter && this.msFilterRegion)
-      filters.push(this.msFilterRegion)
-
-    let msfilter = '&MSFILTER=' + filters.join(' AND ')
-
-
-    let layername = layer.value
-
-    if (layer.value == "uso_solo_mapbiomas") {
-      this.year = layer.timeSelected
-    }
-
-    if (layer.timeHandler == 'layername')
-      layername = layer.timeSelected
-
-    for (let url of this.urls) {
-      result.push(url + "?layers=" + layername + msfilter + "&mode=tile&tile={x}+{y}+{z}" + "&tilemode=gmap" + "&map.imagetype=png");
-    }
-
     return result;
   }
 
@@ -352,6 +376,8 @@ export class GeneralMapComponent implements OnInit {
     return new TileLayer({
       properties: {
         key: layer.value,
+        label: layer.label,
+        descriptorLayer: layer,
         type: 'layer',
         visible: layer.visible,
       },
@@ -394,8 +420,28 @@ export class GeneralMapComponent implements OnInit {
       } else {
         this.layersTMS[layer.value].setVisible(false)
       }
-      this.layersTMS[layer.selectedType].setVisible(layer.visible)
+      this.layersTMS[layer.selectedType].setVisible(layer.visible);
+
+      if(layer.visible){
+        this.selectedLayers.push(this.layersTMS[layer.selectedType])
+      } else {
+        this.selectedLayers.forEach( (item, index) => {
+          if(item.getProperties().key === layer.selectedType) this.selectedLayers.splice(index,1);
+        });
+      }
+
+      this.selectedLayers.forEach((item, index) => {
+        item.visible = item.get('visible');
+      });
+
+      this.updateZIndex();
     }
+  }
+
+  updateZIndex(){
+    this.selectedLayers.forEach((item, index) => {
+      item.setZIndex(index)
+    });
   }
 
   onChangeTransparency(ev) {
@@ -503,6 +549,11 @@ export class GeneralMapComponent implements OnInit {
     } else if(tipo == 'csv'){
       this.downloadCSV(layer, yearDownload, filterRegion, columnsCSV);
     }
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.selectedLayers, event.previousIndex, event.currentIndex);
+    this.updateZIndex();
   }
 
 }

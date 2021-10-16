@@ -64,6 +64,7 @@ module.exports = function(app) {
                         opacity: 1,
                         regionFilter: true,
                         order: 2,
+                        typeLayer: "vectorial",
                         typeLabel: languageJson["typelabel_layer"]["type"][language],
                         timeLabel: languageJson["typelabel_layer"]["year"][language],
                         timeSelected: "year=2014",
@@ -99,6 +100,7 @@ module.exports = function(app) {
                         id: "satelite",
                         label: languageJson["descriptor"]["imagens"]["layers"]["satelite"]["label"][language],
                         visible: false,
+                        typeLayer: "raster",
                         selectedType: "planet",
                         types: [{
                             value: "planet",

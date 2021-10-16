@@ -35,6 +35,10 @@
     "update": "Atualização",
     "contato": "Contato"
   },
+  "legend": {
+    "title": "Legendas"
+  },
+  "planet": "Mosaicos Planet",
   "options": {
     "basemaps": "Mapa Base",
     "legend": "Legenda",

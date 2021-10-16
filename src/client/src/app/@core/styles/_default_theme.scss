@@ -2,7 +2,7 @@
 // include sass color module
 @use 'sass:color';
 
-$primary: #162623 !default;
+$primary: #21413b !default;
 $accent: lighten($primary, 30%) !default;
 $warn:  #ffc107 !default;
 
@@ -14,7 +14,7 @@ $danger: #dc3545;
 $light: #f8f9fa;
 $dark: #343a40;
 
-$background-sidebar: #162623;
+$background-sidebar: #21413b;
 
 $font-family-sans-serif: 'Montserrat', sans-serif;
 

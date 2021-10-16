@@ -46,6 +46,40 @@
           <div id="coordinates-label" class="mouse-position"></div>
         </div>
       </div>
+      <div *ngIf="this.selectedLayers.length > 0" class="legends">
+        <div class="legends-container">
+          <div class="legends-header">
+            <h5>{{'legend.title' | translate}}</h5>
+          </div>
+          <div class="legends-body" cdkDropList (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let layer of selectedLayers" cdkDrag [class]="layer.visible ? 'legend-card legend-card-active' :'legend-card'">
+              <div class="legend-card-content"  >
+                <div (click)="layer.visible = !layer.visible" class="abstract">
+                  <span>
+                   <i class='bx bx-move'></i>
+                    <div class="legend-label">{{ layer.get('key') === 'planet' ? localizationService.translate('planet')  : layer.get('label') }}</div>
+                    <i [class]="layer.visible  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+                  </span>
+                </div>
+                <div class="details" *ngIf="layer.get('key') !== 'planet'">
+                  <div class="details-inner">
+                    <img src="http://ows.lapig.iesa.ufg.br/ows?EXCEPTIONS=application%2Fvnd.ogc.se_xml&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer={{layer.get('key')}}&format=image%2Fpng" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="controls-container">
+          <i class='bx bx-book-content' (click)="mapControls.swipe = !mapControls.swipe"></i>
+          <i class='bx bx-search-alt' (click)="mapControls.search = !mapControls.search"></i>
+          <i class='fg-polygon-pt' (click)="mapControls.drawArea = !mapControls.drawArea"></i>
+          <i class='fg-measure' (click)="mapControls.drawArea = !mapControls.drawArea" ></i>
+          <i class='bx bxs-file-pdf' ></i>
+        </div>
+      </div>
     </ol-map>
   </div>
 </section>
