@@ -36,8 +36,6 @@ export class LeftSideBarComponent implements AfterViewInit {
   items: MenuItem[];
   activeItem: MenuItem;
 
-
-
   public display: boolean;
   public open: boolean;
   public lang: string;
@@ -70,18 +68,12 @@ export class LeftSideBarComponent implements AfterViewInit {
       },
       {
         index: 1,
-        key: 'statistics',
-        icon: 'bx bx-bar-chart-alt',
-        show: false
-      },
-      {
-        index: 2,
         key: 'area',
         icon: 'fg-polygon-hole-pt',
         show: false
       },
       {
-        index: 3,
+        index: 2,
         key: 'options',
         icon: 'fg-map-options-alt',
         show: false
@@ -254,7 +246,7 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.basemap = this.mapaBase.find(b => bmap === b.key);
     this.onChangeMap.emit(this.basemap);
   }
-  
+
   ngOnChanges(changes: SimpleChanges) {
   }
 

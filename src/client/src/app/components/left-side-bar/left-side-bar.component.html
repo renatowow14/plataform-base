@@ -313,10 +313,9 @@
               </div>
              </div>
 
-
             <div  [class]="expendGroup ? 'group-card group-card-active' :'group-card'"> 
               <div (click)="expendGroup = !expendGroup" class="abstract">
-                <h3>{{'options.limits' | translate}}}</h3>
+                <h3>{{'options.limits' | translate}}</h3>
               </div>
               <div class="details">
                 <div class="details-inner">               
@@ -328,8 +327,6 @@
                 </div>
               </div>
              </div>
-
-        
       </div>
     </div>
     <div class="footer">
@@ -347,14 +344,12 @@
 
   <ul #leftSidebarMobile class="nav-list">
     <li class="navtab-item" *ngFor="let item of menuMobile" >
-    <li class="navtab-item" *ngFor="let item of menu">
 
     <div align="center"  [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate " (click)="handleMenu(item, true)"   >
-      <div align="center" [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate " (click)="handleMenu(item)">
         <i style="font-size:28px;width:90px;" class='svg {{item.icon}}'></i>
         <span class="links_name">{{'menu.' + item.key | translate}}</span>
       </div>
-    </div>
+
     </li>
   </ul>
 
