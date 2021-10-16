@@ -12,7 +12,7 @@ import {
 import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 
-import {Menu, Metadata} from "../interfaces";
+import {Legend, Menu, Layer, Metadata} from "../interfaces";
 import {MessageService} from "primeng/api";
 import {MenuItem} from 'primeng/api';
 
@@ -36,7 +36,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   @Output() onChangeMap = new EventEmitter<any>();
   @Output() onChangeLimits = new EventEmitter<any>();
 
-  public Legendas: Legendas[];
+  public Legendas: Legend[];
   public mapaBase: Layer[];
   public Limites: Layer[];
   public basemap: any;
