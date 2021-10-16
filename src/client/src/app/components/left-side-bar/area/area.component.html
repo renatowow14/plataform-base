@@ -1,7 +1,7 @@
 <section id="area">
 
     <p-tabView>
-        <p-tabPanel header="{{'area.search_title' | translate}}" leftIcon="pi pi-search" tooltip="1974">
+        <p-tabPanel header="{{'area.search_title' | translate}}" leftIcon="pi pi-search" tooltip="{{'area.search_tooltip' | translate}}">
             <mat-progress-bar class="progress-analyse" color="accent" *ngIf="layerFromConsulta.analyzedAreaLoading" mode="indeterminate">
             </mat-progress-bar>
             <mat-form-field class="example-full-width">
@@ -77,7 +77,7 @@
         </p-tabPanel>
 
 
-        <p-tabPanel header="{{'area.upload_submit' | translate}} " leftIcon="pi pi-upload" tooltip="1972">
+        <p-tabPanel header="{{'area.upload_submit' | translate}} " leftIcon="pi pi-upload" tooltip="{{'area.upload_tooltip' | translate}}">
             <div class="info-header" [innerHTML]="'area.upload_msg' | translate"></div>
 
             <app-file-upload [tooltip]="'area.upload_tooltip' | translate" [maxSizeMsg]="'area.upload_max_size_msg'  | translate" [loading]="layerFromUpload.loading" [app_origin]="'app-base'" [language]="lang" [ddarea]="layerFromUpload.dragArea" (complete)="onFileComplete($event)">
@@ -111,7 +111,7 @@
           <div>{{'area.btn_clear' | translate | uppercase}}</div>
         </button>
             </div>
-            <div *ngIf="layerFromUpload.analyzedAreaLoading" class="info-header" [innerHTML]="'upload_warning' | translate">
+            <div *ngIf="layerFromUpload.analyzedAreaLoading" class="info-header" [innerHTML]="'area.upload_warning' | translate">
             </div>
 
             <div *ngIf="layerFromUpload.analyzedArea.hasOwnProperty('shape_upload')" class="card card-upload-analysed">
@@ -157,7 +157,7 @@
 
         </p-tabPanel>
 
-        <p-tabPanel header="{{'area.draw_title' | translate}}" leftIcon="pi pi-user" leftIcon="pi pi-pencil" tooltip="1990">
+        <p-tabPanel header="{{'area.draw_title' | translate}}" leftIcon="pi pi-user" leftIcon="pi pi-pencil" tooltip="{{'area.drawed_tooltip' | translate}}" [disabled]="true">
             <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia
                 deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
             </p>
