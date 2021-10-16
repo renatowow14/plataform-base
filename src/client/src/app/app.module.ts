@@ -16,6 +16,7 @@ import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
 
 
+
 /**
  * The http loader factory : Loads the files from define path.
  * @param {HttpClient} http
@@ -30,7 +31,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 // @ts-ignore
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,

@@ -4,7 +4,7 @@ import { MainComponent } from "./main/main.component";
 import { LeftSideBarComponent } from "./left-side-bar/left-side-bar.component";
 import { RightSideBarComponent } from "./right-side-bar/right-side-bar.component";
 import { GeneralMapComponent } from "./general-map/general-map.component";
-
+import { FileUploadComponent } from "./file-upload/file-upload.component";
 
 const routes: Routes = [{
   path: '',
@@ -21,6 +21,7 @@ export const routedComponents = [
   LeftSideBarComponent,
   RightSideBarComponent,
   GeneralMapComponent,
+  FileUploadComponent,
   MainComponent
 ];
 

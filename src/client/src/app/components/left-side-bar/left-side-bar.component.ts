@@ -10,7 +10,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import Map from 'ol/Map';
-import {LocalizationService} from "../../@core/internationalization/localization.service";
+import { LocalizationService } from "../../@core/internationalization/localization.service";
 
 import {Legend, Menu, Layer, Metadata} from "../interfaces";
 import {MessageService} from "primeng/api";
@@ -61,7 +61,6 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   public textSearch: string;
   public results: string[];
-
   public groupLayers: any[];
 
   public metadata: any;
@@ -278,10 +277,8 @@ export class LeftSideBarComponent implements AfterViewInit {
   toggleMenu() {
     this.open = !this.open;
     this.onMenuToggle.emit(this.open);
-    if (this.map) {
-      setTimeout(() => {
-        this.map.updateSize()
-      }, 300);
+    if(this.map){
+      setTimeout(() => { this.map.updateSize() }, 300);
     }
   }
 
@@ -335,7 +332,7 @@ export class LeftSideBarComponent implements AfterViewInit {
 
     } else {
       this.layersSideBar = true;
-      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
+      this.onMenuSelected.emit({ show: this.layersSideBar, key: menu.key })
     }
   }
 

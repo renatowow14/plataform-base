@@ -58,8 +58,6 @@ module.exports = function(app) {
 
         var regionFilter = Internal.getRegionFilter(params['filterRegion']);
 
-        console.log(regionFilter)
-
         return [{
             source: 'lapig',
             id: 'prodes',

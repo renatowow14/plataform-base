@@ -1,14 +1,14 @@
-import {Component, OnInit, AfterViewInit, Input, ElementRef, SimpleChanges, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ElementRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import {defaults as defaultInteractions} from 'ol/interaction';
+import { defaults as defaultInteractions } from 'ol/interaction';
 import * as Proj from 'ol/proj';
 import {
   defaults as defaultControls,
   Control, MousePosition
 } from 'ol/control';
-import {log2} from "ol/math";
+import { log2 } from "ol/math";
 
 export const DEFAULT_HEIGHT = '500px';
 export const DEFAULT_WIDTH = '500px';
@@ -63,12 +63,15 @@ export class OlMapComponent implements OnInit, AfterViewInit {
         center: Proj.fromLonLat([this.lon, this.lat]),
         zoom: this.zoom
       }),
-      interactions: defaultInteractions({altShiftDragRotate: false, pinchRotate: false}),
-      controls: defaultControls({attribution: false, zoom: false}).extend([]),
+      interactions: defaultInteractions({ altShiftDragRotate: false, pinchRotate: false }),
+      controls: defaultControls({ attribution: false, zoom: false }).extend([]),
     });
 
     this.onReady.emit(this.map);
 
+    this.map.on('postrender', function () {
+      self.loading = false;
+    });
     // this.map.on('postrender', function(){
     //   console.log('aiuhasuidhuaishd')
     //   self.loading = false;

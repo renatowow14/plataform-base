@@ -130,6 +130,7 @@
       <div class="menu-item" *ngIf="currentMenu?.key == 'statistics'">
       </div>
       <div class="menu-item" *ngIf="currentMenu?.key == 'area'">
+        <app-leftsidebar-area [map]="map" [lang]="lang"></app-leftsidebar-area>
       </div>
       <div class="menu-item" *ngIf="currentMenu?.key == 'filters'">
         <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results"
