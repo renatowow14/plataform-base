@@ -306,6 +306,35 @@
   .mobile {
     display: none;
   }
+  //Switchs Buttons
+.inlineSwitchButton{
+  display: inline;
+}
+//End Switchs buttons
+
+
+
+
+
+:host ::ng-deep .tabview-custom {
+  i, span {
+    vertical-align: middle;
+  }
+
+  span {
+    margin: 0 .5rem;
+  }
+}
+
+
+:host ::ng-deep .p-tabview-nav-link {
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+   box-shadow: none !important;
+
+}
+
+
 
   .left-side-bar {
     border-radius: 5px 0 0 5px;
