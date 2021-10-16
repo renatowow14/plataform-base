@@ -51,7 +51,7 @@ export class RightSideBarComponent implements OnInit {
   public layersSideBar: boolean;
   public layersSideBarMobile: boolean;
 
-  public displayOpcoes = false as boolean;
+  public displayOptions = false as boolean;
 
   constructor(private el: ElementRef, private localizationService: LocalizationService, private renderer: Renderer2) {
     this.basemap = 'mapbox';
@@ -127,7 +127,7 @@ export class RightSideBarComponent implements OnInit {
 
   }
   displayOp(){
-    this.displayOpcoes = !this.displayOpcoes;
+    this.displayOptions = !this.displayOptions;
   }
 
   handleMenu(menu, mobile = false) {

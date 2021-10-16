@@ -1,5 +1,5 @@
 <section class="" [class]="openMenu ? 'open map-container' : 'map-container' ">
-  <div [class]="displayLayers ? 'open-layers' : '' ">
+  <div [ngClass]="handleSideBars()">
     <ol-map
       [lat]="-16.6958288"
       [lon]="-49.4443537"

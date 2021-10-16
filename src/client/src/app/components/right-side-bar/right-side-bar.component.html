@@ -1,0 +1,11 @@
+<p-sidebar 
+
+position="right"
+[modal]="false"
+[(visible)]="displayOptions"
+(visibleChange)="onSideBarToggle.emit(layersSideBar)">
+
+</p-sidebar>
+
+<button  (click)="displayOp()" class="legend">{{'menu.statistics' | translate}}</button>
+
