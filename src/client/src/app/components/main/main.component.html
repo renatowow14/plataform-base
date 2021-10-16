@@ -1,5 +1,6 @@
 <section id="main" class="container">
   <app-left-side-bar
+    [map]="map"
     (onMenuSelected)="onMenuSelected($event)"
     (onMenuToggle)="onMenuToggle($event)"
     (onSideBarToggle)="onSideBarToggle($event)"
@@ -9,6 +10,7 @@
     [openMenu]="openMenu"
     [displayLayers]="showLayers"
     [basemap]="bmap"
+    (mapInstance)="setMap($event)"
   ></app-general-map>
 
   <app-right-side-bar

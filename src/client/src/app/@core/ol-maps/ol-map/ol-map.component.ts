@@ -8,6 +8,7 @@ import {
   defaults as defaultControls,
   Control, MousePosition
 } from 'ol/control';
+import {log2} from "ol/math";
 
 export const DEFAULT_HEIGHT = '500px';
 export const DEFAULT_WIDTH = '500px';
@@ -33,8 +34,10 @@ export class OlMapComponent implements OnInit, AfterViewInit {
   map: Map;
 
   private mapEl: HTMLElement;
+  public loading: boolean;
 
   constructor(private elementRef: ElementRef) {
+    this.loading = false;
 
     // this.basemaps.forEach(b => {
     //   if(b.name == this.basemap){
@@ -47,9 +50,11 @@ export class OlMapComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.loading = true;
   }
 
   ngAfterViewInit(): void {
+    const self = this;
     this.mapEl = this.elementRef.nativeElement.querySelector('#' + this.target);
     this.setSize();
     this.map = new Map({
@@ -61,7 +66,13 @@ export class OlMapComponent implements OnInit, AfterViewInit {
       interactions: defaultInteractions({altShiftDragRotate: false, pinchRotate: false}),
       controls: defaultControls({attribution: false, zoom: false}).extend([]),
     });
-    this.onReady.emit(this.map)
+
+    this.onReady.emit(this.map);
+
+    this.map.on('postrender', function(){
+      console.log('aiuhasuidhuaishd')
+      self.loading = false;
+    });
   }
 
   private setSize() {
