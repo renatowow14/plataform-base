@@ -19,14 +19,14 @@ module.exports = function(app) {
     }
 
     self.requestFileFromMapServ = async function(url, pathFile, response) {
+        if(url){
+            let file = fs.createWriteStream(pathFile + ".zip");
 
-        let file = fs.createWriteStream(pathFile + ".zip");
-
-        await new Promise((resolve, reject) => {
-                let stream = request({
-                        uri: url,
-                        gzip: true
-                    })
+            await new Promise((resolve, reject) => {
+                request({
+                    uri: url,
+                    gzip: true
+                })
                     .pipe(file)
                     .on('finish', () => {
                         response.download(pathFile + '.zip');
@@ -38,17 +38,19 @@ module.exports = function(app) {
                         reject(error);
                     })
             })
-            .catch(error => {
-                console.log(`Something happened: ${error}`);
-            });
+                .catch(error => {
+                    console.log(`Something happened: ${error}`);
+                });
+        } else {
+            response.status(400)
+            console.log(`URL undefined`);
+        }
+
     };
 
     Controller.downloadCSV = async function(request, response) {
-        let layer = request.body.layer;
-        let region = request.body.selectedRegion;
-        let time = request.body.times;
-        let typeShape = request.body.typeshape;
-
+        let {layer, region, time, typeShape} = request.body;
+        console.log(request.body)
         let data = request.queryResult['csv'];
 
         data.forEach(function(item, index) {
@@ -78,13 +80,10 @@ module.exports = function(app) {
     };
 
     Controller.downloadSHP = function(request, response) {
-
-        let layer = request.body.layer;
-        let region = request.body.selectedRegion;
-        let time = request.body.times;
-        let typeShape = request.body.typeshape;
+        let {layer, region, time, typeShape } = request.body;
 
         let owsRequest = new Ows(typeShape);
+
         owsRequest.setTypeName(layer.selectedType);
 
         let diretorio = '';

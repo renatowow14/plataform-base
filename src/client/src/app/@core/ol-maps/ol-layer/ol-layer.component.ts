@@ -19,5 +19,4 @@ export class OlLayerComponent implements OnInit {
       }, 10);
     }
   }
-
 }

@@ -1,4 +1,17 @@
-import { Component, EventEmitter, OnInit, Output, Input} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  AfterViewInit,
+  Renderer2,
+  ElementRef,
+  OnInit,
+  Output,
+  HostListener,
+  Input,
+  SimpleChanges
+} from '@angular/core';
+import Map from 'ol/Map';
+import {LocalizationService} from "../../@core/internationalization/localization.service";
 import {MenuItem} from 'primeng/api';
 
 
@@ -10,14 +23,20 @@ import {MenuItem} from 'primeng/api';
 })
 export class RightSideBarComponent implements OnInit {
 
+  @Output() onMenuSelected = new EventEmitter<any>();
+  @Output() onSideBarToggle = new EventEmitter<boolean>()
+  
   public Legendas: Legendas[];
   public mapaBase: Layer[];
   public Limites: Layer[];
   public basemap: any;
   public limit: any;
+  
 
   items: MenuItem[];
   activeItem: MenuItem;
+
+  @Input() descriptor: any;
 
   @Output() onChangeMap = new EventEmitter<any>();
   @Output() onChangeLimits = new EventEmitter<any>();
@@ -26,11 +45,26 @@ export class RightSideBarComponent implements OnInit {
   public open: boolean;
   public lang: string;
   public menu: Menu[];
+  public currentMenu: Menu;
+  public layersTitle: string;
+  public displayFilter: boolean;
+  public layersSideBar: boolean;
+  public layersSideBarMobile: boolean;
 
   public displayOpcoes = false as boolean;
 
-  constructor() {
+  constructor(private el: ElementRef, private localizationService: LocalizationService, private renderer: Renderer2) {
     this.basemap = 'mapbox';
+    this.layersSideBar = false;
+    this.layersSideBarMobile = false;
+    this.currentMenu = {
+      index: 0,
+      key: 'layers',
+      icon: 'fg-layers',
+      show: false
+    }
+    this.displayFilter = false;
+
   }
 
   ngOnInit(): void {
@@ -96,6 +130,29 @@ export class RightSideBarComponent implements OnInit {
     this.displayOpcoes = !this.displayOpcoes;
   }
 
+  handleMenu(menu, mobile = false) {
+
+    this.menu.map(m => {
+      return m.show = false
+    });
+    this.currentMenu = menu;
+    this.layersTitle = this.localizationService.translate('menu.' + menu.key);
+
+    if (menu.key == 'filters') {
+      this.displayFilter = !this.displayFilter;
+    } else {
+      this.menu[menu.index].show = true;
+    }
+     if (mobile) {
+      this.layersSideBarMobile = true;
+     // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
+
+    } else {
+      this.layersSideBar = true;
+      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
+    }
+  }
+
   handleLang(lng){
     this.lang = lng;
   }
@@ -138,9 +195,11 @@ export interface Layer {
 
 
 export interface Menu {
+  index: number;
   key: string;
   icon: string;
-  title: string;
-  tooltip: string;
+  show: boolean;
 }
+
+
 

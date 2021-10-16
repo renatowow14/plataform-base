@@ -18,6 +18,11 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { OlMapsModule } from "../@core/ol-maps/ol-maps.module";
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ImageModule } from 'primeng/image';
+import { ToastModule } from 'primeng/toast';
+import { MenuModule } from 'primeng/menu';
+import { DialogModule } from 'primeng/dialog';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HttpClientModule } from '@angular/common/http';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MatButtonModule } from '@angular/material/button';
@@ -70,6 +75,11 @@ registerLocaleData(localePt);
     ScrollPanelModule,
     OlMapsModule,
     InputNumberModule,
+    ImageModule,
+    MenuModule,
+    ToastModule,
+    DialogModule,
+    DragDropModule,
     HttpClientModule
   ],
   providers: [

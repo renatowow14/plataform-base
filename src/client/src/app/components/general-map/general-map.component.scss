@@ -7,29 +7,32 @@
     width: $map-width;
     background: transparent;
     transition: all 0.8s ease !important;
-    .open-layers{
+
+    .open-layers {
       padding-left: 401px;
     }
   }
-  
-  :host ::ng-deep .map{
-  
+
+  :host ::ng-deep .map {
+
     .coordinates {
       z-index: 101;
       position: absolute;
-      bottom: 20px;
-      right: 1em;
-      .coordinates-container{
+      top: 11px;
+      right: 11px;
+
+      .coordinates-container {
         display: flex;
         color: black;
         width: 15.5em;
-        background:rgba($primary, 0.6);
+        background: rgba($primary, 0.6);
         transition: all 0.5s ease;
         border-radius: 5px;
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
-        i{
+
+        i {
           color: white;
           font-size: 18px;
           padding: 1px;
@@ -39,15 +42,18 @@
           transition: all 0.5s ease;
           border-top-left-radius: 5px;
           border-bottom-left-radius: 5px;
-          &:hover{
+
+          &:hover {
             cursor: pointer;
           }
-          &:before{
+
+          &:before {
             font-size: 25px;
             padding: 6px;
           }
         }
-        .mouse-position{
+
+        .mouse-position {
           text-align: center;
           width: 14.5em;
           color: white;
@@ -55,12 +61,14 @@
         }
       }
     }
+
     .search-point {
       z-index: 101;
       position: absolute;
-      bottom: 4.3em;
-      right: 1em;
-      .search-point-container{
+      top: 4.3em;
+      right: 11px;
+
+      .search-point-container {
         display: flex;
         color: black;
         width: 23.8em;
@@ -71,15 +79,18 @@
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
-        input{
+
+        input {
           width: 10em;
           padding: 0.5rem;
         }
-        i{
+
+        i {
           color: $primary;
           transition: all 0.8s ease;
           padding: 8px;
           border-radius: 50px;
+
           &:hover {
             cursor: pointer;
             background: rgba($primary, 0.2);
@@ -87,41 +98,228 @@
         }
       }
     }
+
+    .legends {
+      z-index: 101;
+      position: absolute;
+      bottom: 18px;
+      right: 11px;
+      width: 20em;
+
+      .legends-container {
+        color: black;
+
+        background: rgba(22, 38, 35, 0.6);
+        transition: all 0.5s ease;
+        border-radius: 5px;
+        box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
+
+        .legends-header {
+          transition: .6s ease all;
+          padding: 8px;
+          color: white;
+          text-align: center;
+          background: $primary;
+          border-top-left-radius: 5px;
+          border-top-right-radius: 5px;
+
+          h5 {
+            margin-left: 6px;
+            width: 100%;
+          }
+
+        }
+        .legends-body{
+          height: 23rem;
+          overflow: auto;
+        }
+      }
+    }
+
+    .controls {
+      z-index: 101;
+      position: absolute;
+      top: 101px;
+
+      .controls-container {
+        display: flex;
+        flex-direction: column;
+        transition: all 0.5s ease;
+        margin-left: 5.6px;
+        justify-content: space-between;
+        align-items: center;
+
+        i {
+          color: white;
+          font-size: 18px;
+          margin: 2px;
+          padding: 4px;
+          transition: all 0.5s ease;
+          background-color: lighten($primary, 20%);
+          border-radius: 2px;
+
+          &:focus {
+            background-color: lighten($primary, 40%);
+          }
+
+          &:hover {
+            cursor: pointer;
+            background-color: lighten($primary, 40%);
+          }
+
+          &:before {
+            font-size: 1.30em;
+          }
+        }
+
+        .mouse-position {
+          text-align: center;
+          width: 14.5em;
+          color: white;
+          font-size: 14px;
+        }
+      }
+    }
   }
-  
-  
 }
 
-@include media('>=phone' , '<=tablet') {
-  
+.legend-card {
+  position: relative;
+  margin: 6px;
+
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+
+  overflow: hidden;
+  perspective: 800px;
+  transform-style: preserve-3d;
+}
+.abstract,
+.details {
+  $bg: rgba(white, 1);
+  width: 100%;
+  position: relative;
+  background: $bg;
+
+  .group-card:hover & {
+    background: darken($bg, 2%);
+  }
+}
+.abstract {
+  z-index: 10;
+  transition: .6s ease all;
+  padding: 8px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+
+  .legend-label {
+    font-size: 12px;
+    margin-left: 2px;
+    text-align: center;
+  }
+
+  i {
+    color: black !important;
+    line-height: unset !important;
+    height: unset !important;
+    font-size: 20px !important;
+    min-width: unset !important;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+.details {
+  max-height: 0;
+  padding: 0;
+  visibility: hidden;
+  transform: rotateX(-180deg);
+  transform-origin: top center;
+  backface-visibility: hidden;
+  transition: .6s ease all;
+
+  img{
+    max-width: 82%;
+  }
+
+}
+.legend-card-active {
+  transition: .6s ease all;
+  .details {
+    max-height: none;
+    visibility: visible;
+    transform: rotateX(0deg);
+  }
+}
+.details-inner {
+  padding: 8px;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.legend-card:last-child {
+  border: none;
+}
+
+.legend-card.cdk-drop-list-dragging .legend-card-content:not(.cdk-drag-placeholder){
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+@include media('>=phone', '<=tablet') {
+
   .map-container {
     height: $height;
     width: $map-width;
     background: transparent;
     transition: all 0.8s ease !important;
-    .open-layers{
+
+    .open-layers {
       padding-left: 401px;
     }
   }
-  
-  :host ::ng-deep .map{
-  
+
+  :host ::ng-deep .map {
+
     .coordinates {
       z-index: 101;
       position: absolute;
-      top: 10px;
-      right: 4em;
-      .coordinates-container{
+      top: 11px;
+      right: 11px;
+
+      .coordinates-container {
         display: flex;
         color: black;
         width: 15.5em;
-        background:rgba($primary, 0.6);
+        background: rgba($primary, 0.6);
         transition: all 0.5s ease;
         border-radius: 5px;
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
-        i{
+
+        i {
           color: white;
           font-size: 18px;
           padding: 1px;
@@ -131,15 +329,18 @@
           transition: all 0.5s ease;
           border-top-left-radius: 5px;
           border-bottom-left-radius: 5px;
-          &:hover{
+
+          &:hover {
             cursor: pointer;
           }
-          &:before{
+
+          &:before {
             font-size: 25px;
             padding: 6px;
           }
         }
-        .mouse-position{
+
+        .mouse-position {
           text-align: center;
           width: 14.5em;
           color: white;
@@ -147,12 +348,14 @@
         }
       }
     }
+
     .search-point {
       z-index: 101;
       position: absolute;
-      top: 57px;
-      right: 1em;
-      .search-point-container{
+      top: 4.3em;
+      right: 11px;
+
+      .search-point-container {
         display: flex;
         color: black;
         width: 18.8em;
@@ -163,15 +366,18 @@
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
-        input{
+
+        input {
           width: 7em;
           padding: 0.5rem;
         }
-        i{
+
+        i {
           color: $primary;
           transition: all 0.8s ease;
           padding: 8px;
           border-radius: 50px;
+
           &:hover {
             cursor: pointer;
             background: rgba($primary, 0.2);

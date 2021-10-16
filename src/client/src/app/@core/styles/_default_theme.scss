@@ -1,6 +1,8 @@
 // Colors
 // include sass color module
 @use 'sass:color';
+
+$primary: #21413b !default;
 $primary: #2a2946 !default;
 $accent: lighten($primary, 30%) !default;
 $warn: #ffc107 !default;
@@ -11,9 +13,13 @@ $warning: #ffc107;
 $danger: #dc3545;
 $light: #f8f9fa;
 $dark: #343a40;
+
+$background-sidebar: #21413b;
+
+$font-family-sans-serif: 'Montserrat', sans-serif;
+
 $background-sidebar: #1d3430;
-$font-family-sans-serif: 'Montserrat',
-sans-serif;
+$font-family-sans-serif: 'Montserrat', sans-serif;
 $body-bg: lighten($primary, 10%);
 $font-size-base: 1rem; // Assumes the browser default, typically `16px`
 $font-size-lg: 1.25rem;

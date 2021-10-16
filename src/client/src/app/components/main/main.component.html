@@ -1,12 +1,22 @@
 <section id="main" class="container">
+
   <app-left-side-bar
+    #leftSideBar
     [map]="map"
+    [descriptor]="descriptor"
+    [loadingDownload]="generalMap.loadingDown"
     (onMenuSelected)="onMenuSelected($event)"
     (onMenuToggle)="onMenuToggle($event)"
     (onSideBarToggle)="onSideBarToggle($event)"
+    (onChangeLng)="onChangeLanguage()"
+    (onLayerChangeVisibility)="generalMap.changeLayerVisibility($event)"
+    (onLayerChangeTransparency)="generalMap.onChangeTransparency($event)"
+    (onDownload)="generalMap.buttonDownload($event)"
   ></app-left-side-bar>
 
   <app-general-map
+    #generalMap
+    [descriptor]="descriptor"
     [openMenu]="openMenu"
     [displayLayers]="showLayers"
     [basemap]="bmap"
@@ -14,7 +24,9 @@
   ></app-general-map>
 
   <app-right-side-bar
+    [descriptor]="descriptor"
     (onChangeMap)="onChangeBaseMap($event)"
     (onChangeLimits)="onChangeLimit($event)"
   ></app-right-side-bar>
+
 </section>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {  Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -24,6 +24,16 @@ export class MapService {
         catchError(this.errorHandler),
       );
   }
+
+  downloadSHP(parameters): Observable<Blob> {
+    console.log(parameters)
+    return this.httpClient.post(this.apiURL + "/download/shp", parameters, { responseType: 'blob' })
+  }
+
+  downloadCSV(parameters): Observable<Blob> {
+    return this.httpClient.post(this.apiURL + "/download/csv", parameters, { responseType: 'blob' })
+  }
+
 
   errorHandler(error) {
     let errorMessage = '';
