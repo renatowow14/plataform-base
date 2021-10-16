@@ -322,38 +322,6 @@
 }
 
 
-
-.rightSideMenu {
-  width:auto !important;
-  background: $primary;
-  padding: 6px 14px;
-  border: none;
-  height:auto !important;
-  margin-top: 16% !important;
-  margin-right: 30px !important;
-}
-
-
-:host ::ng-deep .p-sidebar-right{
-  width:auto;
-  background: lighten($primary, 75%) !important;
-  padding: 6px 14px;
-  border: none;
-  border-radius: 15px;
-  height: 280px;
-  margin-top: 16%;
-  margin-right: 30px;
-  .p-sidebar-header {
-    padding: 0rem;
-    .p-sidebar-close{
-      width: 4rem;
-      &:hover{
-        background: transparent;
-      }
-    }
-  }
-    }
-
 .toggle{
   padding: 10px;
 }

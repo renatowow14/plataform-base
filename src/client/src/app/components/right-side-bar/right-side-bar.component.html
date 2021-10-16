@@ -1,38 +1,10 @@
 
- <p-sidebar styleClass="rightSideMenu" position="right" [modal]="false" [(visible)]="displayOpcoes">
-
-  <p-tabView styleClass="tabViewrightSideMenu">
-
-    <p-tabPanel styleClass="tabPanelrightSideMenu" header="{{'options.legend' | translate}}">
-      <div class="font-legenda" *ngFor="let item of Legendas" class="{{item.color}}"> {{item.nome}} </div>
-    </p-tabPanel>
-
-    <p-tabPanel header="{{'options.basemaps' | translate}}">
-      <div class="toggle" *ngFor="let map of mapaBase">
-        <p-inputSwitch styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(map.key)"
-                       [(ngModel)]="map.checked"></p-inputSwitch>
-        <p class="inlineSwitchButton"> {{map.nome}} </p>
-        <br>
-      </div>
-
-    </p-tabPanel>
-    <p-tabPanel header="{{'options.limits' | translate}}">
-      <div class="toggle" *ngFor="let limite of Limites">
-        <p-inputSwitch [(ngModel)]="limite.checked"></p-inputSwitch>
-        <p class="inlineSwitchButton"> {{limite.nome}} </p>
-        <br>
-      </div>
-    </p-tabPanel>
-    <p-tabPanel header="{{'options.limits' | translate}}">
-      <div class="toggle" *ngFor="let limite of Limites">
-        <p-inputSwitch [(ngModel)]="limite.checked"></p-inputSwitch>
-        <p class="inlineSwitchButton"> {{limite.nome}} </p>
-        <br>
-      </div>
-    </p-tabPanel>
-
-
-  </p-tabView>
+ <p-sidebar 
+ 
+ position="right"
+ [modal]="false"
+ [(visible)]="displayOpcoes"
+ (visibleChange)="onSideBarToggle.emit(layersSideBar)">
 
 </p-sidebar>
 
