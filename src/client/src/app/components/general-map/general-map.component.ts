@@ -1,12 +1,22 @@
-import {Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import TileLayer from "ol/layer/Tile";
 import { BingMaps, XYZ } from "ol/source";
 import { Graticule } from "ol/layer";
-import { Stroke }  from "ol/style";
+import { Stroke } from "ol/style";
 import Map from 'ol/Map';
-import {Coordinate, createStringXY, toStringHDMS} from "ol/coordinate";
-import {toLonLat} from "ol/proj";
-import {LocalizationService} from "../../@core/internationalization/localization.service";
+import { Coordinate, createStringXY, toStringHDMS } from "ol/coordinate";
+import { toLonLat } from "ol/proj";
+
+import * as OlProj from 'ol/proj';
+import TileGrid from 'ol/tilegrid/TileGrid';
+import * as OlExtent from 'ol/extent.js';
+import GeoJSON from 'ol/format/GeoJSON';
+import VectorLayer from 'ol/layer/Vector';
+import Style from 'ol/style/Style';
+import VectorSource from 'ol/source/Vector';
+
+
+import { LocalizationService } from "../../@core/internationalization/localization.service";
 
 @Component({
   selector: 'app-general-map',
@@ -16,12 +26,12 @@ import {LocalizationService} from "../../@core/internationalization/localization
 
 export class GeneralMapComponent implements OnInit {
 
-  @Input()  displayLayers = true as boolean;
-  @Input()  openMenu = true as boolean;
-  @Input()  basemap: any;
+  @Input() displayLayers = true as boolean;
+  @Input() openMenu = true as boolean;
+  @Input() basemap: any;
   @Output() onHide = new EventEmitter<any>();
   @Output() mapInstance = new EventEmitter<Map>();
-
+  @Output() layerUploadInstance = new EventEmitter<any>();
 
   public innerHeigth: number;
   public descriptor = {} as any;
@@ -31,9 +41,10 @@ export class GeneralMapComponent implements OnInit {
   public map: Map;
   public mousePositionOptions: any;
   public showFormPoint: boolean;
-  public lat:number;
+  public lat: number;
   public lon: number;
   private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(8);
+
 
   constructor(private localizationService: LocalizationService) {
     this.showFormPoint = false;
@@ -47,7 +58,7 @@ export class GeneralMapComponent implements OnInit {
     this.bmaps = [
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'mapbox',
             type: 'bmap',
             visible: true,
@@ -62,7 +73,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'bing',
             type: 'bmap',
             visible: false,
@@ -78,7 +89,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'google',
             type: 'bmap',
             visible: false,
@@ -92,7 +103,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'estradas',
             type: 'bmap',
             visible: false,
@@ -108,7 +119,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'relevo',
             type: 'bmap',
             visible: false,
@@ -123,7 +134,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'planet',
             type: 'bmap',
             visible: false,
@@ -138,7 +149,7 @@ export class GeneralMapComponent implements OnInit {
       },
       {
         layer: new TileLayer({
-          properties:{
+          properties: {
             key: 'stadia',
             type: 'bmap',
             visible: false,
@@ -170,19 +181,19 @@ export class GeneralMapComponent implements OnInit {
       },
       className: 'mouse-position',
       placeholder: false,
-      target:'coordinates-label'
+      target: 'coordinates-label'
     }
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.map && changes.hasOwnProperty('basemap')){
+    if (this.map && changes.hasOwnProperty('basemap')) {
       const bmap = changes.basemap.currentValue;
       this.map.getLayers().forEach(layer => {
         const properties = layer.getProperties();
-        if(properties.key == bmap.key && properties.type == bmap.type){
+        if (properties.key == bmap.key && properties.type == bmap.type) {
           layer.setVisible(true);
-        } else if(properties.type == bmap.type){
+        } else if (properties.type == bmap.type) {
           layer.setVisible(false);
         }
       })
@@ -201,17 +212,17 @@ export class GeneralMapComponent implements OnInit {
   }
 
 
-  setMap(map){
+  setMap(map) {
     this.map = map;
     this.mapInstance.emit(map);
   }
 
-  hideLayers(){
+  hideLayers() {
     this.onHide.emit();
   }
 
-  searchPoint(){
-    if(this.lat && this.lon){
+  searchPoint() {
+    if (this.lat && this.lon) {
       this.showFormPoint = !this.showFormPoint;
     }
   }

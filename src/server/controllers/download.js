@@ -91,8 +91,6 @@ module.exports = function(app) {
         let fileParam = '';
         let pathFile = '';
 
-        console.log(layer)
-
         let layersSkipFilters = ['terra_indigena', 'quilombola', 'ucs']
 
         if (typeShape == 'shp') {

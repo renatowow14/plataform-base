@@ -10,7 +10,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import Map from 'ol/Map';
-import {LocalizationService} from "../../@core/internationalization/localization.service";
+import { LocalizationService } from "../../@core/internationalization/localization.service";
 
 @Component({
   selector: 'app-left-side-bar',
@@ -39,6 +39,7 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   public textSearch: string;
   public results: string[];
+
 
   constructor(private el: ElementRef, private localizationService: LocalizationService, private renderer: Renderer2) {
 
@@ -107,6 +108,8 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.expendGroup = false;
 
   }
+
+
 
   ngAfterViewInit(): void {
     let navtab = document.querySelector("nav.navtab");
@@ -177,7 +180,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   toggleMenu() {
     this.open = !this.open;
     this.onMenuToggle.emit(this.open);
-    if(this.map){
+    if (this.map) {
       setTimeout(() => { this.map.updateSize() }, 300);
     }
   }
@@ -225,13 +228,13 @@ export class LeftSideBarComponent implements AfterViewInit {
     } else {
       this.menu[menu.index].show = true;
     }
-     if (mobile) {
+    if (mobile) {
       this.layersSideBarMobile = true;
-     // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
+      // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
 
     } else {
       this.layersSideBar = true;
-      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
+      this.onMenuSelected.emit({ show: this.layersSideBar, key: menu.key })
     }
   }
 

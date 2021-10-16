@@ -17,10 +17,40 @@ import { TranslateModule } from "@ngx-translate/core";
 import { TooltipModule } from 'primeng/tooltip';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { OlMapsModule } from "../@core/ol-maps/ol-maps.module";
-import {InputNumberModule} from 'primeng/inputnumber';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { HttpClientModule } from '@angular/common/http';
+import { FileUploadModule } from 'primeng/fileupload';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { AreaComponent } from './left-side-bar/area/area.component';
+import { LOCALE_ID } from '@angular/core';
+import localePt from '@angular/common/locales/pt';
+import { registerLocaleData, DatePipe, DecimalPipe } from '@angular/common';
+
+registerLocaleData(localePt);
+
+
 @NgModule({
-  declarations: [ ...routedComponents],
+  declarations: [...routedComponents, AreaComponent],
   imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressBarModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MatCardModule,
+    MatProgressBarModule,
+    FileUploadModule,
     CommonModule,
     SidebarModule,
     TabMenuModule,
@@ -39,7 +69,13 @@ import {InputNumberModule} from 'primeng/inputnumber';
     AccordionModule,
     ScrollPanelModule,
     OlMapsModule,
-    InputNumberModule
+    InputNumberModule,
+    HttpClientModule
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    DatePipe,
+    DecimalPipe
   ]
 })
 export class ComponentsModule { }
