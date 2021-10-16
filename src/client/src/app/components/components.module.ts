@@ -23,7 +23,6 @@ import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { HttpClientModule } from '@angular/common/http';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MatButtonModule } from '@angular/material/button';
@@ -80,8 +79,7 @@ registerLocaleData(localePt);
     MenuModule,
     ToastModule,
     DialogModule,
-    DragDropModule
-    InputNumberModule,
+    DragDropModule,
     HttpClientModule
   ],
   providers: [

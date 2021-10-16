@@ -1,15 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import TileLayer from "ol/layer/Tile";
-import {BingMaps, XYZ} from "ol/source";
-import {Graticule} from "ol/layer";
-import {Stroke} from "ol/style";
-import { BingMaps, XYZ } from "ol/source";
-import { Graticule } from "ol/layer";
-import { Stroke } from "ol/style";
 import Map from 'ol/Map';
-import {Coordinate, createStringXY} from "ol/coordinate";
 import * as OlExtent from 'ol/extent.js';
-import {toLonLat} from "ol/proj";
 import * as Proj from 'ol/proj';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
@@ -19,17 +11,10 @@ import { saveAs } from 'file-saver';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { Coordinate, createStringXY, toStringHDMS } from "ol/coordinate";
 import { toLonLat } from "ol/proj";
+import {Graticule} from "ol";
+import {BingMaps, XYZ} from "ol/source";
+import {Stroke} from "ol/style";
 
-import * as OlProj from 'ol/proj';
-import TileGrid from 'ol/tilegrid/TileGrid';
-import * as OlExtent from 'ol/extent.js';
-import GeoJSON from 'ol/format/GeoJSON';
-import VectorLayer from 'ol/layer/Vector';
-import Style from 'ol/style/Style';
-import VectorSource from 'ol/source/Vector';
-
-
-import { LocalizationService } from "../../@core/internationalization/localization.service";
 
 @Component({
   selector: 'app-general-map',
