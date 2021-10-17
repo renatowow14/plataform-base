@@ -29,6 +29,10 @@
     "coordinates": "Coordenadas",
     "find_point": "Localizar ponto"
   },
+  "dataSeries": {
+    "title": "Estatisticas",
+    "graphictitle": "Séries Temporais"
+  },
   "menu": {
     "layers": "Camadas",
     "layers_tooltip": "Camadas do Mapa",

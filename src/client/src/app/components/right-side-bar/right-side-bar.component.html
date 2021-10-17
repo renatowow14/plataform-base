@@ -3,8 +3,101 @@
 position="right"
 [modal]="false"
 [(visible)]="displayOptions"
-(visibleChange)="onSideBarToggle.emit(layersSideBar)">
+header="teste"
+>
 
+<!-- <div class="chart-region">
+    <h5>
+        <button [matTooltip]="titlesLayerBox.region_tooltip" *ngIf="selectRegion.type != 'biome'" color="primary" (click)="openRegionReport()" style="font-size: 30px;" mat-icon-button>
+            <mat-icon>text_snippet</mat-icon>
+        </button>
+        <strong> {{ selectRegion.text }} </strong>
+    </h5>
+</div> -->
+<!-- <div class="row">
+    <p-accordion class="dados" [multiple]="true" (onOpen)="onOpenLateralAccordionLULCTab($event)" (onClose)="onCloseLateralAccordionLULCTab($event)">
+        <p-accordionTab class="tabs" header="{{dataSeries.label}}" [selected]="true">
+            <p style="text-align:justify; margin-bottom: 10px">
+                <button color="primary" (click)="openCharts(dataSeries.label, dataSeries.description, dataSeries, dataSeries.type, optionsTimeSeries)" mat-icon-button>
+                    <mat-icon>aspect_ratio</mat-icon>
+                </button> {{ dataSeries.description }}
+            </p>
+            <p-chart [type]="dataSeries.type" [responsive]="true" [data]="dataSeries" [options]="optionsTimeSeries">
+            </p-chart>
+        </p-accordionTab>
+        </p-accordion>
+</div> -->
+<!--  <p-chart type="line" [data]="data" [options]="options"></p-chart> -->
+<!--<p-chart [type]="dataSeries.type" [responsive]="true" [data]="dataSeries" [options]="optionsTimeSeries">
+</p-chart> -->
+<div class="content" [style]="{width: '100%', height: innerHeigth + 'px'}">
+
+<div align="center" class="title-region" > 
+<h5 class="title-region"> {{'dataSeries.title' | translate}}</h5>
+
+<!-- <button type="button" pButton (click)="update($event)"></button> -->
+</div>
+
+
+<div class="chart-region" align="center"> 
+<h5 class="chart-region"> BRASIL</h5>
+</div>
+
+
+  <div  [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
+    <div (click)="expendGroup = !expendGroup" class="abstract" (click)="triggerSeriesChartDeforestation($event)">
+      <span>
+        <i class='bx bx-trending-up'></i>
+        <div class="group-label">{{'dataSeries.graphictitle' | translate}}</div>
+      </span>
+      <i [class]="expendGroup ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+
+    </div>
+    <div class="details">
+      <div class="details-inner">
+        <h4> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
+       <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
+       <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation" [responsive]="true" [data]="DeforestationChart.dataDeforestation" [options]="DeforestationChart.optionsDeforestation"></p-chart> 
+      
+      </div>
+    </div>
+   </div>
+
+  <div  [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'">
+    <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="triggerSeriesChartLulc($event)">
+      <span>
+        <i class='bx bx-trending-up'></i>
+        <div class="group-label">Uso do solo</div>
+      </span>
+      <i [class]="expendGroup2 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+    </div>
+    <div class="details">
+      <div class="details-inner">
+        <p-tabView >
+          <p-tabPanel header="Gráfico 1">
+           <!--  <p style="font-weight: bold">
+              <button color="primary" (click)="openCharts(selectRegion.text,uso.text, uso.data, uso.type, uso.options)" mat-icon-button>
+                  <mat-icon>aspect_ratio</mat-icon>
+              </button>
+          </p> -->
+            <h4> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
+            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart> 
+          </p-tabPanel>
+          <p-tabPanel header="Gráfico 2">
+            <h4> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o que representa 39,40 % da sua área total </h4>
+            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart> 
+          </p-tabPanel>
+
+      </p-tabView>
+
+       
+
+      </div>
+    </div>
+   </div>
+
+
+</div>
 </p-sidebar>
 
 <button  (click)="displayOp()" class="legend">{{'menu.statistics' | translate}}</button>

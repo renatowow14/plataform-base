@@ -25,6 +25,10 @@
     "left_sidebar": {
         "title": "Menu"
     },
+    "dataSeries": {
+      "title": "Statistics",
+      "graphictitle": "Timeseries"
+    },
     "map": {
         "coordinates": "Coordinates",
         "find_point": "Find point"
