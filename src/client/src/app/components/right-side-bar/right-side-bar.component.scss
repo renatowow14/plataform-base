@@ -375,7 +375,7 @@
 
   .chart-region {
     width: 100%;
-
+    box-shadow: 0 .25rem .25rem rgba(0,0,0,0.2), 0 0 1rem rgba(0,0,0,0.2);
     display: table;
     vertical-align: right;
     font-size: 36pt;
@@ -387,8 +387,8 @@
   
    
     font-size: 30pt;
-    background-color: #f9b233;
-    color: #454444;
+    background-color: linear-gradient(to right, $primary, lighten($primary, 0.4) 40%, white);
+    color: #f8f0f0;
   }
 
   .title-region {

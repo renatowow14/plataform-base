@@ -7,7 +7,8 @@
     "find_point": "Find point"
   },
   "dataSeries": {
-    "title": "Statistics"
+    "title": "Statistics",
+    "graphictitle": "Timeseries"
   },
   "menu": {
     "layers": "Layers",

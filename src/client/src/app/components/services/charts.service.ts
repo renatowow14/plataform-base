@@ -28,20 +28,20 @@ export class ChartService {
 
   constructor(private httpClient: HttpClient) { }
 
+  deforestation(parameters): Observable<any> {
+    return this.httpClient.get<any>(this.apiURL + '/deforestation')
+      .pipe(
+        catchError(this.errorHandler),
+      );
+  }
+
   lulc(parameters): Observable<any> {
-    return this.httpClient.post(this.apiURL + "/lulc", parameters)
+    return this.httpClient.get(this.apiURL + "/lulc")
       .pipe(
         catchError(this.errorHandler),
       );   
   }
 
-  deforestation(parameters): Observable<any> {
-    return this.httpClient.post(this.apiURL + "/deforestation", parameters)
-      .pipe(
-        catchError(this.errorHandler),
-      );
-
-  }
 
   errorHandler(error) {
     let errorMessage = '';

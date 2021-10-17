@@ -7,7 +7,8 @@
     "find_point": "Localizar ponto"
   },
   "dataSeries": {
-    "title": "Estatisticas"
+    "title": "Estatisticas",
+    "graphictitle": "Séries Temporais"
   },
   "menu": {
     "layers": "Camadas",

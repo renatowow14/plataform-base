@@ -40,15 +40,15 @@ header="teste"
 
 
 <div class="chart-region" align="center"> 
-<h5 class="chart-region"> Correntina - BA </h5>
+<h5 class="chart-region"> BRASIL</h5>
 </div>
 
 
   <div  [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-    <div (click)="expendGroup = !expendGroup" class="abstract" (click)="update2($event)">
+    <div (click)="expendGroup = !expendGroup" class="abstract" (click)="triggerSeriesChartDeforestation($event)">
       <span>
         <i class='bx bx-trending-up'></i>
-        <div class="group-label">Uso solo terraclas</div>
+        <div class="group-label">{{'dataSeries.graphictitle' | translate}}</div>
       </span>
       <i [class]="expendGroup ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
 
@@ -56,23 +56,42 @@ header="teste"
     <div class="details">
       <div class="details-inner">
         <h4> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
-        <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart>
+       <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
+       <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation" [responsive]="true" [data]="DeforestationChart.dataDeforestation" [options]="DeforestationChart.optionsDeforestation"></p-chart> 
+      
       </div>
     </div>
    </div>
 
   <div  [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'">
-    <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="update($event)">
+    <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="triggerSeriesChartLulc($event)">
       <span>
         <i class='bx bx-trending-up'></i>
-        <div class="group-label">gráfico exemplo 2</div>
+        <div class="group-label">Uso do solo</div>
       </span>
       <i [class]="expendGroup2 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
     </div>
     <div class="details">
       <div class="details-inner">
-        <h4> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
-      <p-chart type="line" [data]="data2" [options]="options"></p-chart>
+        <p-tabView >
+          <p-tabPanel header="Gráfico 1">
+           <!--  <p style="font-weight: bold">
+              <button color="primary" (click)="openCharts(selectRegion.text,uso.text, uso.data, uso.type, uso.options)" mat-icon-button>
+                  <mat-icon>aspect_ratio</mat-icon>
+              </button>
+          </p> -->
+            <h4> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
+            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart> 
+          </p-tabPanel>
+          <p-tabPanel header="Gráfico 2">
+            <h4> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o que representa 39,40 % da sua área total </h4>
+            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart> 
+          </p-tabPanel>
+
+      </p-tabView>
+
+       
+
       </div>
     </div>
    </div>
