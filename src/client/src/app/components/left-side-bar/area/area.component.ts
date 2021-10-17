@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import Map from 'ol/Map';
 
+import { MenuItem } from 'primeng/api';
+
 import * as OlProj from 'ol/proj';
 import TileGrid from 'ol/tilegrid/TileGrid';
 import * as OlExtent from 'ol/extent.js';
@@ -59,6 +61,7 @@ export class AreaComponent implements OnInit {
     heavyAnalysisLoading: false
   };
 
+  selectedIndexUpload: number;
 
   constructor(private http: HttpClient) {
     this.httpOptions = {
@@ -68,6 +71,7 @@ export class AreaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
 

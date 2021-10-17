@@ -39,6 +39,5 @@ src/client/dist/
 src/client/package-lock.json
 src/server/package-lock.json
 package-lock.json
-node_modules/.package-lock.json
-node_modules/.bin/ng
-node_modules/@angular/cli
+node_modules/*
+/src/server/uploads/*

@@ -29,6 +29,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -48,6 +49,7 @@ registerLocaleData(localePt);
   declarations: [...routedComponents, AreaComponent],
   imports: [
     MatFormFieldModule,
+    MatTabsModule,
     MatInputModule,
     MatProgressBarModule,
     MatCheckboxModule,
