@@ -20,9 +20,6 @@
       <!-- add graticule-->
       <ol-layer [layer]="graticule"></ol-layer>
 
-      <!-- add basemaps-->
-      <ol-layer *ngFor="let bmap of bmaps" [layer]="bmap.layer"></ol-layer>
-
       <!-- add layers-->
       <ol-layer *ngFor="let layer of layers" [layer]="layer"></ol-layer>
 
@@ -73,11 +70,21 @@
       </div>
       <div class="controls">
         <div class="controls-container">
-          <i class='bx bx-book-content' (click)="mapControls.swipe = !mapControls.swipe"></i>
-          <i class='bx bx-search-alt' (click)="mapControls.search = !mapControls.search"></i>
-          <i class='fg-polygon-pt' (click)="mapControls.drawArea = !mapControls.drawArea"></i>
-          <i class='fg-measure' (click)="mapControls.drawArea = !mapControls.drawArea" ></i>
-          <i class='bx bx-printer' ></i>
+          <i [pTooltip]="'controls.swipe' | translate" [class]="mapControls.swipe ? 'bx bx-book-content control-active' : 'bx bx-book-content '" (click)="mapControls.swipe = !mapControls.swipe"></i>
+          <i [pTooltip]="'controls.search' | translate" [class]="mapControls.search ? 'bx bx-search-alt control-active' : 'bx bx-search-alt '" class='bx bx-search-alt' (click)="mapControls.search = !mapControls.search"></i>
+          <i [pTooltip]="'controls.draw' | translate" [class]="mapControls.drawArea ? 'fg-polygon-pt control-active' : 'fg-polygon-pt'" class='fg-polygon-pt' (click)="onPolygon()"></i>
+          <i [pTooltip]="'controls.measure' | translate" [class]="mapControls.measure ? 'fg-measure control-active' : 'fg-measure'" class='fg-measure' (click)="onRuler()" ></i>
+          <i [pTooltip]="'controls.measureArea' | translate" [class]="mapControls.measureArea ? 'fg-measure-area control-active' : 'fg-measure-area'" class=' fg-measure-area' (click)="onRulerArea()" ></i>
+<!--          <i [pTooltip]="'controls.print' | translate" [class]="mapControls.print ? 'bx bx-printer control-active' : 'bx bx-printer'" class='bx bx-printer' ></i>-->
+        </div>
+      </div>
+      <div *ngIf="controlOptions" class="controls-details">
+        <div class="controls-details-header">
+         <h5>{{'controls.details.title' | translate}}</h5>
+          <i (click)="controlOptions = !controlOptions" class='bx bx-x-circle'></i>
+        </div>
+        <div class="controls-details-body">
+
         </div>
       </div>
     </ol-map>

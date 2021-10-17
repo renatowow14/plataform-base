@@ -1,4 +1,24 @@
 {
+    "basemans": {
+      "mapbox": "Geopolitico (MapBox)",
+      "bing": "Bing Maps",
+      "google": "Google",
+      "roads": "Roads",
+      "relief": "Relief",
+      "planet": "Planet",
+      "stadia": "Dark Mapa Stadia"
+    },
+    "controls": {
+      "swipe": "Swipe",
+      "search": "Search",
+      "draw": "Draw Area",
+      "measure": "Measure Distance",
+      "measureArea": "Measure Area",
+      "print": "Print Map",
+      "details": {
+        "title": "Controls Details"
+      }
+    },
     "left_sidebar": {
         "title": "Menu"
     },

@@ -1,6 +1,16 @@
 @import "src/app/@core/styles/default_theme";
 #area {
-    .card-checkbox-upload {
+  margin: 8px;
+  border-radius: 5px;
+  box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+  background: white;
+
+  .mat-form-field {
+    width: 92%;
+    margin: 14px;
+  }
+
+  .card-checkbox-upload {
         margin: 10px;
         font-size: 20px;
         padding-top: 23px;
@@ -91,11 +101,11 @@
     }
     .title-file-card {
         position: absolute;
-        top: 0;
+        //top: 0;
         font-size: 11px;
         font-weight: bolder;
         text-align: center;
-        width: 100%;
+        width: 93%;
         color: white;
         border-top-right-radius: 4px;
         border-top-left-radius: 4px;

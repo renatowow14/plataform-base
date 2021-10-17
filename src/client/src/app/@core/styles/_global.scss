@@ -49,6 +49,9 @@
     background: lighten($primary, 30%);
     cursor: pointer !important;
 }
+html, body {
+  color: $primary;
+}
 
 * {
     margin: 0;

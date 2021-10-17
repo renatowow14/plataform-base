@@ -139,103 +139,37 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // let navtab = document.querySelector("nav.navtab");
-    // let navtabItems = document.querySelectorAll("li.navtab-item");
-    // navtabItems.forEach((navtabItem, activeIndex) =>
-    //   navtabItem.addEventListener("click", () => {
-    //     navtabItems.forEach(navtabItem => navtabItem.classList.remove("active"));
-    //     navtabItem.classList.add("active");
-    //     (navtab as HTMLElement).style.setProperty(
-    //       "--active-index",
-    //       `${activeIndex}`
-    //     );
-    //   })
-    // );
+    // this.basesmaps = [
+    //   {
+    //     name: 'Geopolitico (MapBox)',
+    //     key: 'mapbox',
+    //     type: 'bmap',
+    //     checked: true
+    //   },
+    //   {
+    //     name: 'Google Maps',
+    //     key: 'google',
+    //     type: 'bmap',
+    //     checked: false
+    //   },
+    //   {
+    //     name: 'Mosaico Planet',
+    //     key: 'planet',
+    //     type: 'bmap',
+    //     checked: false
+    //   },
+    //   {
+    //     name: 'Stadia Dark',
+    //     key: 'stadia',
+    //     type: 'bmap',
+    //     checked: false
+    //   }
+    // ];
+    this.basesmaps =   this.basesmaps.map(bmap => {
+      return bmap['visible'] = bmap.layer.get('visible')
+    });
     this.lang = this.localizationService.currentLang();
     this.innerHeigth = window.innerHeight - 200;
-  }
-
-  ngOnInit(): void {
-
-    //Limites
-    this.limits = [];
-
-    //Map-Base
-    this.basesmaps = [
-      {
-        name: 'Geopolitico (MapBox)',
-        key: 'mapbox',
-        type: 'bmap',
-        checked: true
-      },
-      {
-        name: 'Google Maps',
-        key: 'google',
-        type: 'bmap',
-        checked: false
-      },
-      {
-        name: 'Mosaico Planet',
-        key: 'planet',
-        type: 'bmap',
-        checked: false
-      },
-      {
-        name: 'Stadia Dark',
-        key: 'stadia',
-        type: 'bmap',
-        checked: false
-      }
-    ];
-
-
-    // //titulos do menu
-    // this.items = [
-    //   {label: 'Legenda', icon: 'pi pi-fw pi-home'},
-    //   {label: 'Mapa-Base', icon: 'pi pi-fw pi-calendar'},
-    //   {label: 'Limites', icon: 'pi pi-fw pi-pencil'},
-    // ];
-    //
-    // this.activeItem = this.items[0];
-
-    // this.http.get('service/map/descriptor?lang=' + this.language).subscribe(result => {
-    //   this.descriptor = result
-    //   this.regionFilterDefault = this.descriptor.regionFilterDefault;
-    //
-    //   for (let groups of this.descriptor.groups) {
-    //
-    //     for (let layers of groups.layers) {
-    //       if (layers.types) {
-    //         for (let types of layers.types) {
-    //           this.layersTypes.push(types)
-    //         }
-    //       } else {
-    //         this.layersTypes.push(layers);
-    //       }
-    //       // this.layersTypes.sort(function (e1, e2) {
-    //       // 	return (e2.order - e1.order)
-    //       // });
-    //
-    //       this.layersNames.push(layers);
-    //     }
-    //
-    //   }
-    //   for (let basemap of this.descriptor.basemaps) {
-    //     for (let types of basemap.types) {
-    //       this.basemapsNames.push(types)
-    //     }
-    //   }
-    //
-    //   for (let limits of this.descriptor.limits) {
-    //     for (let types of limits.types) {
-    //       this.limitsNames.push(types)
-    //     }
-    //   }
-    //
-    //   this.createMap();
-    //   this.updateCharts();
-    //   this.addPoints();
-    // });
   }
 
   onChangeBaseMap(bmap) {
@@ -251,7 +185,7 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('descriptor')) {
-      if (changes.descriptor) {
+      if (changes.descriptor.currentValue) {
         this.descriptor = changes.descriptor.currentValue;
       }
     }

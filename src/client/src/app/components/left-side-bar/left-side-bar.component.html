@@ -151,7 +151,7 @@
         <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results"
                         (completeMethod)="search($event)"></p-autoComplete>
       </div>
-      <div class="menu-item" *ngIf="currentMenu?.key == 'options'">
+      <div class="menu-item options" *ngIf="currentMenu?.key == 'options'">
         <div [class]="optionsGroups.basemaps ? 'group-card group-card-active' :'group-card'">
           <div (click)="optionsGroups.basemaps = !optionsGroups.basemaps" class="abstract">
             <span>
@@ -163,9 +163,9 @@
           <div class="details">
             <div class="details-inner">
               <div class="toggle" *ngFor="let map of basesmaps">
-                <p-inputSwitch styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(map.key)"
-                               [(ngModel)]="map.checked"></p-inputSwitch>
-                <p class="inlineSwitchButton"> {{map.name}} </p>
+                <p-inputSwitch  styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(map.layer)"
+                               [(ngModel)]="map.visible"></p-inputSwitch>
+                <p class="inlineSwitchButton"> {{map.layer.get('label')}} </p>
                 <br><br>
               </div>
             </div>

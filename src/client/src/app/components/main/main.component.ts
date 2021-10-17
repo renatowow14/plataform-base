@@ -11,7 +11,6 @@ import {LocalizationService} from "../../@core/internationalization/localization
 export class MainComponent implements AfterViewInit {
   public openMenu:boolean;
   public showLayers: boolean;
-  public bmap : string = 'mapbox';
   public limit : any;
   public map: Map;
   public descriptor: any;
@@ -43,14 +42,6 @@ export class MainComponent implements AfterViewInit {
 
   onMenuSelected(item){
     this.showLayers = item.show;
-  }
-
-  onChangeBaseMap(bmap){
-    this.bmap = bmap;
-  }
-
-  onChangeLimit(limit){
-    this.limit = limit;
   }
 
   onSideBarToggle(isOpen){

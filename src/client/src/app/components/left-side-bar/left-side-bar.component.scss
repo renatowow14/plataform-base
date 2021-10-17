@@ -641,6 +641,11 @@
 
     .content {
       overflow-y: auto;
+      .options{
+        .details-inner{
+          padding: 18px 8px 0px 8px;
+        }
+      }
 
       .menu-item {
 

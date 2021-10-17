@@ -4,7 +4,7 @@
     #leftSideBar
     [map]="map"
     [descriptor]="descriptor"
-    [basesmaps]="generalMap.bmaps"
+    [basesmaps]="generalMap.basemapsAvaliable"
     [loadingDownload]="generalMap.loadingDown"
     (onMenuSelected)="onMenuSelected($event)"
     (onMenuToggle)="onMenuToggle($event)"
@@ -22,15 +22,12 @@
     [showRightSideBar]="rightSideBar.displayOptions"
     [openMenu]="openMenu"
     [displayLayers]="showLayers"
-    [basemap]="bmap"
     (mapInstance)="setMap($event)"
   ></app-general-map>
 
   <app-right-side-bar
     #rightSideBar
     [descriptor]="descriptor"
-    (onChangeMap)="onChangeBaseMap($event)"
-    (onChangeLimits)="onChangeLimit($event)"
   ></app-right-side-bar>
 
 </section>
