@@ -20,6 +20,8 @@ import { OlMapsModule } from "../@core/ol-maps/ol-maps.module";
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ImageModule } from 'primeng/image';
 import { ToastModule } from 'primeng/toast';
+import { ChartModule } from 'primeng/chart';
+//import { ChartsComponent } from './right-side-bar/charts/charts.component';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -68,6 +70,7 @@ registerLocaleData(localePt);
     DragScrollModule,
     ComponentsRoutingModule,
     ButtonModule,
+    ChartModule,
     DropdownModule,
     TranslateModule,
     TooltipModule,

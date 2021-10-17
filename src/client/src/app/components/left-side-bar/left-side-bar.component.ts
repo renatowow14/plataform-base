@@ -58,6 +58,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   public menuMobile: Menu[];
   public currentMenu: Menu;
   public expendGroup: boolean;
+  public expendGroup2: boolean;
 
   public textSearch: string;
   public results: string[];
@@ -132,6 +133,7 @@ export class LeftSideBarComponent implements AfterViewInit {
       show: false
     }
     this.expendGroup = false;
+    this.expendGroup2 = false;
 
   }
 

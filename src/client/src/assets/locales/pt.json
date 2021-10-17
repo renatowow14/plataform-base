@@ -6,6 +6,9 @@
     "coordinates": "Coordenadas",
     "find_point": "Localizar ponto"
   },
+  "dataSeries": {
+    "title": "Estatisticas"
+  },
   "menu": {
     "layers": "Camadas",
     "layers_tooltip": "Camadas do Mapa",

@@ -6,6 +6,9 @@
     "coordinates": "Coordinates",
     "find_point": "Find point"
   },
+  "dataSeries": {
+    "title": "Statistics"
+  },
   "menu": {
     "layers": "Layers",
     "layers_tooltip": "Layers",

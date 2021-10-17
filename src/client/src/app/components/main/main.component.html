@@ -10,6 +10,8 @@
     (onSideBarToggle)="onSideBarToggle($event)"
     (onChangeLng)="onChangeLanguage()"
     (onLayerChangeVisibility)="generalMap.changeLayerVisibility($event)"
+    (onChangeMap)="onChangeBaseMap($event)"
+    (onChangeLimits)="onChangeLimit($event)"
     (onLayerChangeTransparency)="generalMap.onChangeTransparency($event)"
     (onDownload)="generalMap.buttonDownload($event)"
   ></app-left-side-bar>
@@ -27,8 +29,6 @@
   <app-right-side-bar
     #rightSideBar
     [descriptor]="descriptor"
-    (onChangeMap)="onChangeBaseMap($event)"
-    (onChangeLimits)="onChangeLimit($event)"
   ></app-right-side-bar>
 
 </section>

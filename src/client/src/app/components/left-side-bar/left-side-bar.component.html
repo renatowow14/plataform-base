@@ -136,17 +136,25 @@
         <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results"
                         (completeMethod)="search($event)"></p-autoComplete>
       </div>
+
       <div class="menu-item" *ngIf="currentMenu?.key == 'options'" >
 
             <div  [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
               <div (click)="expendGroup = !expendGroup" class="abstract">
-                <h3>{{'options.basemaps' | translate}}</h3>
+                <span>
+                  <i class='bx bxs-cog'></i>
+                  <div class="group-label">{{'options.basemaps' | translate}}</div>
+                </span>
+                <i [class]="expendGroup ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+
               </div>
               <div class="details">
                 <div class="details-inner">
                     <div class="toggle" *ngFor="let map of mapaBase">
+                      <br>
                       <p-inputSwitch styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(map.key)"
                                      [(ngModel)]="map.checked"></p-inputSwitch>
+                                     
                       <p class="inlineSwitchButton"> {{map.nome}} </p>
                       <br><br>
                     </div>
@@ -154,9 +162,13 @@
               </div>
              </div>
 
-            <div  [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-              <div (click)="expendGroup = !expendGroup" class="abstract">
-                <h3>{{'options.limits' | translate}}</h3>
+            <div  [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'">
+              <div (click)="expendGroup2 = !expendGroup2" class="abstract">
+                <span>
+                  <i class='bx bxs-cog'></i>
+                  <div class="group-label">{{'options.limits' | translate}}</div>
+                </span>
+                <i [class]="expendGroup2 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
               </div>
               <div class="details">
                 <div class="details-inner">
