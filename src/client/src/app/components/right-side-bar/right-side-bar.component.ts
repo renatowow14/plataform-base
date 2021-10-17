@@ -4,17 +4,13 @@ import {
   AfterViewInit,
   Renderer2,
   ElementRef,
-  OnInit,
   Output,
   HostListener,
   Input,
-  SimpleChanges
 } from '@angular/core';
-import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 import {MenuItem} from 'primeng/api';
 import { ChartService } from '../services/charts.service';
-import {Legend, Metadata} from "../interfaces";
 
 
 @Component({
@@ -27,8 +23,6 @@ export class RightSideBarComponent implements AfterViewInit {
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onSideBarToggle = new EventEmitter<boolean>()
   @Input() descriptor: any;
-
-  public activeIndexLateralAccordion: any
 
   public Legendas: Legendas[];
   public mapaBase: Layer[];
@@ -49,13 +43,10 @@ export class RightSideBarComponent implements AfterViewInit {
   public desmatInfo: any;
   public defaultRegion: any;
   public changeTabSelected = ""
-  public viewWidth = 600;
-  public viewWidthMobile = 350;
   public data: any;
   public DeforestationChart: any;
   public LulcChart: any;
   public LulcChart2: any;
-  public data2: any;
   public userAppData2: any;
   public options: any;
   public expendGroup: boolean;
@@ -79,17 +70,6 @@ export class RightSideBarComponent implements AfterViewInit {
   public displayFilter: boolean;
   public layersSideBar: boolean;
   public layersSideBarMobile: boolean;
-
-  //examples chart
-  public userAppData: any;
-  public appUserCount1: any;
-  public appUserCount2: any;
-  public appUserCount3: any;
-  public appUserCount4: any;
-  public appUserCount5: any;
-  public userLabel: any;
-  public userUsageHoursData;
-  //end examples chart
 
 
   public displayOptions = false as boolean;
@@ -145,7 +125,7 @@ export class RightSideBarComponent implements AfterViewInit {
     }
 };
 
-  
+
 this.expendGroup = false;
 
     //End charts
@@ -226,7 +206,7 @@ this.expendGroup = false;
         },
       },
     };
-  
+
     //end chart test
     //Limites
     this.Limites = [];
@@ -287,7 +267,7 @@ this.expendGroup = false;
   this.activeItem = this.items[0];
 
   this.updateDeforestationTimeSeries();
-  this.updateLulcTimeSeries(); 
+  this.updateLulcTimeSeries();
 
 }
   displayOp(){
@@ -369,7 +349,7 @@ this.expendGroup = false;
     // params.push('typeRegion=' + this.defaultRegion)
     // params.push('textRegion=')
     let textParam = params.join('&');
-    let tempResultDeforestation:any[] = []; 
+    let tempResultDeforestation:any[] = [];
 
     this.chartService.deforestation(textParam).subscribe(result => {
       tempResultDeforestation = result;
@@ -385,16 +365,16 @@ this.expendGroup = false;
               backgroundColor: '#289628'
             }
           ],
-  
+
         };
 
-      } 
+      }
     this.timeSeriesResultDeforestation = tempResultDeforestation[0];
     }, error => {
       console.log(error)
     });
 
-    
+
       /* this.dataSeries = {
         title: timeseriesResult['title'],
         labels: timeseriesResult['series'].map(element => element.year),
@@ -416,7 +396,7 @@ this.expendGroup = false;
       };*/
       this.DeforestationChart = {};
 
-      this.optionsTimeSeriesDeforestation = { 
+      this.optionsTimeSeriesDeforestation = {
         responsive:true,
         plugins: {
         tooltips: {
@@ -439,7 +419,7 @@ this.expendGroup = false;
               }
             }
           ],
-          
+
         },
         title: {
           display: false,
@@ -459,8 +439,8 @@ this.expendGroup = false;
           position: 'bottom'
         }
       }
-    }; 
-    
+    };
+
   }
 
   updateLulcTimeSeries(){
@@ -470,7 +450,7 @@ this.expendGroup = false;
     // params.push('typeRegion=' + this.defaultRegion)
     // params.push('textRegion=')
     let textParam = params.join('&');
-    let tempResultLulc:any[] = []; 
+    let tempResultLulc:any[] = [];
 
     this.chartService.lulc(textParam).subscribe(result => {
       tempResultLulc = result;
@@ -486,19 +466,19 @@ this.expendGroup = false;
 
             }
           ],
-  
-        };
-        
 
-        
-      } 
+        };
+
+
+
+      }
     this.timeSeriesResultLulc = tempResultLulc[0];
     this.timeSeriesResultLulc2 = tempResultLulc[1];
     }, error => {
       console.log(error)
     });
 
-    
+
       /* this.dataSeries = {
         title: timeseriesResult['title'],
         labels: timeseriesResult['series'].map(element => element.year),
@@ -521,7 +501,7 @@ this.expendGroup = false;
       this.LulcChart = {};
       this.LulcChart2 = {};
 
-      this.optionsTimeSeriesLulc = { 
+      this.optionsTimeSeriesLulc = {
         responsive:true,
         plugins: {
         tooltips: {
@@ -563,7 +543,7 @@ this.expendGroup = false;
           position: 'bottom'
         }
       }
-    }; 
+    };
   }
 
 

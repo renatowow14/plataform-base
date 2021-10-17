@@ -3,4 +3,6 @@ export interface Control {
   search: boolean;
   drawArea: boolean;
   measure: boolean;
+  measureArea: boolean;
+  print: boolean;
 }

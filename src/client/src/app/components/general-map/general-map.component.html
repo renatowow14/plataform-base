@@ -20,21 +20,19 @@
       <!-- add graticule-->
       <ol-layer [layer]="graticule"></ol-layer>
 
-      <!-- add basemaps-->
-      <ol-layer *ngFor="let bmap of bmaps" [layer]="bmap.layer"></ol-layer>
-
       <!-- add layers-->
       <ol-layer *ngFor="let layer of layers" [layer]="layer"></ol-layer>
 
-      <ol-map-marker  *ngIf="!showFormPoint && lat && lon" [lat]="lat" [lon]="lon" [text]="'Lat: ' + lat + '\nLon: ' + lon"></ol-map-marker>
+      <ol-map-marker *ngIf="!showFormPoint && lat && lon" [lat]="lat" [lon]="lon"
+                     [text]="'Lat: ' + lat + '\nLon: ' + lon"></ol-map-marker>
       <div *ngIf="showFormPoint" class="search-point">
         <div class="search-point-container">
            <span class="p-float-label">
-              <input type="number" id="lat" pInputText [(ngModel)]="lat" >
+              <input type="number" id="lat" pInputText [(ngModel)]="lat">
               <label for="lat">Latitude</label>
            </span>
           <span class="p-float-label">
-              <input type="number" id="lon" pInputText [(ngModel)]="lon" >
+              <input type="number" id="lon" pInputText [(ngModel)]="lon">
               <label for="lat">Longitude</label>
            </span>
           <i (click)="searchPoint()" class='fg-location-on fg-lg'></i>
@@ -42,7 +40,8 @@
       </div>
       <div class="coordinates">
         <div class="coordinates-container">
-          <i (click)="showFormPoint = !showFormPoint" [pTooltip]="'map.find_point' | translate" class='fg-search-poi fg-lg'></i>
+          <i (click)="showFormPoint = !showFormPoint" [pTooltip]="'map.find_point' | translate"
+             class='fg-search-poi fg-lg'></i>
           <div id="coordinates-label" class="mouse-position"></div>
         </div>
       </div>
@@ -52,18 +51,22 @@
             <h5>{{'legend.title' | translate}}</h5>
           </div>
           <div class="legends-body" cdkDropList (cdkDropListDropped)="drop($event)">
-            <div *ngFor="let layer of selectedLayers" cdkDrag [class]="layer.visible ? 'legend-card legend-card-active' :'legend-card'">
-              <div class="legend-card-content"  >
+            <div *ngFor="let layer of selectedLayers" cdkDrag
+                 [class]="layer.visible ? 'legend-card legend-card-active' :'legend-card'">
+              <div class="legend-card-content">
                 <div (click)="layer.visible = !layer.visible" class="abstract">
                   <span>
                    <i class='bx bx-move'></i>
-                    <div class="legend-label">{{ layer.get('key') === 'planet' ? localizationService.translate('planet')  : layer.get('label') }}</div>
-                    <i [class]="layer.visible  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+                    <div
+                      class="legend-label">{{ layer.get('key') === 'planet' ? localizationService.translate('planet') : layer.get('label') }}</div>
+                    <i [class]="layer.visible  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
                   </span>
                 </div>
                 <div class="details" *ngIf="layer.get('key') !== 'planet'">
                   <div class="details-inner">
-                    <img src="http://ows.lapig.iesa.ufg.br/ows?EXCEPTIONS=application%2Fvnd.ogc.se_xml&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer={{layer.get('key')}}&format=image%2Fpng" alt="">
+                    <img
+                      src="http://ows.lapig.iesa.ufg.br/ows?EXCEPTIONS=application%2Fvnd.ogc.se_xml&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer={{layer.get('key')}}&format=image%2Fpng"
+                      alt="">
                   </div>
                 </div>
               </div>
@@ -73,11 +76,56 @@
       </div>
       <div class="controls">
         <div class="controls-container">
-          <i class='bx bx-book-content' (click)="mapControls.swipe = !mapControls.swipe"></i>
-          <i class='bx bx-search-alt' (click)="mapControls.search = !mapControls.search"></i>
-          <i class='fg-polygon-pt' (click)="mapControls.drawArea = !mapControls.drawArea"></i>
-          <i class='fg-measure' (click)="mapControls.drawArea = !mapControls.drawArea" ></i>
-          <i class='bx bxs-file-pdf' ></i>
+          <i [pTooltip]="'controls.swipe' | translate"
+             [class]="mapControls.swipe ? 'bx bx-book-content control-active' : 'bx bx-book-content '"
+             (click)="onSwipe()"></i>
+          <i [pTooltip]="'controls.search' | translate"
+             [class]="mapControls.search ? 'bx bx-search-alt control-active' : 'bx bx-search-alt '"
+             class='bx bx-search-alt' (click)="onSearch()"></i>
+          <i [pTooltip]="'controls.draw' | translate"
+             [class]="mapControls.drawArea ? 'fg-polygon-pt control-active' : 'fg-polygon-pt'" class='fg-polygon-pt'
+             (click)="onPolygon()"></i>
+          <i [pTooltip]="'controls.measure' | translate"
+             [class]="mapControls.measure ? 'fg-measure control-active' : 'fg-measure'" class='fg-measure'
+             (click)="onRuler()"></i>
+          <i [pTooltip]="'controls.measureArea' | translate"
+             [class]="mapControls.measureArea ? 'fg-measure-area control-active' : 'fg-measure-area'"
+             class=' fg-measure-area' (click)="onRulerArea()"></i>
+          <!--          <i [pTooltip]="'controls.print' | translate" [class]="mapControls.print ? 'bx bx-printer control-active' : 'bx bx-printer'" class='bx bx-printer' ></i>-->
+        </div>
+      </div>
+      <div *ngIf="controlOptions" class="controls-details">
+        <div class="controls-details-header">
+          <h5>{{'controls.details.title' | translate}}</h5>
+          <i (click)="controlOptions = !controlOptions" class='bx bx-x-circle'></i>
+        </div>
+        <div *ngIf="mapControls.swipe" class="controls-details-card">
+          <div class="controls-details-card-title">{{'controls.swipe' | translate}}</div>
+          <div class="controls-details-card-body">
+            <span>
+              <p-autoComplete [placeholder]="'controls.details.swipe_placeholder' | translate" [(ngModel)]="valueRegion" [suggestions]="optionsFilter" (completeMethod)="search($event)">
+                <ng-template let-brand pTemplate="item">
+                  <div style="font-size:18px;margin:10px 10px 0 0">{{brand}}</div>
+                </ng-template>
+              </p-autoComplete>
+              <div class="controls-details-card-body-actions">
+                <i class='bx bx-plus-circle' ></i>
+                <i class='bx bx-trash' ></i>
+              </div>
+            </span>
+          </div>
+        </div>
+        <div *ngIf="mapControls.search" class="controls-details-card">
+          <div class="controls-details-card-title">{{'controls.search' | translate}}</div>
+          <div class="controls-details-card-body">
+            <span>
+              <p-autoComplete [placeholder]="'controls.details.filter_placeholder' | translate" [(ngModel)]="valueRegion" [suggestions]="optionsFilter" (completeMethod)="search($event)" field="text">
+              </p-autoComplete>
+              <i [hidden]="selectRegion == defaultRegion" [pTooltip]="'controls.details.clear' | translate" class='close bx bx-x-circle' (click)="updateRegion(defaultRegion)"></i>
+            </span>
+          </div>
+        </div>
+        <div *ngIf="mapControls.drawArea" class="controls-details-card">
         </div>
       </div>
     </ol-map>

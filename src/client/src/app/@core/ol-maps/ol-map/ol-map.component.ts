@@ -1,4 +1,14 @@
-import { Component, OnInit, AfterViewInit, Input, ElementRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  Input,
+  ElementRef,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef
+} from '@angular/core';
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -36,7 +46,7 @@ export class OlMapComponent implements OnInit, AfterViewInit {
   private mapEl: HTMLElement;
   public loading: boolean;
 
-  constructor(private elementRef: ElementRef) {
+  constructor(private elementRef: ElementRef, private cdRef: ChangeDetectorRef) {
     this.loading = false;
 
     // this.basemaps.forEach(b => {
@@ -72,10 +82,8 @@ export class OlMapComponent implements OnInit, AfterViewInit {
     this.map.on('postrender', function () {
       self.loading = false;
     });
-    // this.map.on('postrender', function(){
-    //   console.log('aiuhasuidhuaishd')
-    //   self.loading = false;
-    // });
+
+    this.cdRef.detectChanges();
   }
 
   private setSize() {
@@ -88,10 +96,12 @@ export class OlMapComponent implements OnInit, AfterViewInit {
 
   public addLayer(layer) {
     this.map.addLayer(layer);
+    this.cdRef.detectChanges();
   }
 
   public setMarker(vector) {
     this.map.addLayer(vector);
+    this.cdRef.detectChanges();
   }
   public setControl(control: Control) {
     this.map.addControl(control);

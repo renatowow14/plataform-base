@@ -2460,25 +2460,41 @@
 		}
 	},
 	"basemap": {
-		"geopolitico": {
+		"bing": {
+			"pt": "Bing Maps",
+			"en": "Bing Maps"
+		},
+		"google": {
+			"pt": "Google Maps",
+			"en": "Google Maps"
+		},
+		"mapbox": {
 			"pt": "Geopolítico",
 			"en": "Geopolitical"
 		},
-		"satelite": {
+		"satellite": {
 			"pt": "Satélite",
 			"en": "Satellite"
 		},
-		"estradas": {
+		"roads": {
 			"pt": "Estradas",
 			"en": "Roads"
 		},
-		"relevo": {
+		"relief": {
 			"pt": "Relevo",
 			"en": "Relief"
+		},
+		"planet": {
+			"pt": "Planet",
+			"en": "Planet"
 		},
 		"landsat": {
 			"pt": "Landsat - 2018",
 			"en": "Landsat - 2018"
+		},
+		"stadia": {
+			"pt": "Mapa Escuro Stadia",
+			"en": "Dark Mapa Stadia"
 		}
 	},
 	"limits": {

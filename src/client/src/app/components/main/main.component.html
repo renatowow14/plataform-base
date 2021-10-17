@@ -4,16 +4,16 @@
     #leftSideBar
     [map]="map"
     [descriptor]="descriptor"
+    [basesmaps]="generalMap.basemapsAvaliable"
     [loadingDownload]="generalMap.loadingDown"
     (onMenuSelected)="onMenuSelected($event)"
     (onMenuToggle)="onMenuToggle($event)"
     (onSideBarToggle)="onSideBarToggle($event)"
     (onChangeLng)="onChangeLanguage()"
     (onLayerChangeVisibility)="generalMap.changeLayerVisibility($event)"
-    (onChangeMap)="onChangeBaseMap($event)"
-    (onChangeLimits)="onChangeLimit($event)"
     (onLayerChangeTransparency)="generalMap.onChangeTransparency($event)"
     (onDownload)="generalMap.buttonDownload($event)"
+    (onChangeMap)="generalMap.onChangeTransparency($event)"
   ></app-left-side-bar>
 
   <app-general-map
@@ -22,7 +22,6 @@
     [showRightSideBar]="rightSideBar.displayOptions"
     [openMenu]="openMenu"
     [displayLayers]="showLayers"
-    [basemap]="bmap"
     (mapInstance)="setMap($event)"
   ></app-general-map>
 

@@ -10,9 +10,9 @@ import {
   SimpleChanges
 } from '@angular/core';
 import Map from 'ol/Map';
-import { LocalizationService } from "../../@core/internationalization/localization.service";
+import {LocalizationService} from "../../@core/internationalization/localization.service";
 
-import {Legend, Menu, Layer, Metadata} from "../interfaces";
+import {Legend, Menu, Layer, Metadata} from "../../@core/interfaces";
 import {MessageService} from "primeng/api";
 import {MenuItem} from 'primeng/api';
 
@@ -25,6 +25,7 @@ import {MenuItem} from 'primeng/api';
 export class LeftSideBarComponent implements AfterViewInit {
   @Input() map: Map;
   @Input() descriptor: any;
+  @Input() basesmaps: any[];
   @Input() loadingDownload: any;
   @Output() onSideBarToggle = new EventEmitter<boolean>();
   @Output() onMenuToggle = new EventEmitter<boolean>();
@@ -37,19 +38,16 @@ export class LeftSideBarComponent implements AfterViewInit {
   @Output() onChangeLimits = new EventEmitter<any>();
 
   public Legendas: Legend[];
-  public mapaBase: Layer[];
-  public Limites: Layer[];
+  public limits: Layer[];
   public basemap: any;
   public limit: any;
 
   items: MenuItem[];
-  activeItem: MenuItem;
 
   public display: boolean;
   public open: boolean;
   public lang: string;
   public menu: Menu[];
-  public displayOpcoes = false as boolean;
   public displayFilter: boolean;
   public innerHeigth: number;
   public layersSideBar: boolean;
@@ -57,6 +55,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   public layersTitle: string;
   public menuMobile: Menu[];
   public currentMenu: Menu;
+  public optionsGroups: any;
   public expendGroup: boolean;
   public expendGroup2: boolean;
 
@@ -65,7 +64,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   public groupLayers: any[];
 
   public metadata: any;
-  public displayMetadata:boolean;
+  public displayMetadata: boolean;
 
   constructor(
     private el: ElementRef,
@@ -132,140 +131,65 @@ export class LeftSideBarComponent implements AfterViewInit {
       icon: 'fg-layers',
       show: false
     }
+
+    this.optionsGroups = {
+      basemaps: false,
+      limits: false,
+      settings: false
+    };
     this.expendGroup = false;
     this.expendGroup2 = false;
 
   }
 
   ngAfterViewInit(): void {
-    let navtab = document.querySelector("nav.navtab");
-    let navtabItems = document.querySelectorAll("li.navtab-item");
-    navtabItems.forEach((navtabItem, activeIndex) =>
-      navtabItem.addEventListener("click", () => {
-        navtabItems.forEach(navtabItem => navtabItem.classList.remove("active"));
-        navtabItem.classList.add("active");
-        (navtab as HTMLElement).style.setProperty(
-          "--active-index",
-          `${activeIndex}`
-        );
-      })
-    );
+    // this.basesmaps = [
+    //   {
+    //     name: 'Geopolitico (MapBox)',
+    //     key: 'mapbox',
+    //     type: 'bmap',
+    //     checked: true
+    //   },
+    //   {
+    //     name: 'Google Maps',
+    //     key: 'google',
+    //     type: 'bmap',
+    //     checked: false
+    //   },
+    //   {
+    //     name: 'Mosaico Planet',
+    //     key: 'planet',
+    //     type: 'bmap',
+    //     checked: false
+    //   },
+    //   {
+    //     name: 'Stadia Dark',
+    //     key: 'stadia',
+    //     type: 'bmap',
+    //     checked: false
+    //   }
+    // ];
+    this.basesmaps =   this.basesmaps.map(bmap => {
+      return bmap['visible'] = bmap.layer.get('visible')
+    });
     this.lang = this.localizationService.currentLang();
-    this.innerHeigth = window.innerHeight - 170;
+    this.innerHeigth = window.innerHeight - 200;
   }
 
-  ngOnInit(): void {
-
-     //Limites
-     this.Limites = [];
-
-     //Map-Base
-   this.mapaBase = [
-       {
-         nome: 'Geopolitico (MapBox)',
-         key: 'mapbox',
-         type: 'bmap',
-         checked: true
-       },
-       {
-         nome: 'Google Maps',
-         key: 'google',
-         type: 'bmap',
-         checked: false
-       },
-       {
-         nome: 'Mosaico Planet',
-         key: 'planet',
-         type: 'bmap',
-         checked: false
-       },
-       {
-         nome: 'Stadia Dark',
-         key: 'stadia',
-         type: 'bmap',
-         checked: false
-       }
-   ];
-
-   //Legendas
-   this.Legendas = [
-     {
-       nome: '<= 5km²',
-       color: 'green'
-     },
-     {
-       nome: '5 - 15 km²',
-       color: 'orange'
-     },
-     {
-       nome: '15 - 25 km²',
-       color: 'yellow'
-     }
- ];
-
-   //titulos do menu
-   this.items = [
-     {label: 'Legenda', icon: 'pi pi-fw pi-home'},
-     {label: 'Mapa-Base', icon: 'pi pi-fw pi-calendar'},
-     {label: 'Limites', icon: 'pi pi-fw pi-pencil'},
- ];
-
- this.activeItem = this.items[0];
-
-    // this.http.get('service/map/descriptor?lang=' + this.language).subscribe(result => {
-    //   this.descriptor = result
-    //   this.regionFilterDefault = this.descriptor.regionFilterDefault;
-    //
-    //   for (let groups of this.descriptor.groups) {
-    //
-    //     for (let layers of groups.layers) {
-    //       if (layers.types) {
-    //         for (let types of layers.types) {
-    //           this.layersTypes.push(types)
-    //         }
-    //       } else {
-    //         this.layersTypes.push(layers);
-    //       }
-    //       // this.layersTypes.sort(function (e1, e2) {
-    //       // 	return (e2.order - e1.order)
-    //       // });
-    //
-    //       this.layersNames.push(layers);
-    //     }
-    //
-    //   }
-    //   for (let basemap of this.descriptor.basemaps) {
-    //     for (let types of basemap.types) {
-    //       this.basemapsNames.push(types)
-    //     }
-    //   }
-    //
-    //   for (let limits of this.descriptor.limits) {
-    //     for (let types of limits.types) {
-    //       this.limitsNames.push(types)
-    //     }
-    //   }
-    //
-    //   this.createMap();
-    //   this.updateCharts();
-    //   this.addPoints();
-    // });
-  }
-
-  onChangeBaseMap(bmap){
-    this.mapaBase = this.mapaBase.map((b) => {
-      if(bmap !== b.key){
+  onChangeBaseMap(bmap) {
+    this.basesmaps = this.basesmaps.map((b) => {
+      if (bmap !== b.key) {
         b.checked = false;
       }
       return b;
     })
-    this.basemap = this.mapaBase.find(b => bmap === b.key);
-    this.onChangeMap.emit(this.basemap);
+    this.basemap = this.basesmaps.find(b => bmap === b.key);
+    this.onChangeMap.emit({layer: this.basemap, updateSource: false});
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('descriptor')) {
-      if (changes.descriptor) {
+      if (changes.descriptor.currentValue) {
         this.descriptor = changes.descriptor.currentValue;
       }
     }
@@ -273,14 +197,16 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.innerHeigth = window.innerHeight - 170;
+    this.innerHeigth = window.innerHeight - 200;
   }
 
   toggleMenu() {
     this.open = !this.open;
     this.onMenuToggle.emit(this.open);
-    if(this.map){
-      setTimeout(() => { this.map.updateSize() }, 300);
+    if (this.map) {
+      setTimeout(() => {
+        this.map.updateSize()
+      }, 300);
     }
   }
 
@@ -334,7 +260,7 @@ export class LeftSideBarComponent implements AfterViewInit {
 
     } else {
       this.layersSideBar = true;
-      this.onMenuSelected.emit({ show: this.layersSideBar, key: menu.key })
+      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
     }
   }
 
@@ -347,45 +273,46 @@ export class LeftSideBarComponent implements AfterViewInit {
   setMap(map) {
     this.map = map;
   }
-  enableMetadata(layer){
+
+  enableMetadata(layer) {
     let enable = false;
 
-    if(layer.hasOwnProperty('types')){
+    if (layer.hasOwnProperty('types')) {
       const seleted = layer.types.find(type => {
         return type.value = layer.selectedType;
       });
       enable = seleted.hasOwnProperty('metadata');
-    }else{
+    } else {
       enable = layer.hasOwnProperty('metadata')
     }
 
     return enable && layer.visible;
   }
 
-  formatMetadata(metadata){
-    let dt:any = {
+  formatMetadata(metadata) {
+    let dt: any = {
       title: '',
       data: []
     };
-    Object.getOwnPropertyNames(metadata).forEach(col =>{
-      if(col == 'title'){
+    Object.getOwnPropertyNames(metadata).forEach(col => {
+      if (col == 'title') {
         dt.title = metadata[col];
       }
-      dt.data.push({title: this.localizationService.translate('metadata.'+col), description: metadata[col]})
+      dt.data.push({title: this.localizationService.translate('metadata.' + col), description: metadata[col]})
     });
     return dt;
   }
 
-  showMetadata(layer){
+  showMetadata(layer) {
     this.metadata = null;
-    if(layer.hasOwnProperty('types')) {
+    if (layer.hasOwnProperty('types')) {
       const seleted = layer.types.find(type => {
         return type.value == layer.selectedType;
       });
-      if(seleted.metadata){
+      if (seleted.metadata) {
         this.metadata = this.formatMetadata(seleted.metadata);
         this.displayMetadata = true;
-      }else{
+      } else {
         this.metadata = null;
         this.displayMetadata = false;
       }
@@ -395,19 +322,19 @@ export class LeftSideBarComponent implements AfterViewInit {
     }
   }
 
-  isDetails(data){
+  isDetails(data) {
     return (data == "Detalhes" || data == "Details") ? true : false;
   }
 
-  download(type, layer, ev){
+  download(type, layer, ev) {
     this.onDownload.emit({tipo: type, layer: layer, e: ev});
   }
 
-  onChangeTransparency(layer, ev){
+  onChangeTransparency(layer, ev) {
     this.onLayerChangeTransparency.emit({layer: layer, opacity: ev.target.value})
   }
 
-  changeLayerVisibility(layer, updateSource = false){
+  changeLayerVisibility(layer, updateSource = false) {
     this.onLayerChangeVisibility.emit({layer: layer, updateSource: updateSource})
   }
 }

@@ -1,19 +1,37 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import TileLayer from "ol/layer/Tile";
 import Map from 'ol/Map';
 import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import { Descriptor, Control } from "../interfaces";
-import { DownloadService } from "../services";
-import { saveAs } from 'file-saver';
+import {Descriptor, Control, Ruler} from "../../@core/interfaces";
+import {DownloadService, MapService} from "../services";
+import {saveAs} from 'file-saver';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import { Coordinate, createStringXY, toStringHDMS } from "ol/coordinate";
-import { toLonLat } from "ol/proj";
-import {Graticule} from "ol";
+import {Coordinate, createStringXY, toStringHDMS} from "ol/coordinate";
+import {toLonLat} from "ol/proj";
+import {Graticule, Overlay} from "ol";
 import {BingMaps, XYZ} from "ol/source";
-import {Stroke} from "ol/style";
+import {Fill, Stroke, Style} from "ol/style";
+import {Geometry, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon} from 'ol/geom';
+import {Feature} from "ol";
+import {Draw, Interaction, Modify, Snap} from "ol/interaction";
+import VectorSource from "ol/source/Vector";
+import {GeoJSON} from "ol/format";
+import VectorLayer from "ol/layer/Vector";
+import CircleStyle from "ol/style/Circle";
+import {RulerAreaCtrl, RulerCtrl} from "../../@core/interactions/ruler";
 
 
 @Component({
@@ -22,13 +40,12 @@ import {Stroke} from "ol/style";
   styleUrls: ['./general-map.component.scss']
 })
 
-export class GeneralMapComponent implements OnInit {
+export class GeneralMapComponent implements OnInit, Ruler{
 
   @Input() displayLayers = true as boolean;
   @Input() openMenu = true as boolean;
-  @Input() showRightSideBar  = false as boolean;
+  @Input() showRightSideBar = false as boolean;
   @Input() descriptor: Descriptor;
-  @Input() basemap: any;
   @Output() onHide = new EventEmitter<any>();
   @Output() mapInstance = new EventEmitter<Map>();
 
@@ -43,6 +60,7 @@ export class GeneralMapComponent implements OnInit {
   public mousePositionOptions: any;
   public showFormPoint: boolean;
   public loadingDown: boolean;
+  public controlOptions: boolean;
   public lat: number;
   public lon: number;
 
@@ -50,9 +68,10 @@ export class GeneralMapComponent implements OnInit {
 
   public layersTypes: any[];
   public layersNames: any[];
-  public basemapsNames: any[];
+  public basemapsAvaliable: any[];
   public limitsNames: any[];
   public layersTMS: any;
+  public limitsTMS: any;
   public tileGrid: TileGrid;
   public projection: any;
   public urls: string[];
@@ -62,25 +81,41 @@ export class GeneralMapComponent implements OnInit {
   public selectRegion: any;
   public year: any;
 
+  private interaction: Interaction;
+
+  private source: VectorSource<Geometry> = new VectorSource();
+  private vector: VectorLayer<any> = new VectorLayer();
+  private modify: Modify;
+  private draw: any;
+  private snap: any;
   private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(8);
+
+  valueRegion: any;
+
+  optionsFilter: any[];
 
   constructor(
     public localizationService: LocalizationService,
-    private downloadService: DownloadService
+    private downloadService: DownloadService,
+    private cdRef: ChangeDetectorRef,
+    private mapService: MapService
   ) {
     this.showFormPoint = false;
     this.loadingDown = false;
+    this.controlOptions = false;
     this.layersTypes = [];
     this.layersNames = [];
-    this.basemapsNames = [];
     this.limitsNames = [];
     this.layersTMS = {};
+    this.limitsTMS = {};
 
     this.mapControls = {
       swipe: false,
       search: false,
       drawArea: false,
-      measure: false
+      measure: false,
+      measureArea: false,
+      print: false,
     }
 
     this.defaultRegion = {
@@ -240,23 +275,12 @@ export class GeneralMapComponent implements OnInit {
       placeholder: false,
       target: 'coordinates-label'
     }
+    this.initVectorLayerInteraction();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.map && changes.hasOwnProperty('basemap')) {
-      const bmap = changes.basemap.currentValue;
-      this.map.getLayers().forEach(layer => {
-        const properties = layer.getProperties();
-        if (properties.key == bmap.key && properties.type == bmap.type) {
-          layer.setVisible(true);
-        } else if (properties.type == bmap.type) {
-          layer.setVisible(false);
-        }
-      })
-    }
-
-    if(changes.hasOwnProperty('descriptor')){
-      if(this.map && changes.descriptor.currentValue.hasOwnProperty('regionFilterDefault')){
+    if (changes.hasOwnProperty('descriptor')) {
+      if (this.map && changes.descriptor.currentValue.hasOwnProperty('regionFilterDefault')) {
         this.descriptor = changes.descriptor.currentValue;
         this.onChangeDescriptor();
       }
@@ -269,9 +293,23 @@ export class GeneralMapComponent implements OnInit {
 
   ngOnInit(): void {
     this.innerHeigth = window.innerHeight;
+    this.basemapsAvaliable = [];
+    this.cdRef.detectChanges();
   }
 
-  onChangeDescriptor(){
+  changeVisibilityBasemap(ev) {
+    let {bmap} = ev;
+    this.map.getLayers().forEach(layer => {
+      const properties = layer.getProperties();
+      if (properties.key == bmap.key && properties.type == bmap.type) {
+        layer.setVisible(true);
+      } else if (properties.type == bmap.type) {
+        layer.setVisible(false);
+      }
+    })
+  }
+
+  onChangeDescriptor() {
     // this.map.getLayers().forEach(layer => {
     //   if(layer){
     //     const properties = layer.getProperties();
@@ -297,12 +335,18 @@ export class GeneralMapComponent implements OnInit {
       }
 
     }
+
     for (let basemap of this.descriptor.basemaps) {
       for (let types of basemap.types) {
-        this.basemapsNames.push(types)
+        const baseMapAvaliable = this.bmaps.find(b => {
+          return b.layer.get('key') === types.value;
+        })
+        if (baseMapAvaliable) {
+          baseMapAvaliable.layer.set('label', types.viewValue)
+          this.basemapsAvaliable.push(baseMapAvaliable)
+        }
       }
     }
-
     for (let limits of this.descriptor.limits) {
       for (let types of limits.types) {
         this.limitsNames.push(types)
@@ -374,13 +418,13 @@ export class GeneralMapComponent implements OnInit {
     return result;
   }
 
-  private createTMSLayer(layer) {
+  private createTMSLayer(layer, type = 'layer') {
     return new TileLayer({
       properties: {
         key: layer.value,
         label: layer.label,
         descriptorLayer: layer,
-        type: 'layer',
+        type: type,
         visible: layer.visible,
       },
       source: new XYZ({
@@ -406,14 +450,21 @@ export class GeneralMapComponent implements OnInit {
       this.layersTMS[layer.value] = this.createTMSLayer(layer);
       this.layers.push(this.layersTMS[layer.value])
     }
+
+    for (let bmap of this.basemapsAvaliable) {
+      this.layers.push(bmap.layer)
+    }
+
+    for (let limits of this.limitsNames) {
+      this.limitsTMS[limits.value] = this.createTMSLayer(limits, 'limit')
+      this.layers.push(this.limitsTMS[limits.value])
+    }
   }
 
-  changeLayerVisibility(ev){
-    let { layer, updateSource } = ev;
-    if(updateSource){
-      let sourceLayers = this.layersTMS[layer.value].getSource();
-      sourceLayers.setUrls(this.parseUrls(layer))
-      sourceLayers.refresh();
+  changeLayerVisibility(ev) {
+    let {layer, updateSource} = ev;
+    if (updateSource) {
+      this.updateSourceLayer(layer);
     } else {
       if (layer.types) {
         for (let layerType of layer.types) {
@@ -424,11 +475,11 @@ export class GeneralMapComponent implements OnInit {
       }
       this.layersTMS[layer.selectedType].setVisible(layer.visible);
 
-      if(layer.visible){
+      if (layer.visible) {
         this.selectedLayers.push(this.layersTMS[layer.selectedType])
       } else {
-        this.selectedLayers.forEach( (item, index) => {
-          if(item.getProperties().key === layer.selectedType) this.selectedLayers.splice(index,1);
+        this.selectedLayers.forEach((item, index) => {
+          if (item.getProperties().key === layer.selectedType) this.selectedLayers.splice(index, 1);
         });
       }
 
@@ -440,7 +491,7 @@ export class GeneralMapComponent implements OnInit {
     }
   }
 
-  updateZIndex(){
+  updateZIndex() {
     this.selectedLayers.forEach((item, index) => {
       item.setZIndex(index)
     });
@@ -450,7 +501,7 @@ export class GeneralMapComponent implements OnInit {
     let {layer, opacity} = ev;
     const op = ((100 - opacity) / 100);
     const layerTMS = this.layersTMS[layer.value];
-    if(layerTMS){
+    if (layerTMS) {
       layerTMS.setOpacity(op);
     }
   }
@@ -481,9 +532,8 @@ export class GeneralMapComponent implements OnInit {
 
     let name = ""
     if (parameters.time != undefined) {
-      name = parameters.layer.selectedType + "_" + parameters.region.value+ "_" + parameters.time.Viewvalue
-    }
-    else {
+      name = parameters.layer.selectedType + "_" + parameters.region.value + "_" + parameters.time.Viewvalue
+    } else {
       name = parameters.layer.selectedType + "_" + parameters.region.value
     }
     this.downloadService.downloadSHP(parameters).toPromise()
@@ -496,7 +546,7 @@ export class GeneralMapComponent implements OnInit {
   }
 
   downloadCSV(layer, yearDownload, filterRegion, columnsCSV) {
-   this.loadingDown = true;
+    this.loadingDown = true;
     let parameters = {
       "layer": layer.selectedType + yearDownload,
       "filterRegion": filterRegion + columnsCSV,
@@ -510,13 +560,13 @@ export class GeneralMapComponent implements OnInit {
         saveAs(blob, name + '.csv');
         this.loadingDown = false;
       }).catch(error => {
-        this.loadingDown = false;
+      this.loadingDown = false;
     });
   }
 
-  buttonDownload(ev){
+  buttonDownload(ev) {
 
-    let {tipo, layer, e } = ev;
+    let {tipo, layer, e} = ev;
     let yearDownload = '';
     let columnsCSV = '';
     let regionType = this.selectRegion.type;
@@ -547,8 +597,8 @@ export class GeneralMapComponent implements OnInit {
       regionType = "uf"
 
     if (tipo == 'shp') {
-     this.downloadSHP(layer, tipo)
-    } else if(tipo == 'csv'){
+      this.downloadSHP(layer, tipo)
+    } else if (tipo == 'csv') {
       this.downloadCSV(layer, yearDownload, filterRegion, columnsCSV);
     }
   }
@@ -558,16 +608,214 @@ export class GeneralMapComponent implements OnInit {
     this.updateZIndex();
   }
 
+  initVectorLayerInteraction(){
+    this.vector = new VectorLayer({
+      source: this.source,
+      style: new Style({
+        fill: new Fill({
+          color: 'rgba(255,255,255,0.52)',
+        }),
+        stroke: new Stroke({
+          color: '#ffcc33',
+          width: 1,
+        }),
+        image: new CircleStyle({
+          radius: 5,
+          fill: new Fill({
+            color: '#ffcc33',
+          }),
+        }),
+      }),
+    });
+  }
+
+  // @ts-ignore
+  isGeometry(feature: Feature) {
+
+    if (feature.getGeometry) {
+      const geometry = feature.getGeometry();
+      return geometry instanceof Point || geometry instanceof LinearRing || geometry instanceof LineString
+        || geometry instanceof MultiLineString || geometry instanceof MultiPoint
+        || geometry instanceof MultiPolygon || geometry instanceof Point || geometry instanceof Polygon;
+    }
+
+    return false;
+  }
+
+  onSwipe(){
+    this.controlOptions = true;
+    this.mapControls.swipe = !this.mapControls.swipe
+  }
+
+  onSearch(){
+    this.controlOptions = true;
+    this.mapControls.search = !this.mapControls.search
+  }
+
+  onRuler(): void {
+    this.mapControls.measure = !this.mapControls.measure;
+    if(this.mapControls.measure){
+      this.addInteraction(new RulerCtrl(this).getDraw());
+    } else {
+      this.unselect()
+    }
+  }
+
+  onRulerArea(): void {
+    this.mapControls.measureArea = !this.mapControls.measureArea
+    if(this.mapControls.measureArea){
+      this.addInteraction(new RulerAreaCtrl(this).getDraw());
+    } else {
+      this.unselect()
+    }
+
+  }
+
+  onPolygon(): void {
+    this.controlOptions = true;
+    this.mapControls.drawArea= !this.mapControls.drawArea
+    if(this.mapControls.drawArea){
+      this.addDrawInteraction('Polygon');
+    } else {
+      this.unselect()
+    }
+  }
+
+  removeInteraction(): void {
+    if (this.interaction != null) {
+      this.source.clear();
+      this.map.removeInteraction(this.interaction);
+      // @ts-ignore
+      this.map.removeLayer(this.vector);
+      this.map.removeInteraction(this.modify);
+      this.map.removeInteraction(this.snap);
+      // @ts-ignore
+
+      this.interaction = null; this.vector = null; this.modify = null; this.snap = null;
+      this.initVectorLayerInteraction();
+    }
+  }
+
+  addInteraction(interaction: Interaction, type: string = ''): void {
+    this.map.addLayer(this.vector);
+    this.interaction = interaction;
+    if(type === 'Polygon'){
+      this.modify = new Modify({source: this.source});
+      this.map.addInteraction(this.modify);
+      this.map.addInteraction(this.interaction);
+    }else{
+      this.map.addInteraction(this.interaction);
+    }
+
+    this.snap = new Snap({source: this.source});
+    this.map.addInteraction(this.snap);
+  }
+
+  getGeoJsonFromFeature(){
+    this.draw.on('drawend', e => {
+      if (this.isGeometry(e.feature)) {
+        let geom: Feature<any>[] = [];
+        this.source.getFeatures().forEach( function(feature) {
+          geom.push(new Feature(feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326')));
+        } );
+        let writer = new GeoJSON();
+        return writer.writeFeatures(geom);
+      }
+    });
+  }
+
+  addDrawInteraction(name: string): void {
+    if (name !== 'None') {
+      this.draw = new Draw({
+        source: this.source,
+        type: name
+      });
+      this.addInteraction(this.draw, name);
+    }
+  }
+
   handleSideBars() {
     let classes = "";
     if (this.displayLayers) {
       classes += 'open-layers '
     }
-    if(this.showRightSideBar) {
+    if (this.showRightSideBar) {
       classes += 'open-layers-right'
     }
 
     return classes;
+  }
+
+  addOverlay(overlay: Overlay): void {
+    this.map.addOverlay(overlay);
+  }
+
+  getMap(): Map {
+    return this.map;
+  }
+
+  // @ts-ignore
+  getSource(): VectorSource {
+    return this.source;
+  }
+
+  unselect(): void {
+    this.removeInteraction();
+  }
+
+  private zoomExtent() {
+    let map = this.map;
+    if (this.selectRegion.type != '') {
+      this.mapService.extent(this.selectRegion.value).subscribe(extentResult => {
+        let features = (new GeoJSON()).readFeatures(extentResult, {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:3857'
+        });
+        this.source.clear()
+        this.source.addFeature(features[0])
+        let extent = features[0].getGeometry().getExtent();
+        map.getView().fit(extent, { duration: 1500 });
+      })
+    }
+  }
+
+  private updateSourceLayer(layer){
+    let sourceLayers = this.layersTMS[layer.value].getSource();
+    sourceLayers.setUrls(this.parseUrls(layer))
+    sourceLayers.refresh();
+  }
+
+  private updateSourceAllLayers() {
+    for (let layer of this.layersTypes) {
+      this.updateSourceLayer(layer)
+    }
+  }
+
+  updateRegion(region) {
+    if (region == this.defaultRegion) {
+      this.valueRegion = ''
+    }
+
+    this.selectRegion = region;
+
+    if (this.selectRegion.type == 'municipio')
+      this.msFilterRegion = "cd_geocmu = '" + this.selectRegion.value + "'"
+    else if (this.selectRegion.type == 'estado')
+      this.msFilterRegion = "uf = '" + this.selectRegion.value + "'"
+    else
+      this.msFilterRegion = ""
+
+    this.zoomExtent();
+    this.updateSourceAllLayers()
+
+  }
+
+  search(ev) {
+    this.mapService.search(ev.query).subscribe(options => {
+      this.optionsFilter = options;
+    }, error => {
+      console.log(error)
+    });
   }
 
 }

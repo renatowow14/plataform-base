@@ -107,6 +107,7 @@ module.exports = function(app) {
                             Viewvalue: "Planet",
                             order: 10,
                             opacity: 1,
+                            visible: false,
                             timeLabel: languageJson["typelabel_layer"]["year"][language],
                             typeLabel: languageJson["typelabel_layer"]["type"][language],
                             timeSelected: "global_quarterly_2021q1_mosaic",
@@ -220,27 +221,37 @@ module.exports = function(app) {
                 "defaultBaseMap": 'mapbox',
                 "types": [{
                         "value": "mapbox",
-                        "viewValue": languageJson["basemap"]["geopolitico"][language],
+                        "viewValue": languageJson["basemap"]["mapbox"][language],
                         "visible": true
                     },
                     {
-                        "value": "satelite",
-                        "viewValue": languageJson["basemap"]["satelite"][language],
+                        "value": "roads",
+                        "viewValue": languageJson["basemap"]["roads"][language],
                         "visible": false
                     },
                     {
-                        "value": "estradas",
-                        "viewValue": languageJson["basemap"]["estradas"][language],
+                        "value": "bing",
+                        "viewValue": languageJson["basemap"]["bing"][language],
                         "visible": false
                     },
                     {
-                        "value": "relevo",
-                        "viewValue": languageJson["basemap"]["relevo"][language],
+                        "value": "planet",
+                        "viewValue": languageJson["basemap"]["planet"][language],
                         "visible": false
                     },
                     {
-                        "value": "landsat",
-                        "viewValue": languageJson["basemap"]["landsat"][language],
+                        "value": "google",
+                        "viewValue": languageJson["basemap"]["google"][language],
+                        "visible": false
+                    },
+                    {
+                        "value": "bing",
+                        "viewValue": languageJson["basemap"]["bing"][language],
+                        "visible": false
+                    },
+                    {
+                        "value": "stadia",
+                        "viewValue": languageJson["basemap"]["stadia"][language],
                         "visible": false
                     }
                 ]
