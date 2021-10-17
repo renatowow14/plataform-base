@@ -167,7 +167,7 @@
           padding: 4px;
           transition: all 0.5s ease;
           background-color: lighten($primary, 20%);
-          border-radius: 2px;
+          border-radius: 5px;
 
           &:focus {
             background-color: lighten($primary, 40%);
@@ -184,23 +184,23 @@
         }
 
         .control-active {
-          transform: scale(1.1);
           background-color: lighten($primary, 40%);
         }
       }
     }
+
     .controls-details{
       z-index: 101;
       position: absolute;
-      width: 20em;
+      width: 25em;
       top: 12px;
       left: 49px;
-      height: 14.8em;
+      max-height: 14.8em;
       transition: all 0.5s ease;
       background: rgba($primary, 0.6);
       border-radius: 2px;
       box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
-      overflow: hidden;
+      overflow: auto;
       .controls-details-header{
         transition: 0.6s ease all;
         color: white;
@@ -219,14 +219,74 @@
           }
         }
       }
-      .controls-details-body{
-        height: 12.1em;
-        z-index: 102;
+      .controls-details-card{
+        font-size: 12px;
         margin: 5px;
-        overflow: auto;
         background: white;
         border-radius: 5px;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        .controls-details-card-title {
+          font-size: 14px;
+          text-align: center;
+          padding: 8px;
+          display: flex;
+          justify-content: center;
+          background: lighten($primary, 60%);
+          border-top-left-radius: 5px;
+          border-top-right-radius: 5px;
+        }
+        .controls-details-card-body{
+          margin-top: 5px;
+          margin-bottom: 5px;
+          padding: 5px;
+          span{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            p-autocomplete{
+              width: 100%;
+            }
+            .p-inputtext{
+              padding: 0.5em;
+              width: 100%;
+              color: $primary;
+              font-size: 13px;
+              font-family: "Montserrat", sans-serif;
+            }
+            .p-autocomplete-loader{
+              font-size: 17px;
+              right: 0.3rem;
+              margin-top: -0.56rem;
+            }
+            .close{
+              margin: 5px;
+              font-size: 20px;
+              transition: all 0.8s ease;
+              padding: 8px;
+              border-radius: 50px;
+
+              &:hover {
+                cursor: pointer;
+                background: rgba($primary, 0.2);
+              }
+            }
+          }
+          .controls-details-card-body-actions {
+            margin: 6px;
+            display: flex;
+            i{
+              font-size: 20px;
+              transition: all 0.8s ease;
+              padding: 8px;
+              border-radius: 50px;
+
+              &:hover {
+                cursor: pointer;
+                background: rgba($primary, 0.2);
+              }
+            }
+          }
+        }
       }
     }
   }

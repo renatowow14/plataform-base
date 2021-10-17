@@ -15,8 +15,8 @@ import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import {Descriptor, Control, Ruler} from "../interfaces";
-import {DownloadService} from "../services";
+import {Descriptor, Control, Ruler} from "../../@core/interfaces";
+import {DownloadService, MapService} from "../services";
 import {saveAs} from 'file-saver';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Coordinate, createStringXY, toStringHDMS} from "ol/coordinate";
@@ -31,7 +31,7 @@ import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
 import VectorLayer from "ol/layer/Vector";
 import CircleStyle from "ol/style/Circle";
-import {RulerAreaCtrl, RulerCtrl} from "../interactions/ruler";
+import {RulerAreaCtrl, RulerCtrl} from "../../@core/interactions/ruler";
 
 
 @Component({
@@ -90,14 +90,19 @@ export class GeneralMapComponent implements OnInit, Ruler{
   private snap: any;
   private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(8);
 
+  valueRegion: any;
+
+  optionsFilter: any[];
+
   constructor(
     public localizationService: LocalizationService,
     private downloadService: DownloadService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private mapService: MapService
   ) {
     this.showFormPoint = false;
     this.loadingDown = false;
-    this.controlOptions = true;
+    this.controlOptions = false;
     this.layersTypes = [];
     this.layersNames = [];
     this.limitsNames = [];
@@ -459,9 +464,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
   changeLayerVisibility(ev) {
     let {layer, updateSource} = ev;
     if (updateSource) {
-      let sourceLayers = this.layersTMS[layer.value].getSource();
-      sourceLayers.setUrls(this.parseUrls(layer))
-      sourceLayers.refresh();
+      this.updateSourceLayer(layer);
     } else {
       if (layer.types) {
         for (let layerType of layer.types) {
@@ -639,6 +642,16 @@ export class GeneralMapComponent implements OnInit, Ruler{
     return false;
   }
 
+  onSwipe(){
+    this.controlOptions = true;
+    this.mapControls.swipe = !this.mapControls.swipe
+  }
+
+  onSearch(){
+    this.controlOptions = true;
+    this.mapControls.search = !this.mapControls.search
+  }
+
   onRuler(): void {
     this.mapControls.measure = !this.mapControls.measure;
     if(this.mapControls.measure){
@@ -646,7 +659,6 @@ export class GeneralMapComponent implements OnInit, Ruler{
     } else {
       this.unselect()
     }
-
   }
 
   onRulerArea(): void {
@@ -660,6 +672,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
   }
 
   onPolygon(): void {
+    this.controlOptions = true;
     this.mapControls.drawArea= !this.mapControls.drawArea
     if(this.mapControls.drawArea){
       this.addDrawInteraction('Polygon');
@@ -670,12 +683,14 @@ export class GeneralMapComponent implements OnInit, Ruler{
 
   removeInteraction(): void {
     if (this.interaction != null) {
+      this.source.clear();
       this.map.removeInteraction(this.interaction);
       // @ts-ignore
       this.map.removeLayer(this.vector);
       this.map.removeInteraction(this.modify);
       this.map.removeInteraction(this.snap);
       // @ts-ignore
+
       this.interaction = null; this.vector = null; this.modify = null; this.snap = null;
       this.initVectorLayerInteraction();
     }
@@ -704,8 +719,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
           geom.push(new Feature(feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326')));
         } );
         let writer = new GeoJSON();
-        let geoJsonStr = writer.writeFeatures(geom);
-        console.log(geoJsonStr);
+        return writer.writeFeatures(geom);
       }
     });
   }
@@ -747,6 +761,61 @@ export class GeneralMapComponent implements OnInit, Ruler{
 
   unselect(): void {
     this.removeInteraction();
+  }
+
+  private zoomExtent() {
+    let map = this.map;
+    if (this.selectRegion.type != '') {
+      this.mapService.extent(this.selectRegion.value).subscribe(extentResult => {
+        let features = (new GeoJSON()).readFeatures(extentResult, {
+          dataProjection: 'EPSG:4326',
+          featureProjection: 'EPSG:3857'
+        });
+        this.source.clear()
+        this.source.addFeature(features[0])
+        let extent = features[0].getGeometry().getExtent();
+        map.getView().fit(extent, { duration: 1500 });
+      })
+    }
+  }
+
+  private updateSourceLayer(layer){
+    let sourceLayers = this.layersTMS[layer.value].getSource();
+    sourceLayers.setUrls(this.parseUrls(layer))
+    sourceLayers.refresh();
+  }
+
+  private updateSourceAllLayers() {
+    for (let layer of this.layersTypes) {
+      this.updateSourceLayer(layer)
+    }
+  }
+
+  updateRegion(region) {
+    if (region == this.defaultRegion) {
+      this.valueRegion = ''
+    }
+
+    this.selectRegion = region;
+
+    if (this.selectRegion.type == 'municipio')
+      this.msFilterRegion = "cd_geocmu = '" + this.selectRegion.value + "'"
+    else if (this.selectRegion.type == 'estado')
+      this.msFilterRegion = "uf = '" + this.selectRegion.value + "'"
+    else
+      this.msFilterRegion = ""
+
+    this.zoomExtent();
+    this.updateSourceAllLayers()
+
+  }
+
+  search(ev) {
+    this.mapService.search(ev.query).subscribe(options => {
+      this.optionsFilter = options;
+    }, error => {
+      console.log(error)
+    });
   }
 
 }

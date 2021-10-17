@@ -25,8 +25,21 @@ export class MapService {
       );
   }
 
+  extent(region): Observable<any> {
+    return this.httpClient.get<any>(this.apiURL + '/extent?region=' + region)
+      .pipe(
+        catchError(this.errorHandler),
+      );
+  }
+
+  search(key): Observable<any> {
+    return this.httpClient.get<any>(this.apiURL + '/search?format=json&textRegion=' + key)
+      .pipe(
+        catchError(this.errorHandler),
+      );
+  }
+
   downloadSHP(parameters): Observable<Blob> {
-    console.log(parameters)
     return this.httpClient.post(this.apiURL + "/download/shp", parameters, { responseType: 'blob' })
   }
 

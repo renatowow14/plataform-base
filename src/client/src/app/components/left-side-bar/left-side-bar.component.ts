@@ -12,7 +12,7 @@ import {
 import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 
-import {Legend, Menu, Layer, Metadata} from "../interfaces";
+import {Legend, Menu, Layer, Metadata} from "../../@core/interfaces";
 import {MessageService} from "primeng/api";
 import {MenuItem} from 'primeng/api';
 

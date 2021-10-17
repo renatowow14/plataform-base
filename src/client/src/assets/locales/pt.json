@@ -10,13 +10,16 @@
   },
   "controls": {
     "swipe": "Swipe",
-    "search": "Pesquisar",
+    "search": "Filtros do Mapa",
     "draw": "Desenhar Área",
     "measure": "Medir Distância",
     "measureArea": "Medir Área",
     "print": "Imprimir Mapa",
     "details": {
-      "title": "Detalhes do Controle"
+      "title": "Detalhes do Controle",
+      "clear": "Limpar Filtro",
+      "filter_placeholder": "Escolha um estado ou município",
+      "swipe_placeholder": "Escolha uma camada para comparar"
     }
   },
   "left_sidebar": {

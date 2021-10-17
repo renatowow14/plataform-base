@@ -10,13 +10,16 @@
     },
     "controls": {
       "swipe": "Swipe",
-      "search": "Search",
+      "search": "Filters of Map",
       "draw": "Draw Area",
       "measure": "Measure Distance",
       "measureArea": "Measure Area",
       "print": "Print Map",
       "details": {
-        "title": "Controls Details"
+        "title": "Controls Details",
+        "clear": "Clear Filter",
+        "filter_placeholder": "Choose a state or county",
+        "swipe_placeholder": "Choose a layer to compare"
       }
     },
     "left_sidebar": {
