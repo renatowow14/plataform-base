@@ -37,13 +37,13 @@ module.exports = function(app) {
         return [{
                 source: 'lapig',
                 id: 'uso_solo_terraclass',
-                sql: "SELECT a.classe as label, b.color, sum(a.area_ha) as value, (SELECT SUM(pol_ha) FROM regions " + regionFilter + ") as area_mun FROM uso_solo_terraclass as A INNER JOIN graphic_colors as B on a.classe = b.name AND b.table_rel = 'uso_solo_terraclass' " + regionFilter + " GROUP BY 1,2 ORDER BY 3 DESC",
+                sql: "SELECT a.classe as label, b.color, sum(a.area_ha) as value, (SELECT CAST(SUM(pol_ha) as double precision) FROM regions " + regionFilter + ") as area_mun FROM uso_solo_terraclass as A INNER JOIN graphic_colors as B on a.classe = b.name AND b.table_rel = 'uso_solo_terraclass' " + regionFilter + " GROUP BY 1,2 ORDER BY 3 DESC",
                 mantain: true
             },
             {
                 source: 'lapig',
                 id: 'uso_solo_probio',
-                sql: "SELECT a.classe as label, b.color, sum(a.area_ha) as value, (SELECT SUM(pol_ha) FROM regions " + regionFilter + ") as area_mun FROM uso_solo_probio as A INNER JOIN graphic_colors as B on a.classe = b.name AND b.table_rel = 'uso_solo_probio' " + regionFilter + " GROUP BY 1,2 ORDER BY 3 DESC",
+                sql: "SELECT a.classe as label, b.color, sum(a.area_ha) as value, (SELECT CAST(SUM(pol_ha) as double precision) FROM regions " + regionFilter + ") as area_mun FROM uso_solo_probio as A INNER JOIN graphic_colors as B on a.classe = b.name AND b.table_rel = 'uso_solo_probio' " + regionFilter + " GROUP BY 1,2 ORDER BY 3 DESC",
                 mantain: true
             },
             // {
@@ -61,7 +61,7 @@ module.exports = function(app) {
         return [{
             source: 'lapig',
             id: 'prodes',
-            sql: " SELECT year, 'prodes_cerrado' source, SUM(pol_ha) as area_desmat_ha " +
+            sql: " SELECT year as label, 'prodes_cerrado' source, CAST(SUM(pol_ha) as double precision) as value " +
                 " FROM desmatamento_prodes " +
                 regionFilter + " AND year IS NOT NULL" +
                 " GROUP BY 1;",
