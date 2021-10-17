@@ -53,6 +53,7 @@ export class GeneralMapComponent implements OnInit {
   public basemapsNames: any[];
   public limitsNames: any[];
   public layersTMS: any;
+  public limitsTMS: any;
   public tileGrid: TileGrid;
   public projection: any;
   public urls: string[];
@@ -75,6 +76,7 @@ export class GeneralMapComponent implements OnInit {
     this.basemapsNames = [];
     this.limitsNames = [];
     this.layersTMS = {};
+    this.limitsTMS = {};
 
     this.mapControls = {
       swipe: false,
@@ -303,6 +305,8 @@ export class GeneralMapComponent implements OnInit {
       }
     }
 
+    console.log(this.basemapsNames)
+
     for (let limits of this.descriptor.limits) {
       for (let types of limits.types) {
         this.limitsNames.push(types)
@@ -374,13 +378,13 @@ export class GeneralMapComponent implements OnInit {
     return result;
   }
 
-  private createTMSLayer(layer) {
+  private createTMSLayer(layer, type = 'layer') {
     return new TileLayer({
       properties: {
         key: layer.value,
         label: layer.label,
         descriptorLayer: layer,
-        type: 'layer',
+        type: type,
         visible: layer.visible,
       },
       source: new XYZ({
@@ -405,6 +409,11 @@ export class GeneralMapComponent implements OnInit {
     for (let layer of this.layersTypes) {
       this.layersTMS[layer.value] = this.createTMSLayer(layer);
       this.layers.push(this.layersTMS[layer.value])
+    }
+
+    for (let limits of this.limitsNames) {
+      this.limitsTMS[limits.value] = this.createTMSLayer(limits, 'limit')
+      this.layers.push(this.limitsTMS[limits.value])
     }
   }
 

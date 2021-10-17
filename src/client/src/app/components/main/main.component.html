@@ -4,6 +4,7 @@
     #leftSideBar
     [map]="map"
     [descriptor]="descriptor"
+    [basesmaps]="generalMap.bmaps"
     [loadingDownload]="generalMap.loadingDown"
     (onMenuSelected)="onMenuSelected($event)"
     (onMenuToggle)="onMenuToggle($event)"
@@ -12,6 +13,7 @@
     (onLayerChangeVisibility)="generalMap.changeLayerVisibility($event)"
     (onLayerChangeTransparency)="generalMap.onChangeTransparency($event)"
     (onDownload)="generalMap.buttonDownload($event)"
+    (onChangeMap)="generalMap.onChangeTransparency($event)"
   ></app-left-side-bar>
 
   <app-general-map

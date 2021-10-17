@@ -90,7 +90,78 @@ module.exports = function(app) {
                         columnsCSV: "area_ha, classe, year",
                         downloadSHP: true,
                         downloadCSV: true
-                    }]
+                    },
+                        {
+                            id: "mapa_agricultura_agrosatelite",
+                            label: languageJson["title_layer_label"]["agrosatelite"][language],
+                            visible: false,
+                            selectedType: 'agricultura_agrosatelite',
+                            value: "agricultura_agrosatelite",
+                            opacity: 1,
+                            regionFilter: true,
+                            order: 2,
+                            typeLayer: "vectorial",
+                            typeLabel: languageJson["typelabel_layer"]["type"][language],
+                            timeLabel: languageJson["typelabel_layer"]["year"][language],
+                            timeSelected: "year=2014",
+                            timeHandler: "msfilter",
+                            times: [
+                                { value: "year=2001", Viewvalue: 2001 },
+                                { value: "year=2007", Viewvalue: 2007 },
+                                { value: "year=2014", Viewvalue: 2014 }
+                            ],
+                            metadata: {
+                                title: languageJson["metadata"]["agricultura_agrosatelite"]["title"][language],
+                                description: languageJson["metadata"]["agricultura_agrosatelite"]["description"][language],
+                                format: languageJson["metadata"]["agricultura_agrosatelite"]["format"][language],
+                                region: languageJson["metadata"]["agricultura_agrosatelite"]["region"][language],
+                                period: languageJson["metadata"]["agricultura_agrosatelite"]["period"][language],
+                                scale: languageJson["metadata"]["agricultura_agrosatelite"]["scale"][language],
+                                system_coordinator: languageJson["metadata"]["agricultura_agrosatelite"]["system_coordinator"][language],
+                                cartographic_projection: languageJson["metadata"]["agricultura_agrosatelite"]["cartographic_projection"][language],
+                                cod_caracter: languageJson["metadata"]["agricultura_agrosatelite"]["cod_caracter"][language],
+                                fonte: languageJson["metadata"]["agricultura_agrosatelite"]["fonte"][language],
+                                contato: "lapig.cepf@gmail.com"
+                            },
+                            columnsCSV: "area_ha, classe, year",
+                            downloadSHP: true,
+                            downloadCSV: true
+                        }, {
+                            id: "mapa_agricultura_agrosatelite",
+                            label: languageJson["title_layer_label"]["agrosatelite"][language],
+                            visible: false,
+                            selectedType: 'agricultura_agrosatelite',
+                            value: "agricultura_agrosatelite",
+                            opacity: 1,
+                            regionFilter: true,
+                            order: 2,
+                            typeLayer: "vectorial",
+                            typeLabel: languageJson["typelabel_layer"]["type"][language],
+                            timeLabel: languageJson["typelabel_layer"]["year"][language],
+                            timeSelected: "year=2014",
+                            timeHandler: "msfilter",
+                            times: [
+                                { value: "year=2001", Viewvalue: 2001 },
+                                { value: "year=2007", Viewvalue: 2007 },
+                                { value: "year=2014", Viewvalue: 2014 }
+                            ],
+                            metadata: {
+                                title: languageJson["metadata"]["agricultura_agrosatelite"]["title"][language],
+                                description: languageJson["metadata"]["agricultura_agrosatelite"]["description"][language],
+                                format: languageJson["metadata"]["agricultura_agrosatelite"]["format"][language],
+                                region: languageJson["metadata"]["agricultura_agrosatelite"]["region"][language],
+                                period: languageJson["metadata"]["agricultura_agrosatelite"]["period"][language],
+                                scale: languageJson["metadata"]["agricultura_agrosatelite"]["scale"][language],
+                                system_coordinator: languageJson["metadata"]["agricultura_agrosatelite"]["system_coordinator"][language],
+                                cartographic_projection: languageJson["metadata"]["agricultura_agrosatelite"]["cartographic_projection"][language],
+                                cod_caracter: languageJson["metadata"]["agricultura_agrosatelite"]["cod_caracter"][language],
+                                fonte: languageJson["metadata"]["agricultura_agrosatelite"]["fonte"][language],
+                                contato: "lapig.cepf@gmail.com"
+                            },
+                            columnsCSV: "area_ha, classe, year",
+                            downloadSHP: true,
+                            downloadCSV: true
+                        }]
                 },
                 {
                     id: "imagens",

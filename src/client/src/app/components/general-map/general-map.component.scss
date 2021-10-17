@@ -9,24 +9,24 @@
     transition: all 0.8s ease !important;
 
     .open-layers {
-      padding-left: 401px;
+      padding-left: 321px;
     }
 
-    .open-layers-right
-    {
-      padding-right: 321px;
+    .open-layers-right {
+      //padding-right: 321px;
+      margin-right: 321px;
     }
 
   }
 
   :host ::ng-deep .map {
+    position: relative;
 
     .coordinates {
       z-index: 101;
       position: absolute;
       top: 11px;
       right: 11px;
-
       .coordinates-container {
         display: flex;
         color: black;
@@ -108,13 +108,12 @@
     .legends {
       z-index: 101;
       position: absolute;
-      bottom: 18px;
-      right: 11px;
       width: 20em;
+      bottom: 19px;
+      right: 11px;
 
       .legends-container {
         color: black;
-
         background: rgba(22, 38, 35, 0.6);
         transition: all 0.5s ease;
         border-radius: 5px;
@@ -130,8 +129,13 @@
           border-top-right-radius: 5px;
 
           h5 {
-            margin-left: 6px;
             width: 100%;
+          }
+
+          h5, div {
+            margin: unset;
+            font-size: 0.9rem !important;
+            font-family: 'Montserrat', sans-serif !important;
           }
 
         }
@@ -146,18 +150,19 @@
       z-index: 101;
       position: absolute;
       top: 101px;
-
       .controls-container {
+        position: relative;
+
         display: flex;
         flex-direction: column;
         transition: all 0.5s ease;
-        margin-left: 5.6px;
+        margin-left: 8.6px;
         justify-content: space-between;
         align-items: center;
 
         i {
           color: white;
-          font-size: 18px;
+          font-size: 0.9em;
           margin: 2px;
           padding: 4px;
           transition: all 0.5s ease;

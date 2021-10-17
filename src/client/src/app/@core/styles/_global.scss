@@ -1,6 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,700;1,900&display=swap");
 @import "default_theme";
-@import "file_upload";
+
+.mat-body,
+.mat-body-1,
+.mat-typography,
+.mat-h4,
+.mat-subheading-1,
+.mat-typography h1,
+.mat-typography h2,
+.mat-typography h3,
+.mat-typography h4,
+.mat-typography h5 {
+  font: unset;
+  letter-spacing: unset;
+  margin: unset;
+}
 
 /* width */
 
@@ -47,24 +61,6 @@
     z-index: 1003 !important;
 }
 
-//
-//::-webkit-scrollbar {
-//  width: 5px;
-//  margin-left: 10px;
-//}
-//
-//::-webkit-scrollbar-track {
-//  background-color: rgba(228, 228, 228, 0.09);
-//  border-radius: 30px;
-//}
-//
-//::-webkit-scrollbar-thumb {
-//  border-radius: 30px;
-//  border: 6px solid rgba(0, 0, 0, 0.18);
-//  border-left: 0;
-//  border-right: 0;
-//  background-color:  lighten($primary, 60%);
-//}
 li:after {
     content: '';
     display: block;
@@ -108,14 +104,13 @@ li:after {
     bottom: 21px !important;
 }
 
-.ol-scale-text,
-.ol-scale-step-text {
-    text-shadow: unset !important;
-}
+//.ol-scale-text,
+//.ol-scale-step-text {
+//    text-shadow: unset !important;
+//}
 
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-    color: $primary !important;
-    ;
+    color: $primary !important;;
 }
 
 .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
