@@ -54,7 +54,8 @@ module.exports = function(app) {
         var language = request.param('lang')
         var typeRegion = request.param('typeRegion');
         var textRegion = request.param('textRegion');
-
+       // let {lang, typeRegion, textRegion} = request.body;
+      //  let language = lang;
         var region = languageJson["charts_regions"]["biome"][language]
 
         if (typeRegion == 'municipio' || typeRegion == 'estado') {
