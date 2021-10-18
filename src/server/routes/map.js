@@ -1,4 +1,4 @@
-module.exports = function(app) {
+module.exports = function (app) {
 
     var dataInjector = app.middleware.dataInjector;
     var map = app.controllers.map;
@@ -8,4 +8,9 @@ module.exports = function(app) {
     app.get('/service/map/search', dataInjector);
     app.get('/service/map/searchregion', dataInjector);
     app.get('/service/map/getowsdomain', map.host);
+    app.get('/service/map/cdgeocmu', dataInjector);
+    app.get('/service/map/cars', dataInjector);
+    app.get('/service/map/ucs', dataInjector);
+
+
 }

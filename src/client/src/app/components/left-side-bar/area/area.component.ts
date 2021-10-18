@@ -13,6 +13,7 @@ import VectorSource from 'ol/source/Vector';
 import Stroke from 'ol/style/Stroke';
 
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { AreaService } from '../../services/area.service';
 
 
 @Component({
@@ -63,7 +64,7 @@ export class AreaComponent implements OnInit {
 
   selectedIndexUpload: number;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private areaService: AreaService) {
     this.httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
@@ -353,7 +354,9 @@ export class AreaComponent implements OnInit {
     urlParams = '/service/upload/findgeojsonbytoken?' + params.join('&');
 
     try {
-      let result = await this.http.get(urlParams, this.httpOptions).toPromise()
+      // let result = await this.http.get(urlParams, this.httpOptions).toPromise()
+
+      let result = await this.areaService.getGeoJsonByToken(params).toPromise()
 
       this.layerFromConsulta.analyzedArea = result;
       this.layerFromConsulta.analyzedAreaLoading = false;

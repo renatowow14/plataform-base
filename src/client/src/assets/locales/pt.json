@@ -18,8 +18,19 @@
     "details": {
       "title": "Detalhes do Controle",
       "clear": "Limpar Filtro",
-      "filter_placeholder": "Escolha um estado ou município",
       "swipe_placeholder": "Escolha uma camada para comparar"
+    },
+    "filter_texts": {
+      "search_lateral_title": "Procurar por: ",
+      "label_region": "Região",
+      "label_car": "CAR",
+      "label_uc": "UC",
+      "search_placeholder_region": "Digite um Bioma, Estado ou Município",
+      "search_placeholder_car": "Digite o Código da Propriedade Rural",
+      "search_placeholder_uc": "Digite o nome da Unidade de Conservação",
+      "search_failed_region": "Desculpe, região não encontrada.",
+      "search_failed_car": "Desculpe, código da propriedade rural não encontrado.",
+      "search_failed_uc": "Desculpe, nenhuma Unidade de Conservação encontrada."
     }
   },
   "left_sidebar": {
