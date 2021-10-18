@@ -1,13 +1,7 @@
 <section class="" [class]="openMenu ? 'open map-container' : 'map-container' ">
   <div [ngClass]="handleSideBars()">
-    <ol-map
-      [lat]="-16.6958288"
-      [lon]="-49.4443537"
-      [zoom]="4.6"
-      [width]="'100%'"
-      [height]="'100vh'"
-      (onReady)="setMap($event)"
-    >
+    <ol-map [lat]="-16.6958288" [lon]="-49.4443537" [zoom]="4.6" [width]="'100%'" [height]="'100vh'"
+      (onReady)="setMap($event)">
       <ol-control control="FullScreen" [options]="{ source:'main'}">
       </ol-control>
       <ol-control control="ScaleLine" [options]="options">
@@ -24,24 +18,24 @@
       <ol-layer *ngFor="let layer of layers" [layer]="layer"></ol-layer>
 
       <ol-map-marker *ngIf="!showFormPoint && lat && lon" [lat]="lat" [lon]="lon"
-                     [text]="'Lat: ' + lat + '\nLon: ' + lon"></ol-map-marker>
+        [text]="'Lat: ' + lat + '\nLon: ' + lon"></ol-map-marker>
       <div *ngIf="showFormPoint" class="search-point">
         <div class="search-point-container">
-           <span class="p-float-label">
-              <input type="number" id="lat" pInputText [(ngModel)]="lat">
-              <label for="lat">Latitude</label>
-           </span>
           <span class="p-float-label">
-              <input type="number" id="lon" pInputText [(ngModel)]="lon">
-              <label for="lat">Longitude</label>
-           </span>
+            <input type="number" id="lat" pInputText [(ngModel)]="lat">
+            <label for="lat">Latitude</label>
+          </span>
+          <span class="p-float-label">
+            <input type="number" id="lon" pInputText [(ngModel)]="lon">
+            <label for="lat">Longitude</label>
+          </span>
           <i (click)="searchPoint()" class='fg-location-on fg-lg'></i>
         </div>
       </div>
       <div class="coordinates">
         <div class="coordinates-container">
           <i (click)="showFormPoint = !showFormPoint" [pTooltip]="'map.find_point' | translate"
-             class='fg-search-poi fg-lg'></i>
+            class='fg-search-poi fg-lg'></i>
           <div id="coordinates-label" class="mouse-position"></div>
         </div>
       </div>
@@ -52,13 +46,14 @@
           </div>
           <div class="legends-body" cdkDropList (cdkDropListDropped)="drop($event)">
             <div *ngFor="let layer of selectedLayers" cdkDrag
-                 [class]="layer.visible ? 'legend-card legend-card-active' :'legend-card'">
+              [class]="layer.visible ? 'legend-card legend-card-active' :'legend-card'">
               <div class="legend-card-content">
                 <div (click)="layer.visible = !layer.visible" class="abstract">
                   <span>
-                   <i class='bx bx-move'></i>
-                    <div
-                      class="legend-label">{{ layer.get('key') === 'planet' ? localizationService.translate('planet') : layer.get('label') }}</div>
+                    <i class='bx bx-move'></i>
+                    <div class="legend-label">
+                      {{ layer.get('key') === 'planet' ? localizationService.translate('planet') : layer.get('label') }}
+                    </div>
                     <i [class]="layer.visible  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
                   </span>
                 </div>
@@ -77,8 +72,8 @@
       <div class="controls">
         <div class="controls-container">
           <i [pTooltip]="'controls.swipe' | translate"
-             [class]="mapControls.swipe ? 'bx bx-book-content control-active' : 'bx bx-book-content '"
-             (click)="onSwipe()"></i>
+            [class]="mapControls.swipe ? 'bx bx-book-content control-active' : 'bx bx-book-content '"
+            (click)="onSwipe()"></i>
           <i [pTooltip]="'controls.search' | translate"
              [class]="mapControls.search ? 'bx bx-search-alt control-active' : 'bx bx-search-alt '"
              (click)="onSearch()"></i>
@@ -106,14 +101,15 @@
           <div class="controls-details-card-title">{{'controls.swipe' | translate}}</div>
           <div class="controls-details-card-body">
             <span>
-              <p-autoComplete [placeholder]="'controls.details.swipe_placeholder' | translate" [(ngModel)]="valueRegion" [suggestions]="optionsFilter" (completeMethod)="search($event)">
+              <p-autoComplete [placeholder]="'controls.details.swipe_placeholder' | translate" [(ngModel)]="valueSwipe"
+                [suggestions]="swipeOptions" (completeMethod)="search($event)">
                 <ng-template let-brand pTemplate="item">
                   <div style="font-size:18px;margin:10px 10px 0 0">{{brand}}</div>
                 </ng-template>
               </p-autoComplete>
               <div class="controls-details-card-body-actions">
-                <i class='bx bx-plus-circle' ></i>
-                <i class='bx bx-trash' ></i>
+                <i class='bx bx-plus-circle'></i>
+                <i class='bx bx-trash'></i>
               </div>
             </span>
           </div>
@@ -121,17 +117,35 @@
         <div *ngIf="mapControls.search" class="controls-details-card">
           <div class="controls-details-card-title">{{'controls.search' | translate}}</div>
           <div class="controls-details-card-body">
+            <div class="grid">
+              <div class="col-3">
+                <div class="p-text-bold"> <b>{{'controls.filter_texts.search_lateral_title' | translate}} </b>
+                </div>
+              </div>
+              <div class="col-9">
+                <p-selectButton [options]="searchOptions" [(ngModel)]="selectedSearchOption">
+                  <ng-template let-item>
+                    <!-- <i [class]="item.icon"></i> -->
+                    <mat-icon>{{item.icon}}</mat-icon>
+                    <p>{{item.label}}</p>
+                  </ng-template>
+                </p-selectButton>
+                <!-- (onChange)="onChangeSearchOption($event)"  -->
+
+              </div>
+            </div>
             <span>
               <p-autoComplete
-                [placeholder]="'controls.details.filter_placeholder' | translate"
-                [(ngModel)]="valueRegion"
-                [suggestions]="optionsFilter"
-                (completeMethod)="search($event)"
-                field="text"
-              >
+                [placeholder]="'controls.filter_texts.search_placeholder_' + selectedSearchOption | translate"
+                [(ngModel)]="selectedAutoCompleteText" [suggestions]="listForAutoComplete"
+                (completeMethod)="obtainSearchSuggestions($event)" field="text" styleClass="wid100"
+                (onSelect)="onSelectSuggestion($event)"
+                [emptyMessage]="'controls.filter_texts.search_failed_' + selectedSearchOption | translate">
               </p-autoComplete>
-              <i [hidden]="selectRegion == defaultRegion" [pTooltip]="'controls.details.clear' | translate" class='close bx bx-x-circle' (click)="updateRegion(defaultRegion)"></i>
+              <i *ngIf="selectedAutoCompleteText != ''" [pTooltip]="'controls.details.clear' | translate"
+                class='close bx bx-x-circle' (click)="true"></i>
             </span>
+
           </div>
         </div>
         <div *ngIf="mapControls.drawArea" class="controls-details-card">

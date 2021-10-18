@@ -32,6 +32,7 @@
     "ngx-drag-scroll": "^12.0.0-beta.1",
     "ol": "^6.6.1",
     "pbf": "^3.2.1",
+    "primeflex": "^3.0.1",
     "primeicons": "^4.1.0",
     "primeng": "^12.2.0",
     "proj4": "^2.7.4",

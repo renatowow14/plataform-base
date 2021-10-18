@@ -13,26 +13,28 @@ import TileLayer from "ol/layer/Tile";
 import Map from 'ol/Map';
 import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
-import {LocalizationService} from "../../@core/internationalization/localization.service";
+import { LocalizationService } from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import {Descriptor, Control, Ruler} from "../../@core/interfaces";
-import {DownloadService, MapService} from "../services";
-import {saveAs} from 'file-saver';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {Coordinate, createStringXY, toStringHDMS} from "ol/coordinate";
-import {toLonLat} from "ol/proj";
-import {Graticule, Overlay} from "ol";
-import {BingMaps, XYZ} from "ol/source";
-import {Fill, Stroke, Style} from "ol/style";
-import {Geometry, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon} from 'ol/geom';
-import {Feature} from "ol";
-import {Draw, Interaction, Modify, Snap} from "ol/interaction";
+import { Descriptor, Control, Ruler } from "../../@core/interfaces";
+import { DownloadService, MapService } from "../services";
+import { saveAs } from 'file-saver';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Coordinate, createStringXY, format, toStringHDMS } from "ol/coordinate";
+import { toLonLat } from "ol/proj";
+import { Graticule, Overlay } from "ol";
+import { BingMaps, XYZ } from "ol/source";
+import { Fill, Stroke, Style } from "ol/style";
+import { Geometry, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
+import { Feature } from "ol";
+import { Draw, Interaction, Modify, Snap } from "ol/interaction";
 import VectorSource from "ol/source/Vector";
-import {GeoJSON} from "ol/format";
+import { GeoJSON } from "ol/format";
 import VectorLayer from "ol/layer/Vector";
 import CircleStyle from "ol/style/Circle";
-import {RulerAreaCtrl, RulerCtrl} from "../../@core/interactions/ruler";
-
+import { Observable, timer } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, switchMap, tap, take } from 'rxjs/operators';
+import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
+import { SelectItem, PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-general-map',
@@ -40,7 +42,7 @@ import {RulerAreaCtrl, RulerCtrl} from "../../@core/interactions/ruler";
   styleUrls: ['./general-map.component.scss']
 })
 
-export class GeneralMapComponent implements OnInit, Ruler{
+export class GeneralMapComponent implements OnInit, Ruler {
 
   @Input() displayLayers = true as boolean;
   @Input() openMenu = true as boolean;
@@ -88,16 +90,29 @@ export class GeneralMapComponent implements OnInit, Ruler{
   private modify: Modify;
   private draw: any;
   private snap: any;
-  private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(8);
+  private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(4);
 
-  valueRegion: any;
 
-  optionsFilter: any[];
+  public otherLayerFromFilters: any = {
+    layer: null,
+    strokeColor: '#363230',
+  }
+
+  public selectedAutoCompleteText = '';
+  public listForAutoComplete: any[];
+  public textsComponentesFilters: any;
+  public selectedSearchOption: string;
+  public searchOptions: SelectItem[];
+
+  public swipeOptions: any[];
+  public valueSwipe: any;
+
 
   constructor(
     public localizationService: LocalizationService,
     private downloadService: DownloadService,
     private cdRef: ChangeDetectorRef,
+    private primeNGConfig: PrimeNGConfig,
     private mapService: MapService
   ) {
     this.showFormPoint = false;
@@ -296,10 +311,20 @@ export class GeneralMapComponent implements OnInit, Ruler{
     this.innerHeigth = window.innerHeight;
     this.basemapsAvaliable = [];
     this.cdRef.detectChanges();
+    this.primeNGConfig.ripple = true;
+
+    this.searchOptions = [
+      { label: this.localizationService.translate('controls.filter_texts.label_region'), value: 'region', icon: 'language' },
+      { label: this.localizationService.translate('controls.filter_texts.label_car'), value: 'car', icon: 'home' },
+      { label: this.localizationService.translate('controls.filter_texts.label_uc'), value: 'uc', icon: 'nature_people' },
+      // { label: this.language === 'pt-br' ? 'Ponto' : 'Point', value: 'coordinate', icon: 'fa fa-fw fa-map-pin' }
+    ];
+    this.selectedSearchOption = 'region';
+    this.selectedAutoCompleteText = ''
   }
 
   changeVisibilityBasemap(ev) {
-    let {bmap} = ev;
+    let { bmap } = ev;
     this.map.getLayers().forEach(layer => {
       const properties = layer.getProperties();
       if (properties.key == bmap.key && properties.type == bmap.type) {
@@ -463,7 +488,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
   }
 
   changeLayerVisibility(ev) {
-    let {layer, updateSource} = ev;
+    let { layer, updateSource } = ev;
     if (updateSource) {
       this.updateSourceLayer(layer);
     } else {
@@ -499,7 +524,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
   }
 
   onChangeTransparency(ev) {
-    let {layer, opacity} = ev;
+    let { layer, opacity } = ev;
     const op = ((100 - opacity) / 100);
     const layerTMS = this.layersTMS[layer.value];
     if (layerTMS) {
@@ -542,8 +567,8 @@ export class GeneralMapComponent implements OnInit, Ruler{
         saveAs(blob, name + '.zip');
         this.loadingDown = false;
       }).catch(error => {
-      this.loadingDown = false;
-    });
+        this.loadingDown = false;
+      });
   }
 
   downloadCSV(layer, yearDownload, filterRegion, columnsCSV) {
@@ -561,13 +586,13 @@ export class GeneralMapComponent implements OnInit, Ruler{
         saveAs(blob, name + '.csv');
         this.loadingDown = false;
       }).catch(error => {
-      this.loadingDown = false;
-    });
+        this.loadingDown = false;
+      });
   }
 
   buttonDownload(ev) {
 
-    let {tipo, layer, e} = ev;
+    let { tipo, layer, e } = ev;
     let yearDownload = '';
     let columnsCSV = '';
     let regionType = this.selectRegion.type;
@@ -594,7 +619,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
       filterRegion = this.msFilterRegion
     }
 
-    if (this.selectRegion.type == 'estado')
+    if (this.selectRegion.type == 'state')
       regionType = "uf"
 
     if (tipo == 'shp') {
@@ -609,7 +634,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
     this.updateZIndex();
   }
 
-  initVectorLayerInteraction(){
+  initVectorLayerInteraction() {
     this.vector = new VectorLayer({
       source: this.source,
       style: new Style({
@@ -643,19 +668,19 @@ export class GeneralMapComponent implements OnInit, Ruler{
     return false;
   }
 
-  onSwipe(){
+  onSwipe() {
     this.controlOptions = true;
     this.mapControls.swipe = !this.mapControls.swipe
   }
 
-  onSearch(){
+  onSearch() {
     this.controlOptions = true;
     this.mapControls.search = !this.mapControls.search
   }
 
   onRuler(): void {
     this.mapControls.measure = !this.mapControls.measure;
-    if(this.mapControls.measure){
+    if (this.mapControls.measure) {
       this.addInteraction(new RulerCtrl(this).getDraw());
     } else {
       this.unselect()
@@ -664,7 +689,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
 
   onRulerArea(): void {
     this.mapControls.measureArea = !this.mapControls.measureArea
-    if(this.mapControls.measureArea){
+    if (this.mapControls.measureArea) {
       this.addInteraction(new RulerAreaCtrl(this).getDraw());
     } else {
       this.unselect()
@@ -684,8 +709,8 @@ export class GeneralMapComponent implements OnInit, Ruler{
 
   onPolygon(): void {
     this.controlOptions = true;
-    this.mapControls.drawArea= !this.mapControls.drawArea
-    if(this.mapControls.drawArea){
+    this.mapControls.drawArea = !this.mapControls.drawArea
+    if (this.mapControls.drawArea) {
       this.addDrawInteraction('Polygon');
     } else {
       this.unselect()
@@ -711,25 +736,25 @@ export class GeneralMapComponent implements OnInit, Ruler{
   addInteraction(interaction: Interaction, type: string = ''): void {
     this.map.addLayer(this.vector);
     this.interaction = interaction;
-    if(type === 'Polygon'){
-      this.modify = new Modify({source: this.source});
+    if (type === 'Polygon') {
+      this.modify = new Modify({ source: this.source });
       this.map.addInteraction(this.modify);
       this.map.addInteraction(this.interaction);
-    }else{
+    } else {
       this.map.addInteraction(this.interaction);
     }
 
-    this.snap = new Snap({source: this.source});
+    this.snap = new Snap({ source: this.source });
     this.map.addInteraction(this.snap);
   }
 
-  getGeoJsonFromFeature(){
+  getGeoJsonFromFeature() {
     this.draw.on('drawend', e => {
       if (this.isGeometry(e.feature)) {
         let geom: Feature<any>[] = [];
-        this.source.getFeatures().forEach( function(feature) {
-          geom.push(new Feature(feature.getGeometry().clone().transform('EPSG:3857', 'EPSG:4326')));
-        } );
+        this.source.getFeatures().forEach(function (feature) {
+          geom.push(new Feature(feature.getGeometry()!.clone().transform('EPSG:3857', 'EPSG:4326')));
+        });
         let writer = new GeoJSON();
         return writer.writeFeatures(geom);
       }
@@ -791,7 +816,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
     }
   }
 
-  private updateSourceLayer(layer){
+  private updateSourceLayer(layer) {
     let sourceLayers = this.layersTMS[layer.value].getSource();
     sourceLayers.setUrls(this.parseUrls(layer))
     sourceLayers.refresh();
@@ -805,7 +830,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
 
   updateRegion(region) {
     if (region == this.defaultRegion) {
-      this.valueRegion = ''
+      this.selectedAutoCompleteText = ''
     }
 
     this.selectRegion = region;
@@ -824,10 +849,109 @@ export class GeneralMapComponent implements OnInit, Ruler{
 
   search(ev) {
     this.mapService.search(ev.query).subscribe(options => {
-      this.optionsFilter = options;
+      this.swipeOptions = options.search;
     }, error => {
       console.log(error)
     });
+  }
+
+  obtainSearchSuggestions(event) {
+
+    if (this.selectedSearchOption.toLowerCase() == 'region') {
+
+      let query = event.query;
+      this.mapService.getRegions(query).subscribe(result => {
+        this.listForAutoComplete = result.search;
+      });
+    }
+    else if (this.selectedSearchOption.toLowerCase() == 'car') {
+      let query = event.query;
+      this.mapService.getCARS(query).subscribe(result => {
+        this.listForAutoComplete = result.search;
+      });
+    }
+    else if (this.selectedSearchOption.toLowerCase() == 'uc') {
+      let query = event.query;
+      this.mapService.getUCs(query).subscribe(result => {
+        this.listForAutoComplete = result.search;
+      });
+    }
+
+    console.log(this.listForAutoComplete)
+
+  }
+
+  onSelectSuggestion(event) {
+
+    if (this.selectedSearchOption.toLowerCase() == 'region') {
+      this.updateRegion(event)
+    }
+    else if (this.selectedSearchOption.toLowerCase() == 'car' || this.selectedSearchOption.toLowerCase() == 'uc') {
+      this.updateAreaOnMap(event)
+    }
+
+  }
+
+  onChangeSearchOption(event) {
+
+    console.log(this.selectedSearchOption.toLowerCase())
+
+    this.textsComponentesFilters.search_placeholder = this.localizationService.translate('controls.filter_texts.search_placeholder_' + new String(this.selectedSearchOption).toLowerCase())
+    this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' + this.selectedSearchOption.toLowerCase())
+
+  }
+
+
+  private async clearAreaBeforeSearch() {
+    await this.updateRegion(this.defaultRegion)
+
+    await timer(2000).pipe(take(1)).toPromise();
+  }
+
+  async updateAreaOnMap(event) {
+
+    if (this.selectRegion != this.defaultRegion) {
+      await this.clearAreaBeforeSearch();
+    }
+
+    let map = this.map;
+
+    map.removeLayer(this.otherLayerFromFilters.layer)
+
+    this.selectedAutoCompleteText = event
+
+    let vectorSource = new VectorSource({
+      features: (new GeoJSON()).readFeatures(event.geojson, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+      })
+    });
+
+    this.otherLayerFromFilters.layer = new VectorLayer({
+      source: vectorSource,
+      style: [
+        new Style({
+          stroke: new Stroke({
+            color: this.otherLayerFromFilters.strokeColor,
+            width: 4
+          })
+        }),
+        new Style({
+          stroke: new Stroke({
+            color: this.otherLayerFromFilters.strokeColor,
+            width: 4,
+            lineCap: 'round'
+          })
+        })
+      ]
+    });
+
+    map.addLayer(this.otherLayerFromFilters.layer);
+    let extent = this.otherLayerFromFilters.layer.getSource().getExtent();
+    map.getView().fit(extent, { duration: 1800 });
+
+
+
   }
 
 }

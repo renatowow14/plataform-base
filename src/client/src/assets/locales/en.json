@@ -1,33 +1,44 @@
 {
     "basemans": {
-      "mapbox": "Geopolitico (MapBox)",
-      "bing": "Bing Maps",
-      "google": "Google",
-      "roads": "Roads",
-      "relief": "Relief",
-      "planet": "Planet",
-      "stadia": "Dark Mapa Stadia"
+        "mapbox": "Geopolitico (MapBox)",
+        "bing": "Bing Maps",
+        "google": "Google",
+        "roads": "Roads",
+        "relief": "Relief",
+        "planet": "Planet",
+        "stadia": "Dark Mapa Stadia"
     },
     "controls": {
-      "swipe": "Swipe",
-      "search": "Filters of Map",
-      "draw": "Draw Area",
-      "measure": "Measure Distance",
-      "measureArea": "Measure Area",
-      "print": "Print Map",
-      "details": {
-        "title": "Controls Details",
-        "clear": "Clear Filter",
-        "filter_placeholder": "Choose a state or county",
-        "swipe_placeholder": "Choose a layer to compare"
-      }
+        "swipe": "Swipe",
+        "search": "Filters of Map",
+        "draw": "Draw Area",
+        "measure": "Measure Distance",
+        "measureArea": "Measure Area",
+        "print": "Print Map",
+        "details": {
+            "title": "Controls Details",
+            "clear": "Clear Filter",
+            "swipe_placeholder": "Choose a layer to compare"
+        },
+        "filter_texts": {
+            "search_lateral_title": "Search by: ",
+            "label_region": "Region",
+            "label_car": "CAR",
+            "label_uc": "Cons. Unit",
+            "search_placeholder_region": "Choose a biome, state or county",
+            "search_placeholder_car": "Please enter the Rural Property Code",
+            "search_placeholder_uc": "Please enter the name of the Conservation Unit",
+            "search_failed_region": "Sorry, region not found.",
+            "search_failed_car": "Sorry, CAR not found.",
+            "search_failed_uc": "Sorry, none Conservation unit were found."
+        }
     },
     "left_sidebar": {
         "title": "Menu"
     },
     "dataSeries": {
-      "title": "Statistics",
-      "graphictitle": "Timeseries"
+        "title": "Statistics",
+        "graphictitle": "Timeseries"
     },
     "map": {
         "coordinates": "Coordinates",

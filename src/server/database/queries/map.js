@@ -1,4 +1,4 @@
-module.exports = function(app) {
+module.exports = function (app) {
 
     var Internal = {}
     var Query = {};
@@ -8,7 +8,7 @@ module.exports = function(app) {
         'region': 'Cerrado'
     }
 
-    Query.extent = function(params) {
+    Query.extent = function (params) {
         return [{
             source: 'general',
             id: 'extent',
@@ -17,18 +17,51 @@ module.exports = function(app) {
         }]
     }
 
-    Query.search = function() {
+    Query.search = function () {
         return [{
             source: 'general',
             id: 'search',
-            sql: "SELECT distinct text, value, type FROM regions_geom WHERE unaccent(text) ILIKE unaccent(${textRegion}%) AND type NOT in ('country') LIMIT 10",
+            sql: "SELECT distinct text || ' - ' || uf as text, value, type FROM regions_geom WHERE unaccent(text) ILIKE unaccent(${key}%) AND type NOT in ('country') LIMIT 10",
             mantain: true
         }]
 
     }
 
-    Query.searchregion = function() {
-        return "SELECT text, value, type FROM regions_geom WHERE unaccent(value) ILIKE unaccent(${textRegion}) AND type = (${type}) LIMIT 10";
+    Query.searchregion = function () {
+        return [{
+            source: 'general',
+            id: 'search',
+            sql: "SELECT text, value, type FROM regions_geom WHERE unaccent(value) ILIKE unaccent(${key}) AND type = (${type}) LIMIT 10",
+            mantain: true
+        }]
+    }
+
+    Query.cdgeocmu = function () {
+        return [{
+            source: 'general',
+            id: 'search',
+            sql: "SELECT text, value, type, cd_geocmu FROM regions WHERE cd_geocmu=${key} LIMIT 10",
+            mantain: true
+        }]
+    }
+
+    Query.cars = function () {
+        return [{
+            source: 'general',
+            id: 'search',
+            sql: "SELECT cod_car || ' - ' || uf as text, uf, area_km2, cd_geocmu, ST_AsGeoJSON(geom) geojson FROM car_cerrado WHERE unaccent(cod_car) ILIKE unaccent(${key}%) order by area_km2 DESC LIMIT 10",
+            mantain: true
+        }]
+    }
+
+    Query.ucs = function (params) {
+        var key = params['key']
+        return [{
+            source: 'general',
+            id: 'search',
+            sql: "SELECT nome || ' - ' || uf as text, uf, cd_geocmu, ST_AsGeoJSON(geom) geojson FROM ucs WHERE unaccent(nome) ILIKE unaccent('%" + key + "%') order by nome ASC LIMIT 10",
+            mantain: true
+        }]
     }
 
 

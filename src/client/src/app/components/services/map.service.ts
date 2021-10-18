@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { of } from "rxjs";
+import { map } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +11,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class MapService {
 
   private apiURL = '/service/map';
+
+  static PARAMS = new HttpParams({
+    fromObject: {
+      format: "json"
+    }
+  });
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -20,23 +28,29 @@ export class MapService {
 
   getDescriptor(lng): Observable<any> {
     return this.httpClient.get<any>(this.apiURL + '/descriptor?lang=' + lng)
-      .pipe(
-        catchError(this.errorHandler),
-      );
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler),
+    );
   }
 
   extent(region): Observable<any> {
     return this.httpClient.get<any>(this.apiURL + '/extent?region=' + region)
-      .pipe(
-        catchError(this.errorHandler),
-      );
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler),
+    );
   }
 
-  search(key): Observable<any> {
-    return this.httpClient.get<any>(this.apiURL + '/search?format=json&textRegion=' + key)
-      .pipe(
-        catchError(this.errorHandler),
-      );
+  search(term): Observable<any> {
+
+    if (term === "") {
+      return of([]);
+    }
+
+    return this.httpClient.get<any>(this.apiURL + '/search', { params: MapService.PARAMS.set("key", term) })
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler));
+
+
   }
 
   downloadSHP(parameters): Observable<Blob> {
@@ -47,6 +61,45 @@ export class MapService {
     return this.httpClient.post(this.apiURL + "/download/csv", parameters, { responseType: 'blob' })
   }
 
+  getRegions(term: string): Observable<any> {
+
+    if (term === "") {
+      return of([]);
+    }
+
+    return this.httpClient.get<any>(this.apiURL + '/search', { params: MapService.PARAMS.set("key", term) })
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler));
+
+  }
+
+  getCARS(term: string): Observable<any> {
+
+    return this.httpClient.get<any>(this.apiURL + '/cars', { params: MapService.PARAMS.set("key", term) })
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler));
+
+  }
+
+  getUCs(term: string): Observable<any> {
+
+    if (term === "") {
+      return of([]);
+    }
+
+    return this.httpClient.get<any>(this.apiURL + '/ucs', { params: MapService.PARAMS.set("key", term) })
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler));
+
+  }
+
+  getRegionByGeocodigo(term: string): Observable<any[]> {
+
+    return this.httpClient.get<any>(this.apiURL + '/cdgeocmu', { params: MapService.PARAMS.set("key", term) })
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler));
+
+  }
 
   errorHandler(error) {
     let errorMessage = '';

@@ -41,6 +41,8 @@ import { AreaComponent } from './left-side-bar/area/area.component';
 import { LOCALE_ID } from '@angular/core';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData, DatePipe, DecimalPipe } from '@angular/common';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 registerLocaleData(localePt);
 
@@ -48,6 +50,8 @@ registerLocaleData(localePt);
 @NgModule({
   declarations: [...routedComponents, AreaComponent],
   imports: [
+    MatButtonToggleModule,
+    SelectButtonModule,
     MatFormFieldModule,
     MatTabsModule,
     MatInputModule,
