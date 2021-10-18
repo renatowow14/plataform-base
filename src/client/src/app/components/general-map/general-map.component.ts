@@ -4,10 +4,9 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnInit,
   Output,
-  SimpleChanges,
-  ViewChild
+  OnInit,
+  SimpleChanges
 } from '@angular/core';
 import TileLayer from "ol/layer/Tile";
 import Map from 'ol/Map';
@@ -15,7 +14,7 @@ import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
 import { LocalizationService } from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import { Descriptor, Control, Ruler } from "../../@core/interfaces";
+import {Descriptor, Control, Ruler, TextFilter} from "../../@core/interfaces";
 import { DownloadService, MapService } from "../services";
 import { saveAs } from 'file-saver';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -100,7 +99,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   public selectedAutoCompleteText = '';
   public listForAutoComplete: any[];
-  public textsComponentesFilters: any;
+  public textsComponentesFilters: TextFilter;
   public selectedSearchOption: string;
   public searchOptions: SelectItem[];
 
@@ -123,6 +122,11 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.limitsNames = [];
     this.layersTMS = {};
     this.limitsTMS = {};
+
+    this.textsComponentesFilters = {
+      search_failed: '',
+      search_placeholder: ''
+    }
 
     this.mapControls = {
       swipe: false,
@@ -294,6 +298,24 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.initVectorLayerInteraction();
   }
 
+  ngOnInit(): void {
+    this.innerHeigth = window.innerHeight;
+    this.basemapsAvaliable = [];
+    this.cdRef.detectChanges();
+    this.primeNGConfig.ripple = true;
+    this.selectedSearchOption = 'region';
+
+    this.searchOptions = [
+      { label: this.localizationService.translate('controls.filter_texts.label_region'), value: 'region', icon: 'language' },
+      { label: this.localizationService.translate('controls.filter_texts.label_car'), value: 'car', icon: 'home' },
+      { label: this.localizationService.translate('controls.filter_texts.label_uc'), value: 'uc', icon: 'nature_people' },
+      // { label: this.language === 'pt-br' ? 'Ponto' : 'Point', value: 'coordinate', icon: 'fa fa-fw fa-map-pin' }
+    ];
+
+    this.onChangeSearchOption();
+    this.cdRef.detectChanges();
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('descriptor')) {
       if (this.map && changes.descriptor.currentValue.hasOwnProperty('regionFilterDefault')) {
@@ -305,22 +327,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
     setTimeout(() => {
       this.map.updateSize()
     });
-  }
-
-  ngOnInit(): void {
-    this.innerHeigth = window.innerHeight;
-    this.basemapsAvaliable = [];
-    this.cdRef.detectChanges();
-    this.primeNGConfig.ripple = true;
-
-    this.searchOptions = [
-      { label: this.localizationService.translate('controls.filter_texts.label_region'), value: 'region', icon: 'language' },
-      { label: this.localizationService.translate('controls.filter_texts.label_car'), value: 'car', icon: 'home' },
-      { label: this.localizationService.translate('controls.filter_texts.label_uc'), value: 'uc', icon: 'nature_people' },
-      // { label: this.language === 'pt-br' ? 'Ponto' : 'Point', value: 'coordinate', icon: 'fa fa-fw fa-map-pin' }
-    ];
-    this.selectedSearchOption = 'region';
-    this.selectedAutoCompleteText = ''
   }
 
   changeVisibilityBasemap(ev) {
@@ -851,7 +857,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.mapService.search(ev.query).subscribe(options => {
       this.swipeOptions = options.search;
     }, error => {
-      console.log(error)
     });
   }
 
@@ -876,9 +881,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
         this.listForAutoComplete = result.search;
       });
     }
-
-    console.log(this.listForAutoComplete)
-
   }
 
   onSelectSuggestion(event) {
@@ -889,18 +891,20 @@ export class GeneralMapComponent implements OnInit, Ruler {
     else if (this.selectedSearchOption.toLowerCase() == 'car' || this.selectedSearchOption.toLowerCase() == 'uc') {
       this.updateAreaOnMap(event)
     }
-
   }
 
-  onChangeSearchOption(event) {
-
-    console.log(this.selectedSearchOption.toLowerCase())
-
-    this.textsComponentesFilters.search_placeholder = this.localizationService.translate('controls.filter_texts.search_placeholder_' + new String(this.selectedSearchOption).toLowerCase())
-    this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' + this.selectedSearchOption.toLowerCase())
+  onChangeSearchOption(ev = null) {
+    console.log(this.selectedSearchOption)
+    this.textsComponentesFilters.search_placeholder = this.localizationService.translate('controls.filter_texts.search_placeholder_'+ this.selectedSearchOption)
+    this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' +  this.selectedSearchOption)
+    // if(ev){
+    //
+    // } else {
+    //   this.textsComponentesFilters.search_placeholder = this.localizationService.translate('controls.filter_texts.search_placeholder_'+ ev.target!.value)
+    //   this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' +  this.selectedSearchOption)
+    // }
 
   }
-
 
   private async clearAreaBeforeSearch() {
     await this.updateRegion(this.defaultRegion)
@@ -949,9 +953,5 @@ export class GeneralMapComponent implements OnInit, Ruler {
     map.addLayer(this.otherLayerFromFilters.layer);
     let extent = this.otherLayerFromFilters.layer.getSource().getExtent();
     map.getView().fit(extent, { duration: 1800 });
-
-
-
   }
-
 }

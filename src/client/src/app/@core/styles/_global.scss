@@ -74,6 +74,22 @@ html, body {
   background-color: $primary;
 }
 
+.p-button {
+  font-weight: unset;
+  min-width: unset;
+}
+.mat-button-toggle-checked {
+  background-color: lighten($primary, 60%);
+  color: $primary;
+}
+.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item {
+  padding: 0.5rem 0.5rem;
+  font-size: 14px;
+  &:hover{
+    background: lighten($primary, 60%);
+  }
+}
+
 .mat-tab-label {
   height: 35px !important;
 }

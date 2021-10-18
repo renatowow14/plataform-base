@@ -97,58 +97,56 @@
           <h5>{{'controls.details.title' | translate}}</h5>
           <i (click)="controlOptions = !controlOptions" class='bx bx-x-circle'></i>
         </div>
-        <div *ngIf="mapControls.swipe" class="controls-details-card">
-          <div class="controls-details-card-title">{{'controls.swipe' | translate}}</div>
-          <div class="controls-details-card-body">
-            <span>
-              <p-autoComplete [placeholder]="'controls.details.swipe_placeholder' | translate" [(ngModel)]="valueSwipe"
-                [suggestions]="swipeOptions" (completeMethod)="search($event)">
-                <ng-template let-brand pTemplate="item">
-                  <div style="font-size:18px;margin:10px 10px 0 0">{{brand}}</div>
-                </ng-template>
-              </p-autoComplete>
-              <div class="controls-details-card-body-actions">
-                <i class='bx bx-plus-circle'></i>
-                <i class='bx bx-trash'></i>
-              </div>
-            </span>
-          </div>
-        </div>
-        <div *ngIf="mapControls.search" class="controls-details-card">
-          <div class="controls-details-card-title">{{'controls.search' | translate}}</div>
-          <div class="controls-details-card-body">
-            <div class="grid">
-              <div class="col-3">
-                <div class="p-text-bold"> <b>{{'controls.filter_texts.search_lateral_title' | translate}} </b>
-                </div>
-              </div>
-              <div class="col-9">
-                <p-selectButton [options]="searchOptions" [(ngModel)]="selectedSearchOption">
-                  <ng-template let-item>
-                    <!-- <i [class]="item.icon"></i> -->
-                    <mat-icon>{{item.icon}}</mat-icon>
-                    <p>{{item.label}}</p>
+        <div class="controls-details-body">
+          <div *ngIf="mapControls.swipe" class="controls-details-card">
+            <div class="controls-details-card-title">{{'controls.swipe' | translate}}</div>
+            <div class="controls-details-card-body">
+              <span>
+                <p-autoComplete [placeholder]="'controls.details.swipe_placeholder' | translate" [(ngModel)]="valueSwipe"
+                  [suggestions]="swipeOptions" (completeMethod)="search($event)">
+                  <ng-template let-brand pTemplate="item">
+                    <div style="font-size:18px;margin:10px 10px 0 0">{{brand}}</div>
                   </ng-template>
-                </p-selectButton>
-                <!-- (onChange)="onChangeSearchOption($event)"  -->
-
-              </div>
+                </p-autoComplete>
+                <div class="controls-details-card-body-actions">
+                  <i class='bx bx-plus-circle'></i>
+                  <i class='bx bx-trash'></i>
+                </div>
+              </span>
             </div>
-            <span>
-              <p-autoComplete
-                [placeholder]="'controls.filter_texts.search_placeholder_' + selectedSearchOption | translate"
-                [(ngModel)]="selectedAutoCompleteText" [suggestions]="listForAutoComplete"
-                (completeMethod)="obtainSearchSuggestions($event)" field="text" styleClass="wid100"
-                (onSelect)="onSelectSuggestion($event)"
-                [emptyMessage]="'controls.filter_texts.search_failed_' + selectedSearchOption | translate">
-              </p-autoComplete>
-              <i *ngIf="selectedAutoCompleteText != ''" [pTooltip]="'controls.details.clear' | translate"
-                class='close bx bx-x-circle' (click)="true"></i>
-            </span>
-
           </div>
-        </div>
-        <div *ngIf="mapControls.drawArea" class="controls-details-card">
+          <div *ngIf="mapControls.search" class="controls-details-card">
+            <div class="controls-details-card-title">{{'controls.search' | translate}}</div>
+            <div class="controls-details-card-body">
+              <div id="search-options" class="search-options">
+                <div class="search-options-title">
+                 {{'controls.filter_texts.search_lateral_title' | translate}}
+                </div>
+                <mat-button-toggle-group appearance="legacy" #group="matButtonToggleGroup" [(ngModel)]="selectedSearchOption" (change)="onChangeSearchOption()">
+                  <mat-button-toggle *ngFor="let option of searchOptions" value="{{option.value}}" aria-label="{{option.label}}">
+                    <mat-icon>{{option.icon}}</mat-icon> {{option.label}}
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+              <span>
+                <p-autoComplete
+                  [appendTo]="'body'"
+                  [placeholder]="textsComponentesFilters.search_placeholder"
+                  [(ngModel)]="selectedAutoCompleteText" [suggestions]="listForAutoComplete"
+                  (completeMethod)="obtainSearchSuggestions($event)" field="text" styleClass="wid100"
+                  (onSelect)="onSelectSuggestion($event)"
+                  [emptyMessage]="textsComponentesFilters.search_failed">
+                   <ng-template let-brand pTemplate="item">
+                          <div class="autocomplete-option">{{brand.text}}</div>
+                  </ng-template>
+                </p-autoComplete>
+                <i *ngIf="selectedAutoCompleteText != ''" [pTooltip]="'controls.details.clear' | translate"
+                  class='close bx bx-x-circle' (click)="true"></i>
+              </span>
+
+            </div>
+          </div>
+          <div *ngIf="mapControls.drawArea" class="controls-details-card"></div>
         </div>
       </div>
     </ol-map>

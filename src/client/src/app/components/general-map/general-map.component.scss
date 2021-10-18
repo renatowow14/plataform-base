@@ -195,12 +195,11 @@
       width: 25em;
       top: 12px;
       left: 49px;
-      max-height: 14.8em;
       transition: all 0.5s ease;
       background: rgba($primary, 0.6);
       border-radius: 2px;
       box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
-      overflow: auto;
+      overflow: hidden;
       .controls-details-header{
         transition: 0.6s ease all;
         color: white;
@@ -218,6 +217,10 @@
             cursor: pointer;
           }
         }
+      }
+      .controls-details-body{
+        max-height: 14.8em;
+        overflow-x: auto;
       }
       .controls-details-card{
         font-size: 12px;
@@ -268,6 +271,22 @@
               &:hover {
                 cursor: pointer;
                 background: rgba($primary, 0.2);
+              }
+            }
+          }
+          .search-options{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+
+            .p-button{
+              padding: 5px !important;
+            }
+            div[role='button']{
+              span{
+                display: none;
               }
             }
           }

@@ -7,7 +7,7 @@ import {
   Output,
   HostListener,
   Input,
-  SimpleChanges
+  SimpleChanges, ChangeDetectorRef
 } from '@angular/core';
 import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
@@ -70,7 +70,8 @@ export class LeftSideBarComponent implements AfterViewInit {
     private el: ElementRef,
     private localizationService: LocalizationService,
     private renderer: Renderer2,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.metadata = {};
     this.displayMetadata = false;
@@ -174,6 +175,7 @@ export class LeftSideBarComponent implements AfterViewInit {
     });
     this.lang = this.localizationService.currentLang();
     this.innerHeigth = window.innerHeight - 170;
+    this.cdRef.detectChanges();
   }
 
   onChangeBaseMap(bmap) {
