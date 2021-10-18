@@ -15,13 +15,13 @@ abstract class RulerControl {
     // @ts-ignore
     private sketch: Feature;
 
-    protected constructor(protected component: Ruler, private tipo: string) {
+    protected constructor(protected component: Ruler, private type: string) {
     }
 
     getDraw(): Draw {
         const draw = new Draw({
             source: this.component.getSource(),
-            type: this.tipo,
+            type: this.type,
             style: new Style({
                 fill: new Fill({
                     color: 'rgba(255, 255, 255, 0.2)',

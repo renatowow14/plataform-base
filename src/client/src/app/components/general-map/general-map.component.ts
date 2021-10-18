@@ -116,6 +116,7 @@ export class GeneralMapComponent implements OnInit, Ruler{
       measure: false,
       measureArea: false,
       print: false,
+      point: false
     }
 
     this.defaultRegion = {
@@ -671,6 +672,16 @@ export class GeneralMapComponent implements OnInit, Ruler{
 
   }
 
+  onPoint(): void {
+    this.controlOptions = true;
+    this.mapControls.point= !this.mapControls.point
+    if(this.mapControls.point){
+      this.addDrawInteraction('Point');
+    } else {
+      this.unselect()
+    }
+  }
+
   onPolygon(): void {
     this.controlOptions = true;
     this.mapControls.drawArea= !this.mapControls.drawArea
@@ -682,18 +693,19 @@ export class GeneralMapComponent implements OnInit, Ruler{
   }
 
   removeInteraction(): void {
-    if (this.interaction != null) {
-      this.source.clear();
-      this.map.removeInteraction(this.interaction);
-      // @ts-ignore
-      this.map.removeLayer(this.vector);
-      this.map.removeInteraction(this.modify);
-      this.map.removeInteraction(this.snap);
-      // @ts-ignore
+    // if (this.interaction != null) {
+    //
+    // }
+    this.source.clear();
+    this.map.removeInteraction(this.interaction);
+    // @ts-ignore
+    this.map.removeLayer(this.vector);
+    this.map.removeInteraction(this.modify);
+    this.map.removeInteraction(this.snap);
+    // @ts-ignore
 
-      this.interaction = null; this.vector = null; this.modify = null; this.snap = null;
-      this.initVectorLayerInteraction();
-    }
+    this.interaction = null; this.vector = null; this.modify = null; this.snap = null;
+    this.initVectorLayerInteraction();
   }
 
   addInteraction(interaction: Interaction, type: string = ''): void {

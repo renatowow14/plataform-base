@@ -173,7 +173,7 @@ export class LeftSideBarComponent implements AfterViewInit {
       return bmap['visible'] = bmap.layer.get('visible')
     });
     this.lang = this.localizationService.currentLang();
-    this.innerHeigth = window.innerHeight - 200;
+    this.innerHeigth = window.innerHeight - 170;
   }
 
   onChangeBaseMap(bmap) {
@@ -197,7 +197,7 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.innerHeigth = window.innerHeight - 200;
+    this.innerHeigth = window.innerHeight - 170;
   }
 
   toggleMenu() {

@@ -49,6 +49,12 @@
     background: lighten($primary, 30%);
     cursor: pointer !important;
 }
+
+::placeholder {
+  color: lighten($primary, 20%);
+  opacity: 1;
+}
+
 html, body {
   color: $primary;
 }
@@ -62,6 +68,18 @@ html, body {
 
 .p-sidebar-left {
     z-index: 1003 !important;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background-color: $primary;
+}
+
+.mat-tab-label {
+  height: 35px !important;
+}
+
+.mat-tab-label-active{
+  background:  lighten($primary, 50%);
 }
 
 li:after {

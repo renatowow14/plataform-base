@@ -5,4 +5,5 @@ export interface Control {
   measure: boolean;
   measureArea: boolean;
   print: boolean;
+  point: boolean;
 }
