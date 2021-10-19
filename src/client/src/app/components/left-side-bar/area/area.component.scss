@@ -7,7 +7,7 @@
 
   .mat-form-field {
     width: 92%;
-    margin: 14px;
+    margin: 13px;
   }
 
   .card-checkbox-upload {
@@ -30,25 +30,25 @@
     .card-upload-analysed {
         margin: 10px;
         border-radius: 4px;
-        color: rgba(0, 0, 0, .54);
+        color: $primary;
         font-weight: 500;
         .title-file-card {
             padding: 9px;
             font-size: 13px;
         }
         .btn-print {
-            color: darken($primary, 40%) !important;
+            color:$primary !important;
         }
         &-table {
             margin-bottom: 15px;
             margin-top: 15px;
             text-align: center;
             .ui-table .ui-table-tbody>tr:nth-child(even).ui-state-highlight {
-                background-color: darken($primary, 40%) !important;
+                background-color: $primary !important;
                 color: #ffffff !important;
             }
             .ui-table .ui-table-tbody>tr.ui-state-highlight {
-                background-color: darken($primary, 40%) !important;
+                background-color: $primary !important;
                 color: #ffffff !important;
             }
             &-title {
@@ -62,14 +62,14 @@
             padding-top: 32px;
             .card {
                 margin: 15px;
-                color: rgba(0, 0, 0, 0.54);
+                color: $primary;
                 cursor: pointer;
                 transition: 0.5s;
-                font-size: 14px;
+                font-size: 13px;
                 padding: 14px;
                 border-radius: 6px;
                 &:hover {
-                    background-color: darken($primary, 40%) !important;
+                    background-color: $primary !important;
                     color: white;
                 }
             }
@@ -80,7 +80,7 @@
     }
     .btn-print-token {
         margin-left: 8px !important;
-        color: darken($primary, 40%) !important;
+        color: $primary !important;
     }
     .buttons-analyze {
         display: flex;
@@ -109,7 +109,7 @@
         color: white;
         border-top-right-radius: 4px;
         border-top-left-radius: 4px;
-        background-color: darken($primary, 40%);
+        background-color: $primary;
     }
     .map-snack-bar {
         text-align: center;
@@ -120,9 +120,9 @@
         z-index: 1000000000;
     }
     .info-header {
-        font-size: 14px;
+        font-size: 12px;
         padding: 5px;
-        margin: 10px;
+        margin: 3px;
         border-radius: 6px;
         background-color: #8080802e;
         text-align: justify;
@@ -135,7 +135,7 @@
         border-radius: 6px;
         background-color: rgba(128, 83, 58, 0.18);
         text-align: justify;
-        border-left: 5px solid #58070e;
+        border-left: 5px solid $primary;
     }
     .btn-languages {
         display: flex;

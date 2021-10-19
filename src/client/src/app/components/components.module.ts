@@ -43,7 +43,7 @@ import localePt from '@angular/common/locales/pt';
 import { registerLocaleData, DatePipe, DecimalPipe } from '@angular/common';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-
+import {RippleModule} from 'primeng/ripple';
 registerLocaleData(localePt);
 
 
@@ -89,7 +89,8 @@ registerLocaleData(localePt);
     ToastModule,
     DialogModule,
     DragDropModule,
-    HttpClientModule
+    HttpClientModule,
+    RippleModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },

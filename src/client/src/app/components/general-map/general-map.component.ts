@@ -18,7 +18,7 @@ import {Descriptor, Control, Ruler, TextFilter} from "../../@core/interfaces";
 import { DownloadService, MapService } from "../services";
 import { saveAs } from 'file-saver';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Coordinate, createStringXY, format, toStringHDMS } from "ol/coordinate";
+import { Coordinate, createStringXY} from "ol/coordinate";
 import { toLonLat } from "ol/proj";
 import { Graticule, Overlay } from "ol";
 import { BingMaps, XYZ } from "ol/source";
@@ -30,10 +30,11 @@ import VectorSource from "ol/source/Vector";
 import { GeoJSON } from "ol/format";
 import VectorLayer from "ol/layer/Vector";
 import CircleStyle from "ol/style/Circle";
-import { Observable, timer } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, switchMap, tap, take } from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
 import { SelectItem, PrimeNGConfig } from 'primeng/api';
+import {resolve} from "chart.js/helpers";
 
 @Component({
   selector: 'app-general-map',
@@ -89,6 +90,10 @@ export class GeneralMapComponent implements OnInit, Ruler {
   private modify: Modify;
   private draw: any;
   private snap: any;
+  public features: any[];
+  public highlightStyle: Style;
+  public defaultStyle: Style;
+
   private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(4);
 
 
@@ -106,7 +111,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
   public swipeOptions: any[];
   public valueSwipe: any;
 
-
   constructor(
     public localizationService: LocalizationService,
     private downloadService: DownloadService,
@@ -122,6 +126,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.limitsNames = [];
     this.layersTMS = {};
     this.limitsTMS = {};
+
+    this.features = [];
 
     this.textsComponentesFilters = {
       search_failed: '',
@@ -295,10 +301,44 @@ export class GeneralMapComponent implements OnInit, Ruler {
       placeholder: false,
       target: 'coordinates-label'
     }
+
+    this.defaultStyle = new Style({
+      fill: new Fill({
+        color: 'rgba(255,255,255,0.52)',
+      }),
+      stroke: new Stroke({
+        color: this.readStyleProperty('primary'),
+        width: 2,
+      }),
+      image: new CircleStyle({
+        radius: 5,
+        fill: new Fill({
+          color: this.readStyleProperty('primary'),
+        }),
+      }),
+    });
+
+    this.highlightStyle = new Style({
+      fill: new Fill({
+        color: 'rgba(255,255,255,0.52)',
+      }),
+      stroke: new Stroke({
+        color: '#03f4fc',
+        width: 3,
+      }),
+      image: new CircleStyle({
+        radius: 5,
+        fill: new Fill({
+          color: '#fcba03',
+        }),
+      }),
+    });
+
     this.initVectorLayerInteraction();
   }
 
   ngOnInit(): void {
+    const self = this;
     this.innerHeigth = window.innerHeight;
     this.basemapsAvaliable = [];
     this.cdRef.detectChanges();
@@ -311,7 +351,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
       { label: this.localizationService.translate('controls.filter_texts.label_uc'), value: 'uc', icon: 'nature_people' },
       // { label: this.language === 'pt-br' ? 'Ponto' : 'Point', value: 'coordinate', icon: 'fa fa-fw fa-map-pin' }
     ];
-
+    this.source.on( 'addfeature', function (ev) {
+      self.features.push(ev.feature)
+    });
     this.onChangeSearchOption();
     this.cdRef.detectChanges();
   }
@@ -643,21 +685,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   initVectorLayerInteraction() {
     this.vector = new VectorLayer({
       source: this.source,
-      style: new Style({
-        fill: new Fill({
-          color: 'rgba(255,255,255,0.52)',
-        }),
-        stroke: new Stroke({
-          color: '#ffcc33',
-          width: 1,
-        }),
-        image: new CircleStyle({
-          radius: 5,
-          fill: new Fill({
-            color: '#ffcc33',
-          }),
-        }),
-      }),
+      style: this.defaultStyle,
     });
   }
 
@@ -724,9 +752,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   removeInteraction(): void {
-    // if (this.interaction != null) {
-    //
-    // }
+    this.features = [];
     this.source.clear();
     this.map.removeInteraction(this.interaction);
     // @ts-ignore
@@ -739,7 +765,10 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.initVectorLayerInteraction();
   }
 
-  addInteraction(interaction: Interaction, type: string = ''): void {
+  addInteraction(interaction: Interaction, type: string = '', removeInteraction: boolean = false): void {
+    if(removeInteraction){
+      this.removeInteraction();
+    }
     this.map.addLayer(this.vector);
     this.interaction = interaction;
     if (type === 'Polygon') {
@@ -754,17 +783,13 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.map.addInteraction(this.snap);
   }
 
-  getGeoJsonFromFeature() {
-    this.draw.on('drawend', e => {
-      if (this.isGeometry(e.feature)) {
-        let geom: Feature<any>[] = [];
-        this.source.getFeatures().forEach(function (feature) {
-          geom.push(new Feature(feature.getGeometry()!.clone().transform('EPSG:3857', 'EPSG:4326')));
-        });
-        let writer = new GeoJSON();
-        return writer.writeFeatures(geom);
-      }
+  getGeoJsonFromFeature(): string {
+    let geom: Feature<any>[] = [];
+    this.source.getFeatures().forEach(function (feature) {
+      geom.push(new Feature(feature.getGeometry()!.clone().transform('EPSG:3857', 'EPSG:4326')));
     });
+    let writer = new GeoJSON();
+    return writer.writeFeatures(geom);
   }
 
   addDrawInteraction(name: string): void {
@@ -773,7 +798,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
         source: this.source,
         type: name
       });
-      this.addInteraction(this.draw, name);
+      this.addInteraction(this.draw, name, true);
     }
   }
 
@@ -893,17 +918,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
     }
   }
 
-  onChangeSearchOption(ev = null) {
-    console.log(this.selectedSearchOption)
+  onChangeSearchOption() {
     this.textsComponentesFilters.search_placeholder = this.localizationService.translate('controls.filter_texts.search_placeholder_'+ this.selectedSearchOption)
     this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' +  this.selectedSearchOption)
-    // if(ev){
-    //
-    // } else {
-    //   this.textsComponentesFilters.search_placeholder = this.localizationService.translate('controls.filter_texts.search_placeholder_'+ ev.target!.value)
-    //   this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' +  this.selectedSearchOption)
-    // }
-
   }
 
   private async clearAreaBeforeSearch() {
@@ -954,4 +971,32 @@ export class GeneralMapComponent implements OnInit, Ruler {
     let extent = this.otherLayerFromFilters.layer.getSource().getExtent();
     map.getView().fit(extent, { duration: 1800 });
   }
+
+  readStyleProperty(name: string): string {
+    let bodyStyles = window.getComputedStyle(document.body);
+    return bodyStyles.getPropertyValue('--' + name).trim();
+  }
+
+  onHoverFeature(feature, leave: boolean = false){
+    if(leave){
+      feature.setStyle(this.defaultStyle);
+    }else{
+      feature.setStyle(this.highlightStyle);
+    }
+  }
+  onRemoveFeature(index, feature){
+    this.source.removeFeature(feature);
+    this.features.splice(index, 1);
+  }
+
+  onSave(){
+    console.log(this.getGeoJsonFromFeature())
+  }
+  onCancel(){
+    this.removeInteraction();
+    this.mapControls.drawArea = false;
+    this.mapControls.point = false;
+    this.controlOptions = false;
+  }
+
 }

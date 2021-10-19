@@ -88,7 +88,7 @@ abstract class RulerControl {
 
             // unset tooltip so that a new one can be created
             // @ts-ignore
-          this.measureTooltipElement = null;
+            this.measureTooltipElement = null;
             this.sketch.overlay = this.measureTooltip;
             this.sketch.regua = true;
 

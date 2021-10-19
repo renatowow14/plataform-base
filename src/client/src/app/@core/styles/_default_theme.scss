@@ -2,7 +2,7 @@
 // include sass color module
 @use 'sass:color';
 
-$primary: #52563b !default;
+$primary: #21413b !default;
 $accent: lighten($primary, 30%) !default;
 $warn: #ffc107 !default;
 $secondary: #6c757d;
@@ -38,3 +38,21 @@ $left-sb-width: 100%;
 $layers-width: 3rem;
 $map-width: 100%;
 $right-sb-width: 20rem;
+
+$prefix: "--"; //Prefix string for custom CSS properties
+
+//Merges a variable name with $prefix
+@function custom-property-name($name) {
+  @return $prefix + $name;
+}
+
+// Defines a custom property
+@mixin define-custom-property($name, $value) {
+  #{custom-property-name($name)}: $value;
+}
+
+body {
+
+  // Append SASS variables which are desired to be accesible:
+  @include define-custom-property('primary',$primary);
+}

@@ -1,9 +1,8 @@
-<p-sidebar 
-
-position="right"
-[modal]="false"
-[(visible)]="displayOptions"
-header="teste"
+<p-sidebar
+  position="right"
+  [modal]="false"
+  [(visible)]="displayOptions"
+  header="teste"
 >
 
 <!-- <div class="chart-region">
@@ -32,14 +31,14 @@ header="teste"
 </p-chart> -->
 <div class="content" [style]="{width: '100%', height: innerHeigth + 'px'}">
 
-<div align="center" class="title-region" > 
+<div align="center" class="title-region" >
 <h5 class="title-region"> {{'dataSeries.title' | translate}}</h5>
 
 <!-- <button type="button" pButton (click)="update($event)"></button> -->
 </div>
 
 
-<div class="chart-region" align="center"> 
+<div class="chart-region" align="center">
 <h5 class="chart-region"> BRASIL</h5>
 </div>
 
@@ -57,8 +56,8 @@ header="teste"
       <div class="details-inner">
         <h4> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
        <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
-       <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation" [responsive]="true" [data]="DeforestationChart.dataDeforestation" [options]="DeforestationChart.optionsDeforestation"></p-chart> 
-      
+       <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation" [responsive]="true" [data]="DeforestationChart.dataDeforestation" [options]="DeforestationChart.optionsDeforestation"></p-chart>
+
       </div>
     </div>
    </div>
@@ -81,16 +80,16 @@ header="teste"
               </button>
           </p> -->
             <h4> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
-            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart> 
+            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
           </p-tabPanel>
           <p-tabPanel header="Gráfico 2">
             <h4> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o que representa 39,40 % da sua área total </h4>
-            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart> 
+            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
           </p-tabPanel>
 
       </p-tabView>
 
-       
+
 
       </div>
     </div>
@@ -100,5 +99,5 @@ header="teste"
 </div>
 </p-sidebar>
 
-<button  (click)="displayOp()" class="legend">{{'menu.statistics' | translate}}</button>
+<!--<button  (click)="displayOp()" class="legend">{{'menu.statistics' | translate}}</button>-->
 

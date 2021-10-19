@@ -34,7 +34,7 @@
       </div>
       <div class="coordinates">
         <div class="coordinates-container">
-          <i (click)="showFormPoint = !showFormPoint" [pTooltip]="'map.find_point' | translate"
+          <i (click)="showFormPoint = !showFormPoint"  tooltipPosition="left" [pTooltip]="'map.find_point' | translate"
             class='fg-search-poi fg-lg'></i>
           <div id="coordinates-label" class="mouse-position"></div>
         </div>
@@ -71,25 +71,25 @@
       </div>
       <div class="controls">
         <div class="controls-container">
-          <i [pTooltip]="'controls.swipe' | translate"
-            [class]="mapControls.swipe ? 'bx bx-book-content control-active' : 'bx bx-book-content '"
+          <i pRipple [pTooltip]="'controls.swipe' | translate"
+            [class]="mapControls.swipe ? 'fg-flip-h control-active' : 'fg-flip-h'"
             (click)="onSwipe()"></i>
-          <i [pTooltip]="'controls.search' | translate"
+          <i pRipple [pTooltip]="'controls.search' | translate"
              [class]="mapControls.search ? 'bx bx-search-alt control-active' : 'bx bx-search-alt '"
              (click)="onSearch()"></i>
-          <i [pTooltip]="'controls.point' | translate"
+          <i pRipple [pTooltip]="'controls.point' | translate"
              [class]="mapControls.point ? 'fg-location-poi-o control-active' : 'fg-location-poi-o'"
              (click)="onPoint()"></i>
-          <i [pTooltip]="'controls.draw' | translate"
+          <i pRipple [pTooltip]="'controls.draw' | translate"
              [class]="mapControls.drawArea ? 'fg-polygon-pt control-active' : 'fg-polygon-pt'"
              (click)="onPolygon()"></i>
-          <i [pTooltip]="'controls.measure' | translate"
+          <i pRipple [pTooltip]="'controls.measure' | translate"
              [class]="mapControls.measure ? 'fg-measure control-active' : 'fg-measure'"
              (click)="onRuler()"></i>
-          <i [pTooltip]="'controls.measureArea' | translate"
+          <i pRipple [pTooltip]="'controls.measureArea' | translate"
              [class]="mapControls.measureArea ? 'fg-measure-area control-active' : 'fg-measure-area'"
              (click)="onRulerArea()"></i>
-          <i [pTooltip]="'controls.print' | translate" [class]="mapControls.print ? 'bx bxs-file-pdf control-active' : 'bx bxs-file-pdf'" ></i>
+          <i pRipple [pTooltip]="'controls.print' | translate" [class]="mapControls.print ? 'bx bxs-file-pdf control-active' : 'bx bxs-file-pdf'" ></i>
         </div>
       </div>
       <div *ngIf="controlOptions" class="controls-details">
@@ -146,7 +146,29 @@
 
             </div>
           </div>
-          <div *ngIf="mapControls.drawArea" class="controls-details-card"></div>
+          <div *ngIf="(mapControls.drawArea || this.mapControls.point) && features.length > 0" class="controls-details-card">
+            <div class="controls-details-card-title">Features desenhadas</div>
+            <div class="controls-details-card-body">
+              <div class="features grid">
+                <div class="card-feature col-fixed" *ngFor="let feat of features; let i = index" (mouseenter)="onHoverFeature(feat)" (mouseleave)="onHoverFeature(feat, true)">
+                  <div class="card-feature-title">{{i+1}} - {{feat.getGeometry().getType()}}</div>
+                  <div class="card-feature-actions">
+                    <i class='bx bx-trash remove' (click)="onRemoveFeature(i, feat)"></i>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="features.length > 0" class="features-actions">
+                <div pRipple class="btn-action btn-save" (click)="onSave()">
+                  <i class='bx bx-save'></i>
+                  <span>Salvar</span>
+                </div>
+                <div pRipple class="btn-action btn-cancel" (click)="onCancel()">
+                  <i class='bx bx-trash'></i>
+                  <span>Cancelar</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </ol-map>

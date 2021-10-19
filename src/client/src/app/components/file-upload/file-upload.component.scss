@@ -64,7 +64,7 @@
     margin-top: 20px;
   }
   .btn-upload {
-    background-color: darken($primary, 40%);
+    background-color: $primary;
     color: white;
   }
   .msg-error {
@@ -81,6 +81,6 @@
     display: grid;
   }
   .card-error {
-    background-color: salmon;
+    background-color: $danger;
   }
 }

@@ -30,7 +30,7 @@
       .coordinates-container {
         display: flex;
         color: black;
-        width: 15.5em;
+        width: 11.5em;
         background: rgba($primary, 0.6);
         transition: all 0.5s ease;
         border-radius: 5px;
@@ -61,7 +61,7 @@
 
         .mouse-position {
           text-align: center;
-          width: 14.5em;
+          width: 10.5em;
           color: white;
           font-size: 14px;
         }
@@ -302,6 +302,65 @@
               &:hover {
                 cursor: pointer;
                 background: rgba($primary, 0.2);
+              }
+            }
+          }
+          .features{
+            box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+          }
+          .card-feature{
+            display: flex;
+            width: 121px;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px;
+            padding: 5px;
+            transition: all 0.5s ease;
+            border-radius: 5px;
+            box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+            &:hover {
+              background: lighten($primary, 60%);
+            }
+            .card-feature-title{
+              font-size: 12px
+            }
+            .remove{
+              font-size: 15px;
+              transition: all 0.5s ease;
+
+              &:hover {
+                cursor: pointer;
+                color: $danger;
+              }
+            }
+          }
+          .features-actions{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 10px;
+            .btn-save{
+              background: $primary;
+            }
+            .btn-cancel{
+              background: $secondary;
+            }
+            .btn-action{
+              width: 8em;
+              color: white;
+              display: flex;
+              justify-content: center;
+              padding: 10px;
+              border-radius: 5px;
+              font-size: 13px;
+              align-items: center;
+              transition: all 0.5s ease;
+              &:hover {
+                cursor:pointer;
+              }
+              i {
+                font-size: 18px;
+                margin-right: 5px;
               }
             }
           }
