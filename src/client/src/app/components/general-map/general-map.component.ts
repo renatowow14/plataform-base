@@ -34,7 +34,7 @@ import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
 import { SelectItem, PrimeNGConfig } from 'primeng/api';
-import {resolve} from "chart.js/helpers";
+import Text from "ol/style/Text";
 
 @Component({
   selector: 'app-general-map',
@@ -351,7 +351,33 @@ export class GeneralMapComponent implements OnInit, Ruler {
       { label: this.localizationService.translate('controls.filter_texts.label_uc'), value: 'uc', icon: 'nature_people' },
       // { label: this.language === 'pt-br' ? 'Ponto' : 'Point', value: 'coordinate', icon: 'fa fa-fw fa-map-pin' }
     ];
+
     this.source.on( 'addfeature', function (ev) {
+      const id = new Date().valueOf();
+      const text = new Style({
+        text: new Text({
+          text: id.toString(),
+          font: 'normal 12px Montserrat',
+          offsetY: 14,
+          fill: new Fill({color: 'rgb(0,0,0)'}),
+          stroke: new Stroke({color: 'rgb(255,255,255)', width: 1})
+        }),
+        fill: new Fill({
+          color: 'rgba(255,255,255,0.52)',
+        }),
+        stroke: new Stroke({
+          color: self.readStyleProperty('primary'),
+          width: 2,
+        }),
+        image: new CircleStyle({
+          radius: 5,
+          fill: new Fill({
+            color: self.readStyleProperty('primary'),
+          }),
+        }),
+      });
+      ev.feature!.setStyle(text);
+      ev.feature!.set('id', id)
       self.features.push(ev.feature)
     });
     this.onChangeSearchOption();
@@ -786,7 +812,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
   getGeoJsonFromFeature(): string {
     let geom: Feature<any>[] = [];
     this.source.getFeatures().forEach(function (feature) {
-      geom.push(new Feature(feature.getGeometry()!.clone().transform('EPSG:3857', 'EPSG:4326')));
+      let feat = new Feature(feature.getGeometry()!.clone().transform('EPSG:3857', 'EPSG:4326'));
+      feat.setProperties(feature.getProperties())
+      geom.push(feat);
     });
     let writer = new GeoJSON();
     return writer.writeFeatures(geom);
@@ -978,11 +1006,17 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   onHoverFeature(feature, leave: boolean = false){
-    if(leave){
-      feature.setStyle(this.defaultStyle);
-    }else{
-      feature.setStyle(this.highlightStyle);
+    const style = feature!.getStyle();
+    if(leave) {
+      style.setFill(this.defaultStyle.getFill());
+      style.setStroke(this.defaultStyle.getStroke());
+      style.setImage(this.defaultStyle.getImage());
+    } else {
+      style.setFill(this.highlightStyle.getFill());
+      style.setStroke(this.highlightStyle.getStroke());
+      style.setImage(this.highlightStyle.getImage());
     }
+    feature.setStyle(style);
   }
   onRemoveFeature(index, feature){
     this.source.removeFeature(feature);
