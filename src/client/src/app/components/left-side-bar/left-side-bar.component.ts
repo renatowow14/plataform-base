@@ -87,12 +87,18 @@ export class LeftSideBarComponent implements AfterViewInit {
       },
       {
         index: 1,
+        key: 'statistics',
+        icon: 'bx bx-bar-chart-alt',
+        show: false
+      },
+      {
+        index: 2,
         key: 'area',
         icon: 'fg-polygon-hole-pt',
         show: false
       },
       {
-        index: 2,
+        index: 3,
         key: 'options',
         icon: 'fg-map-options-alt',
         show: false

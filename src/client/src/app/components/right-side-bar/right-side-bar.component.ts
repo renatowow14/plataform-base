@@ -11,11 +11,16 @@ import {
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 import {MenuItem} from 'primeng/api';
 import { ChartService } from '../services/charts.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ChartsComponent } from './charts/charts.component';
+import { CustomerService } from '../services/customer.service';
+import { Customer } from 'src/app/@core/interfaces/customer';
 
 
 @Component({
   selector: 'app-right-side-bar',
   templateUrl: './right-side-bar.component.html',
+  providers: [CustomerService],
   styleUrls: ['./right-side-bar.component.scss']
 })
 export class RightSideBarComponent implements AfterViewInit {
@@ -23,7 +28,7 @@ export class RightSideBarComponent implements AfterViewInit {
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onSideBarToggle = new EventEmitter<boolean>()
   @Input() descriptor: any;
-
+  public dialog: MatDialog;
   public Legendas: Legendas[];
   public mapaBase: Layer[];
   public Limites: Layer[];
@@ -51,8 +56,15 @@ export class RightSideBarComponent implements AfterViewInit {
   public options: any;
   public expendGroup: boolean;
   public expendGroup2: boolean;
+  public expendGroup3: boolean;
   public groupLayers: any[];
   //End Charts Variables
+
+  //Customer variables 
+  public customers: Customer[];
+  public first = 0;
+  public rows = 10;
+  //end customer variables
 
   items: MenuItem[];
   activeItem: MenuItem;
@@ -74,7 +86,7 @@ export class RightSideBarComponent implements AfterViewInit {
 
   public displayOptions = false as boolean;
 
-  constructor(private el: ElementRef, private localizationService: LocalizationService, private chartService: ChartService, private renderer: Renderer2) {
+  constructor(private el: ElementRef, private customerService: CustomerService, private localizationService: LocalizationService, private chartService: ChartService, private renderer: Renderer2) {
 
     //Charts Variables
 
@@ -166,10 +178,10 @@ this.expendGroup = false;
     this.innerHeigth = window.innerHeight;
   }
 
-  /* async openCharts(title, description = false, data, type, options) {
+   async openCharts(data, type, options) {
     let ob = {
-      title: title,
-      description: description,
+    //  title: title,
+    //  description: description,
       type: type,
       data: data,
       options: options,
@@ -179,10 +191,13 @@ this.expendGroup = false;
       height: 'calc(100% - 5vh)',
       data: { ob }
     });
-  } */
+  } 
 
   ngOnInit(): void {
 
+    this.customerService.getCustomersLarge().then(customers => this.customers = customers);
+    
+    
     this.options = {
       //display labels on data elements in graph
       plugins: {
@@ -263,6 +278,7 @@ this.expendGroup = false;
   ];
   this.expendGroup = false;
   this.expendGroup2 = false;
+  this.expendGroup3 = false;
 
   this.activeItem = this.items[0];
 
@@ -270,6 +286,27 @@ this.expendGroup = false;
   this.updateLulcTimeSeries();
 
 }
+
+    next() {
+      this.first = this.first + this.rows;
+    }
+
+    prev() {
+      this.first = this.first - this.rows;
+    }
+
+    reset() {
+      this.first = 0;
+    }
+
+    isLastPage(): boolean {
+      return this.customers ? this.first === (this.customers.length - this.rows): true;
+    }
+
+    isFirstPage(): boolean {
+      return this.customers ? this.first === 0 : true;
+    }
+
   displayOp(){
     this.displayOptions = !this.displayOptions;
   }
