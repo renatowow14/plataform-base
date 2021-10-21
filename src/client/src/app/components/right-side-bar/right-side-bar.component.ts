@@ -2,11 +2,13 @@ import {
   Component,
   EventEmitter,
   AfterViewInit,
+  AfterContentInit,
   Renderer2,
   ElementRef,
   Output,
   HostListener,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 import {MenuItem} from 'primeng/api';
@@ -28,6 +30,7 @@ export class RightSideBarComponent implements AfterViewInit {
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onSideBarToggle = new EventEmitter<boolean>()
   @Input() descriptor: any;
+  @Input() displayOptions: boolean;
   public dialog: MatDialog;
   public Legendas: Legendas[];
   public mapaBase: Layer[];
@@ -82,9 +85,9 @@ export class RightSideBarComponent implements AfterViewInit {
   public displayFilter: boolean;
   public layersSideBar: boolean;
   public layersSideBarMobile: boolean;
+ 
 
 
-  public displayOptions = false as boolean;
 
   constructor(private el: ElementRef, private customerService: CustomerService, private localizationService: LocalizationService, private chartService: ChartService, private renderer: Renderer2) {
 
@@ -194,6 +197,8 @@ this.expendGroup = false;
   } 
 
   ngOnInit(): void {
+
+    this.displayOptions = false
 
     this.customerService.getCustomersLarge().then(customers => this.customers = customers);
     
@@ -360,6 +365,7 @@ this.expendGroup = false;
       this.layersSideBar = true;
       this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
     }
+    
   }
 
 

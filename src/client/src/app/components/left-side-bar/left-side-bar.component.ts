@@ -59,6 +59,8 @@ export class LeftSideBarComponent implements AfterViewInit {
   public expendGroup: boolean;
   public expendGroup2: boolean;
 
+  public displayStatistics: boolean;
+
   public textSearch: string;
   public results: string[];
   public groupLayers: any[];
@@ -257,19 +259,31 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.currentMenu = menu;
     this.layersTitle = this.localizationService.translate('menu.' + menu.key);
 
-    if (menu.key == 'filters') {
-      this.displayFilter = !this.displayFilter;
+    if (menu.key == 'filters' || menu.key == 'statistics') {
+      if (menu.key == 'statistics') {
+        this.displayStatistics = !this.displayStatistics;
+      
+      } 
+      if (menu.key == 'filters') {
+        this.displayFilter = !this.displayFilter;
+      } 
     } else {
       this.menu[menu.index].show = true;
     }
+
     if (mobile) {
       this.layersSideBarMobile = true;
       // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
 
     } else {
+      if (menu.key == 'filters' || menu.key == 'statistics') {
+
+      }else {
       this.layersSideBar = true;
       this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
+      }
     }
+
   }
 
   search(event) {
