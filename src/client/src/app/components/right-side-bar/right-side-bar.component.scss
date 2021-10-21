@@ -264,9 +264,9 @@
     border-width:1px;
     width:90% !important;
     text-align:center;
-
-
   }
+  
+
   .reportButton{
  
     display:inline;
@@ -293,6 +293,25 @@
   .matButton{
     
     display:inline;
+  }
+  :host ::ng-deep .p-datatable .p-datatable-tbody > td{
+ 
+    font-size:11px;
+  }
+
+  :host ::ng-deep .p-datatable .p-datatable-tbody > tr{
+
+    font-size:11px;
+  }
+
+  :host ::ng-deep .p-paginator .p-paginator-current{
+  
+    font-size:14px;
+  }
+
+  :host ::ng-deep .p-datatable .p-datatable-thead > tr > th{
+  
+    font-size:11px;
   }
   :host ::ng-deep .p-sidebar-right{
     width:420px;
