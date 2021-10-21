@@ -251,8 +251,120 @@
 
  @include media('>=desktop') {
 
+  .layer-merge{
+    margin-bottom:11px;margin-top:10px;margin-left:5px;margin-right:5px;
+  }
+
+  .layer-card-header {
+    background: lighten($primary, 60%);
+    border-radius:5px;
+    padding:0px;
+
+    h5 {
+ 
+      width: 100%;
+    }
+
+  }
+
+  .title {
+    padding-bottom: 8px;
+    padding-top: 8px;
+    transition: 0.6s ease all;
+    margin: 5px;
+    color: white;
+    text-align: center;
+    background: $primary;
+    border-radius: 5px;
+  }
+
+  .margin{
+    margin-bottom:15px;
+  }
+
+  .graphicTitle{
+    font-size:13px;
+    position:absolute;
+    margin-top:7px;
+    display:inline;
+    width:243px;
+  }
+  .divReportButton{
+    display:inline;
+    width:90% !important;
+    text-align:center;
+  }
+  
+
+  .reportButton{
+ 
+    font-size:19px;
+
+  }
+
+  .inline{
+    display:inline;
+  }
+  .myIcon{
+   position:absolute;
+   display:inline;
+   margin-top:-200px;
+  }
+
+  :host ::ng-deep .p-tabview-panels {
+    padding:5px;
+    margin:0px;
+  }
+
+  .matButton{
+    
+    display:inline;
+  }
+  :host ::ng-deep .p-paginator {
+    //display:grid !important;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  :host ::ng-deep .p-paginator .p-paginator-last {
+    font-size:12px !important;
+  }
+
+ 
+  :host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+    font-size:12px !important;
+    height: 2rem;
+
+  }
+  :host ::ng-deep .p-paginator-left-content {
+    display:none;
+  }
+
+  :host ::ng-deep .p-paginator-right-content{
+    display:none;
+  }
+
+  :host ::ng-deep .p-datatable .p-datatable-tbody > td{
+ 
+    font-size:11px;
+  }
+
+  :host ::ng-deep .p-datatable .p-datatable-tbody > tr{
+
+    font-size:11px;
+  }
+
+  :host ::ng-deep .p-paginator .p-paginator-current{
+  
+    font-size:14px;
+  }
+
+  :host ::ng-deep .p-datatable .p-datatable-thead > tr > th{
+  
+    font-size:11px;
+  }
   :host ::ng-deep .p-sidebar-right{
-    width:420px;
+    width:321px;
     //background: $primary;
 
     border: none;
@@ -262,11 +374,13 @@
   }
   .group-card {
     position: relative;
-    margin: 6px;
+    margin-right: 6px;
+    margin-left: 6px;
+    margin-bottom: 10px;
+    margin-top: 10px;
   
     border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-  
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
     overflow: hidden;
     perspective: 800px;
     transform-style: preserve-3d;
@@ -297,10 +411,10 @@
     box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
   
     .group-label {
-      font-size: 15px;
+      font-size: 13px;
       margin-left: 2px;
     }
-  
+    
     i {
       color: black !important;
       line-height: unset !important;
@@ -341,8 +455,8 @@
   
   .group-card-active {
     transition: .6s ease all;
-    border: 1px solid $primary;
-  
+    //border: 1px solid $primary;
+    transform: scale(1.0);
     .details {
       max-height: none;
       overflow: visible;
@@ -364,31 +478,26 @@
   }
 
   :host ::ng-deep .p-sidebar-header{
-    background-color: $primary;
+   // background-color: $primary;
   }
   :host ::ng-deep .p-sidebar-content{
-    background-color: $primary;
+   // background-color: $primary;
   }
   :host ::ng-deep .p-sidebar-close-icon{
-    color:white;
+   // color:white;
   }
+  :host ::ng-deep .p-sidebar-close {
+    position: absolute;
+    top:0px; right:0;
+}
+
 
   .chart-region {
-    width: 100%;
-    box-shadow: 0 .25rem .25rem rgba(0,0,0,0.2), 0 0 1rem rgba(0,0,0,0.2);
-    display: table;
-    vertical-align: right;
-    font-size: 36pt;
-   
-
-    padding: 15px;
+    width: 100%;  
     text-align: center;
-    display: table;
-  
-   
-    font-size: 30pt;
-    background-color: linear-gradient(to right, $primary, lighten($primary, 0.4) 40%, white);
-    color: #f8f0f0;
+    font-size: 16px;
+    padding:10px;
+    color: #070606;
   }
 
   .title-region {

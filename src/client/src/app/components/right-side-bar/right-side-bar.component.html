@@ -1,9 +1,9 @@
 <p-sidebar
-  position="right"
-  [modal]="false"
-  [(visible)]="displayOptions"
-  header="teste"
+position="right"
+[modal]="false"
+[(visible)]="displayOptions"
 >
+<h4 class="title"> {{'dataSeries.title' | translate}}</h4>
 
 <!-- <div class="chart-region">
     <h5>
@@ -29,19 +29,25 @@
 <!--  <p-chart type="line" [data]="data" [options]="options"></p-chart> -->
 <!--<p-chart [type]="dataSeries.type" [responsive]="true" [data]="dataSeries" [options]="optionsTimeSeries">
 </p-chart> -->
-<div class="content" [style]="{width: '100%', height: innerHeigth + 'px'}">
 
-<div align="center" class="title-region" >
-<h5 class="title-region"> {{'dataSeries.title' | translate}}</h5>
+<!-- <button [matTooltip]="titlesLayerBox.region_tooltip" *ngIf="selectRegion.type != 'biome'" color="primary" (click)="openRegionReport()" style="font-size: 30px;" mat-icon-button>
+  <mat-icon>text_snippet</mat-icon>
+</button> -->
 
-<!-- <button type="button" pButton (click)="update($event)"></button> -->
+
+<div class="content"  >
+
+
+<div class="layer-merge" align="center">
+  <div class="layer-card-header">
+<div class="chart-region divReportButton">
+  <button  class="reportButton"  mat-icon-button>
+    <mat-icon>text_snippet</mat-icon>
+</button>
+<h5 class="chart-region inline"> BRASIL</h5>
 </div>
-
-
-<div class="chart-region" align="center">
-<h5 class="chart-region"> BRASIL</h5>
 </div>
-
+</div>
 
   <div  [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
     <div (click)="expendGroup = !expendGroup" class="abstract" (click)="triggerSeriesChartDeforestation($event)">
@@ -54,8 +60,16 @@
     </div>
     <div class="details">
       <div class="details-inner">
-        <h4> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
-       <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
+
+        <div class="margin">
+          <button class="matButton" color="primary" (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+              <mat-icon>aspect_ratio</mat-icon>
+          </button>
+          <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
+
+        </div>
+      <br><br>
+        <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
        <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation" [responsive]="true" [data]="DeforestationChart.dataDeforestation" [options]="DeforestationChart.optionsDeforestation"></p-chart>
 
       </div>
@@ -74,30 +88,83 @@
       <div class="details-inner">
         <p-tabView >
           <p-tabPanel header="Gráfico 1">
-           <!--  <p style="font-weight: bold">
-              <button color="primary" (click)="openCharts(selectRegion.text,uso.text, uso.data, uso.type, uso.options)" mat-icon-button>
+         <div class="margin">
+              <button class="matButton"color="primary" (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
                   <mat-icon>aspect_ratio</mat-icon>
               </button>
-          </p> -->
-            <h4> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
+              <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
+         </div>
+
+            <br><br>
             <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
           </p-tabPanel>
           <p-tabPanel header="Gráfico 2">
-            <h4> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o que representa 39,40 % da sua área total </h4>
+            <div class="margin">
+              <button class="matButton" color="primary" (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+                  <mat-icon>aspect_ratio</mat-icon>
+              </button>
+              <h4 class="graphicTitle"> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o que representa 39,40 % da sua área total </h4>
+
+            </div>
+
+
+            <br><br>
             <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
+
           </p-tabPanel>
 
       </p-tabView>
-
-
-
       </div>
     </div>
    </div>
 
 
+   <div  [class]="expendGroup3 ? 'group-card group-card-active' :'group-card'">
+    <div (click)="expendGroup3 = !expendGroup3" class="abstract" (click)="triggerSeriesChartLulc($event)">
+      <span>
+        <i class='bx bx-trending-up'></i>
+        <div class="group-label">Tabela</div>
+      </span>
+      <i [class]="expendGroup3 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+    </div>
+    <div class="details">
+      <div class="details-inner">
+        <div class="card">
+       <!--   <h5>Implicit Pagination</h5> -->
+          <p-table styleClass="p-datatable-sm" [value]="customers" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th>Name</th>
+                      <th>Country</th>
+                      <th>Company</th>
+                      <th>Representative</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-customer>
+                  <tr>
+                      <td>{{customer.name}}</td>
+                      <td>{{customer.country.name}}</td>
+                      <td>{{customer.company}}</td>
+                      <td>{{customer.representative.name}}</td>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft">
+                  <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+              </ng-template>
+              <ng-template pTemplate="paginatorright">
+                  <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+              </ng-template>
+          </p-table>
+      </div>
+      </div>
+    </div>
+   </div>
+
+
+
 </div>
 </p-sidebar>
 
-<!--<button  (click)="displayOp()" class="legend">{{'menu.statistics' | translate}}</button>-->
+
 

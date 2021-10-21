@@ -142,8 +142,6 @@
         </div>
       </div>
 
-      <div class="menu-item" *ngIf="currentMenu?.key == 'statistics'">
-      </div>
       <div class="menu-item" *ngIf="currentMenu?.key == 'area'">
         <app-leftsidebar-area [map]="map" [lang]="lang"></app-leftsidebar-area>
       </div>
@@ -240,9 +238,6 @@
         </p-accordionTab>
 
       </p-accordion>
-    </div>
-    <div class="menu-item" *ngIf="currentMenu?.key == 'statistics'">
-
     </div>
     <div class="menu-item" *ngIf="currentMenu?.key == 'area'">
 

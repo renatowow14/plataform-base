@@ -4,6 +4,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TabViewModule } from 'primeng/tabview';
+import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -90,7 +91,8 @@ registerLocaleData(localePt);
     DialogModule,
     DragDropModule,
     HttpClientModule,
-    RippleModule
+    RippleModule,
+    TableModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
