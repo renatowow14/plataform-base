@@ -1,18 +1,18 @@
-import {Component, AfterViewInit, ChangeDetectorRef, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, Output, EventEmitter} from '@angular/core';
 import {MapService} from "../services/map.service";
 import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements AfterViewInit {
+export class MainComponent implements OnInit {
   public openMenu:boolean;
   public showLayers: boolean;
   public limit : any;
-  public map: Map;
   public descriptor: any;
 
   constructor(
@@ -22,19 +22,16 @@ export class MainComponent implements AfterViewInit {
   ) {
     this.openMenu = true;
     this.showLayers = false;
-    this.descriptor = {};
-
-
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.getDescriptor();
     this.cdRef.detectChanges();
   }
 
   getDescriptor(){
     this.mapService.getDescriptor(this.localizationService.currentLang()).subscribe(descriptor => {
-      this.descriptor = descriptor;
+      setTimeout(() => this.descriptor = descriptor, 0);
     }, error => {
       console.log(error)
     });
@@ -54,11 +51,6 @@ export class MainComponent implements AfterViewInit {
 
   onChangeLanguage(){
     this.getDescriptor();
-  }
-
-  setMap(map){
-    this.map = map;
-    this.cdRef.detectChanges();
   }
 }
 

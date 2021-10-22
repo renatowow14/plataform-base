@@ -1,5 +1,5 @@
 <section class="" [class]="openMenu ? 'open map-container' : 'map-container' ">
-  <div [ngClass]="handleSideBars()">
+  <div [class]="classes">
     <ol-map [lat]="-16.6958288" [lon]="-49.4443537" [zoom]="4.6" [width]="'100%'" [height]="'100vh'"
       (onReady)="setMap($event)">
       <ol-control control="FullScreen" [options]="{ source:'main'}">
@@ -39,10 +39,11 @@
           <div id="coordinates-label" class="mouse-position"></div>
         </div>
       </div>
-      <div *ngIf="this.selectedLayers.length > 0" class="legends">
+      <div *ngIf="this.selectedLayers.length > 0"  [class]="legendExpanded ? 'legends' : 'legends legends-expanded'">
         <div class="legends-container">
           <div class="legends-header">
             <h5>{{'legend.title' | translate}}</h5>
+            <i (click)="legendExpanded = !legendExpanded" [class]="legendExpanded ? 'bx bx-collapse' : 'bx bx-expand'"></i>
           </div>
           <div class="legends-body" cdkDropList (cdkDropListDropped)="drop($event)">
             <div *ngFor="let layer of selectedLayers" cdkDrag
@@ -74,9 +75,9 @@
           <i pRipple [pTooltip]="'controls.swipe' | translate"
             [class]="mapControls.swipe ? 'fg-flip-h control-active' : 'fg-flip-h'"
             (click)="onSwipe()"></i>
-          <i pRipple [pTooltip]="'controls.search' | translate"
-             [class]="mapControls.search ? 'bx bx-search-alt control-active' : 'bx bx-search-alt '"
-             (click)="onSearch()"></i>
+<!--          <i pRipple [pTooltip]="'controls.search' | translate"-->
+<!--             [class]="mapControls.search ? 'bx bx-search-alt control-active' : 'bx bx-search-alt '"-->
+<!--             (click)="onSearch()"></i>-->
           <i pRipple [pTooltip]="'controls.point' | translate"
              [class]="mapControls.point ? 'fg-location-poi-o control-active' : 'fg-location-poi-o'"
              (click)="onPoint()"></i>
@@ -156,6 +157,7 @@
                     <span>{{feat.getGeometry().getType()}}</span>
                   </div>
                   <div class="card-feature-actions">
+<!--                    <i class='bx bx-plus-medical' (click)="onAddPropertyFeature(i, feat)"></i>-->
                     <i class='bx bx-trash remove' (click)="onRemoveFeature(i, feat)"></i>
                   </div>
                 </div>

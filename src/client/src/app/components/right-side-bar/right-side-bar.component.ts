@@ -1,22 +1,21 @@
 import {
   Component,
   EventEmitter,
-  AfterViewInit,
-  AfterContentInit,
+  OnInit,
   Renderer2,
   ElementRef,
   Output,
   HostListener,
-  Input,
-  ChangeDetectorRef,
+  Input, SimpleChanges,
 } from '@angular/core';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 import {MenuItem} from 'primeng/api';
-import { ChartService } from '../services/charts.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ChartsComponent } from './charts/charts.component';
-import { CustomerService } from '../services/customer.service';
-import { Customer } from 'src/app/@core/interfaces/customer';
+import {ChartService} from '../services/charts.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ChartsComponent} from './charts/charts.component';
+import {CustomerService} from '../services/customer.service';
+import {Customer} from 'src/app/@core/interfaces/customer';
+import {Layer, Legend, Menu} from "../../@core/interfaces";
 
 
 @Component({
@@ -25,14 +24,15 @@ import { Customer } from 'src/app/@core/interfaces/customer';
   providers: [CustomerService],
   styleUrls: ['./right-side-bar.component.scss']
 })
-export class RightSideBarComponent implements AfterViewInit {
+export class RightSideBarComponent implements OnInit {
 
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onSideBarToggle = new EventEmitter<boolean>()
   @Input() descriptor: any;
   @Input() displayOptions: boolean;
+
   public dialog: MatDialog;
-  public Legendas: Legendas[];
+  public Legendas: Legend[];
   public mapaBase: Layer[];
   public Limites: Layer[];
   public basemap: any;
@@ -63,7 +63,7 @@ export class RightSideBarComponent implements AfterViewInit {
   public groupLayers: any[];
   //End Charts Variables
 
-  //Customer variables 
+  //Customer variables
   public customers: Customer[];
   public first = 0;
   public rows = 10;
@@ -85,8 +85,6 @@ export class RightSideBarComponent implements AfterViewInit {
   public displayFilter: boolean;
   public layersSideBar: boolean;
   public layersSideBarMobile: boolean;
- 
-
 
 
   constructor(private el: ElementRef, private customerService: CustomerService, private localizationService: LocalizationService, private chartService: ChartService, private renderer: Renderer2) {
@@ -118,30 +116,30 @@ export class RightSideBarComponent implements AfterViewInit {
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 
       datasets: [
-          {
-              label: 'First Dataset',
-              data: [65, 59, 80, 81, 56, 55, 40]
-          },
-          {
-              label: 'Second Dataset',
-              data: [28, 48, 40, 19, 86, 27, 90]
-          }
+        {
+          label: 'First Dataset',
+          data: [65, 59, 80, 81, 56, 55, 40]
+        },
+        {
+          label: 'Second Dataset',
+          data: [28, 48, 40, 19, 86, 27, 90]
+        }
       ]
-  }];
+    }];
 
-  this.options = {
-    title: {
+    this.options = {
+      title: {
         display: true,
         text: 'My Title',
         fontSize: 16
-    },
-    legend: {
+      },
+      legend: {
         position: 'bottom'
-    }
-};
+      }
+    };
 
 
-this.expendGroup = false;
+    this.expendGroup = false;
 
     //End charts
 
@@ -159,50 +157,14 @@ this.expendGroup = false;
 
   }
 
-  ngAfterViewInit(): void {
-    let navtab = document.querySelector("nav.navtab");
-    let navtabItems = document.querySelectorAll("li.navtab-item");
-    navtabItems.forEach((navtabItem, activeIndex) =>
-      navtabItem.addEventListener("click", () => {
-        navtabItems.forEach(navtabItem => navtabItem.classList.remove("active"));
-        navtabItem.classList.add("active");
-        (navtab as HTMLElement).style.setProperty(
-          "--active-index",
-          `${activeIndex}`
-        );
-      })
-    );
+  ngOnInit(): void {
     this.lang = this.localizationService.currentLang();
     this.innerHeigth = window.innerHeight;
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.innerHeigth = window.innerHeight;
-  }
-
-   async openCharts(data, type, options) {
-    let ob = {
-    //  title: title,
-    //  description: description,
-      type: type,
-      data: data,
-      options: options,
-    }
-    this.dialog.open(ChartsComponent, {
-      width: 'calc(100% - 5vw)',
-      height: 'calc(100% - 5vh)',
-      data: { ob }
-    });
-  } 
-
-  ngOnInit(): void {
 
     this.displayOptions = false
 
     this.customerService.getCustomersLarge().then(customers => this.customers = customers);
-    
-    
+
     this.options = {
       //display labels on data elements in graph
       plugins: {
@@ -231,32 +193,32 @@ this.expendGroup = false;
     //Limites
     this.Limites = [];
 
-      //Map-Base
+    //Map-Base
     this.mapaBase = [
-        {
-          nome: 'Geopolitico (MapBox)',
-          key: 'mapbox',
-          type: 'bmap',
-          checked: true
-        },
-        {
-          nome: 'Google Maps',
-          key: 'google',
-          type: 'bmap',
-          checked: false
-        },
-        {
-          nome: 'Mosaico Planet',
-          key: 'planet',
-          type: 'bmap',
-          checked: false
-        },
-        {
-          nome: 'Stadia Dark',
-          key: 'stadia',
-          type: 'bmap',
-          checked: false
-        }
+      {
+        nome: 'Geopolitico (MapBox)',
+        key: 'mapbox',
+        type: 'bmap',
+        checked: true
+      },
+      {
+        nome: 'Google Maps',
+        key: 'google',
+        type: 'bmap',
+        checked: false
+      },
+      {
+        nome: 'Mosaico Planet',
+        key: 'planet',
+        type: 'bmap',
+        checked: false
+      },
+      {
+        nome: 'Stadia Dark',
+        key: 'stadia',
+        type: 'bmap',
+        checked: false
+      }
     ];
 
     //Legendas
@@ -273,49 +235,69 @@ this.expendGroup = false;
         nome: '15 - 25 km²',
         color: 'yellow'
       }
-  ];
+    ];
 
     //titulos do menu
     this.items = [
       {label: 'Legenda', icon: 'pi pi-fw pi-home'},
       {label: 'Mapa-Base', icon: 'pi pi-fw pi-calendar'},
       {label: 'Limites', icon: 'pi pi-fw pi-pencil'},
-  ];
-  this.expendGroup = false;
-  this.expendGroup2 = false;
-  this.expendGroup3 = false;
+    ];
+    this.expendGroup = false;
+    this.expendGroup2 = false;
+    this.expendGroup3 = false;
 
-  this.activeItem = this.items[0];
+    this.activeItem = this.items[0];
 
-  this.updateDeforestationTimeSeries();
-  this.updateLulcTimeSeries();
-
-}
-
-    next() {
-      this.first = this.first + this.rows;
-    }
-
-    prev() {
-      this.first = this.first - this.rows;
-    }
-
-    reset() {
-      this.first = 0;
-    }
-
-    isLastPage(): boolean {
-      return this.customers ? this.first === (this.customers.length - this.rows): true;
-    }
-
-    isFirstPage(): boolean {
-      return this.customers ? this.first === 0 : true;
-    }
-
-  displayOp(){
-    this.displayOptions = !this.displayOptions;
+    this.updateDeforestationTimeSeries();
+    this.updateLulcTimeSeries();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.hasOwnProperty('displayOptions')) {
+      this.onSideBarToggle.emit(changes.displayOptions.currentValue)
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.innerHeigth = window.innerHeight;
+  }
+
+  async openCharts(data, type, options) {
+    let ob = {
+      //  title: title,
+      //  description: description,
+      type: type,
+      data: data,
+      options: options,
+    }
+    this.dialog.open(ChartsComponent, {
+      width: 'calc(100% - 5vw)',
+      height: 'calc(100% - 5vh)',
+      data: {ob}
+    });
+  }
+
+  next() {
+    this.first = this.first + this.rows;
+  }
+
+  prev() {
+    this.first = this.first - this.rows;
+  }
+
+  reset() {
+    this.first = 0;
+  }
+
+  isLastPage(): boolean {
+    return this.customers ? this.first === (this.customers.length - this.rows) : true;
+  }
+
+  isFirstPage(): boolean {
+    return this.customers ? this.first === 0 : true;
+  }
 
   triggerSeriesChartLulc(event: Event) {
     this.LulcChart = {
@@ -331,17 +313,16 @@ this.expendGroup = false;
     }
 
     console.log(this.LulcChart);
- }
+  }
 
   triggerSeriesChartDeforestation(event: Event) {
-   this.DeforestationChart = {
-     dataDeforestation: this.timeSeriesResultDeforestation.data,
-     optionsDeforestation: this.optionsTimeSeriesDeforestation,
-     typeDeforestation: this.timeSeriesResultDeforestation.type
-   }
-   console.log(this.DeforestationChart);
-}
-
+    this.DeforestationChart = {
+      dataDeforestation: this.timeSeriesResultDeforestation.data,
+      optionsDeforestation: this.optionsTimeSeriesDeforestation,
+      typeDeforestation: this.timeSeriesResultDeforestation.type
+    }
+    console.log(this.DeforestationChart);
+  }
 
 
   handleMenu(menu, mobile = false) {
@@ -357,25 +338,25 @@ this.expendGroup = false;
     } else {
       this.menu[menu.index].show = true;
     }
-     if (mobile) {
+    if (mobile) {
       this.layersSideBarMobile = true;
-     // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
+      // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
 
     } else {
       this.layersSideBar = true;
       this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
     }
-    
+
   }
 
 
-  handleLang(lng){
+  handleLang(lng) {
     this.lang = lng;
   }
 
-  onChangeBaseMap(bmap){
+  onChangeBaseMap(bmap) {
     this.mapaBase = this.mapaBase.map((b) => {
-      if(bmap !== b.key){
+      if (bmap !== b.key) {
         b.checked = false;
       }
       return b;
@@ -385,18 +366,18 @@ this.expendGroup = false;
   }
 
 
-  updateDeforestationTimeSeries(){
-    let params:string[] = [];
+  updateDeforestationTimeSeries() {
+    let params: string[] = [];
 
     // params.push('lang=' + this.lang)
     // params.push('typeRegion=' + this.defaultRegion)
     // params.push('textRegion=')
     let textParam = params.join('&');
-    let tempResultDeforestation:any[] = [];
+    let tempResultDeforestation: any[] = [];
 
     this.chartService.deforestation(textParam).subscribe(result => {
       tempResultDeforestation = result;
-      for(let graphic of tempResultDeforestation){
+      for (let graphic of tempResultDeforestation) {
         graphic.data = {
           labels: graphic.indicators.map(element => element.label),
           datasets: [
@@ -412,36 +393,36 @@ this.expendGroup = false;
         };
 
       }
-    this.timeSeriesResultDeforestation = tempResultDeforestation[0];
+      this.timeSeriesResultDeforestation = tempResultDeforestation[0];
     }, error => {
       console.log(error)
     });
 
 
-      /* this.dataSeries = {
-        title: timeseriesResult['title'],
-        labels: timeseriesResult['series'].map(element => element.year),
-        datasets: [
-          {
-            label: timeseriesResult['name'],
-            data: timeseriesResult['series'].map(element => element.value),
-            fill: false,
-            borderColor: '#289628',
-            backgroundColor: '#289628'
-          }
-        ],
-        area_antropica: timeseriesResult['indicator'].anthropic,
-        description: timeseriesResult['getText'],
-        label: timeseriesResult['label'],
-        type: timeseriesResult['type'],
-        pointStyle: 'rect'
+    /* this.dataSeries = {
+      title: timeseriesResult['title'],
+      labels: timeseriesResult['series'].map(element => element.year),
+      datasets: [
+        {
+          label: timeseriesResult['name'],
+          data: timeseriesResult['series'].map(element => element.value),
+          fill: false,
+          borderColor: '#289628',
+          backgroundColor: '#289628'
+        }
+      ],
+      area_antropica: timeseriesResult['indicator'].anthropic,
+      description: timeseriesResult['getText'],
+      label: timeseriesResult['label'],
+      type: timeseriesResult['type'],
+      pointStyle: 'rect'
 
-      };*/
-      this.DeforestationChart = {};
+    };*/
+    this.DeforestationChart = {};
 
-      this.optionsTimeSeriesDeforestation = {
-        responsive:true,
-        plugins: {
+    this.optionsTimeSeriesDeforestation = {
+      responsive: true,
+      plugins: {
         tooltips: {
           callbacks: {
             label(tooltipItem, data) {
@@ -486,18 +467,18 @@ this.expendGroup = false;
 
   }
 
-  updateLulcTimeSeries(){
-    let params:string[] = [];
+  updateLulcTimeSeries() {
+    let params: string[] = [];
 
     // params.push('lang=' + this.lang)
     // params.push('typeRegion=' + this.defaultRegion)
     // params.push('textRegion=')
     let textParam = params.join('&');
-    let tempResultLulc:any[] = [];
+    let tempResultLulc: any[] = [];
 
     this.chartService.lulc(textParam).subscribe(result => {
       tempResultLulc = result;
-      for(let graphic of tempResultLulc){
+      for (let graphic of tempResultLulc) {
         graphic.data = {
           labels: graphic.indicators.map(element => element.label),
           datasets: [
@@ -513,40 +494,39 @@ this.expendGroup = false;
         };
 
 
-
       }
-    this.timeSeriesResultLulc = tempResultLulc[0];
-    this.timeSeriesResultLulc2 = tempResultLulc[1];
+      this.timeSeriesResultLulc = tempResultLulc[0];
+      this.timeSeriesResultLulc2 = tempResultLulc[1];
     }, error => {
       console.log(error)
     });
 
 
-      /* this.dataSeries = {
-        title: timeseriesResult['title'],
-        labels: timeseriesResult['series'].map(element => element.year),
-        datasets: [
-          {
-            label: timeseriesResult['name'],
-            data: timeseriesResult['series'].map(element => element.value),
-            fill: false,
-            borderColor: '#289628',
-            backgroundColor: '#289628'
-          }
-        ],
-        area_antropica: timeseriesResult['indicator'].anthropic,
-        description: timeseriesResult['getText'],
-        label: timeseriesResult['label'],
-        type: timeseriesResult['type'],
-        pointStyle: 'rect'
+    /* this.dataSeries = {
+      title: timeseriesResult['title'],
+      labels: timeseriesResult['series'].map(element => element.year),
+      datasets: [
+        {
+          label: timeseriesResult['name'],
+          data: timeseriesResult['series'].map(element => element.value),
+          fill: false,
+          borderColor: '#289628',
+          backgroundColor: '#289628'
+        }
+      ],
+      area_antropica: timeseriesResult['indicator'].anthropic,
+      description: timeseriesResult['getText'],
+      label: timeseriesResult['label'],
+      type: timeseriesResult['type'],
+      pointStyle: 'rect'
 
-      };*/
-      this.LulcChart = {};
-      this.LulcChart2 = {};
+    };*/
+    this.LulcChart = {};
+    this.LulcChart2 = {};
 
-      this.optionsTimeSeriesLulc = {
-        responsive:true,
-        plugins: {
+    this.optionsTimeSeriesLulc = {
+      responsive: true,
+      plugins: {
         tooltips: {
           callbacks: {
             label(tooltipItem, data) {
@@ -601,26 +581,6 @@ this.expendGroup = false;
   //   this.onChangeLimit.emit(this.basemap);
   // }
 
-}
-
-export interface Legendas {
-  nome: string;
-  color: string;
-}
-
-export interface Layer {
-  nome: string;
-  key:string;
-  type: string;
-  checked: boolean;
-}
-
-
-export interface Menu {
-  index: number;
-  key: string;
-  icon: string;
-  show: boolean;
 }
 
 

@@ -1,7 +1,7 @@
 import {
   Component,
   EventEmitter,
-  AfterViewInit,
+  OnInit,
   Renderer2,
   ElementRef,
   Output,
@@ -22,7 +22,7 @@ import {MenuItem} from 'primeng/api';
   styleUrls: ['./left-side-bar.component.scss'],
   providers: [MessageService]
 })
-export class LeftSideBarComponent implements AfterViewInit {
+export class LeftSideBarComponent implements OnInit {
   @Input() map: Map;
   @Input() descriptor: any;
   @Input() basesmaps: any[];
@@ -36,6 +36,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   @Output() onDownload = new EventEmitter<any>();
   @Output() onChangeMap = new EventEmitter<any>();
   @Output() onChangeLimits = new EventEmitter<any>();
+  @Output() displayFilter = new EventEmitter<any>();
 
   public Legendas: Legend[];
   public limits: Layer[];
@@ -48,10 +49,10 @@ export class LeftSideBarComponent implements AfterViewInit {
   public open: boolean;
   public lang: string;
   public menu: Menu[];
-  public displayFilter: boolean;
   public innerHeigth: number;
   public layersSideBar: boolean;
   public layersSideBarMobile: boolean;
+  public showFilter: boolean;
   public layersTitle: string;
   public menuMobile: Menu[];
   public currentMenu: Menu;
@@ -77,6 +78,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   ) {
     this.metadata = {};
     this.displayMetadata = false;
+    this.showFilter = false;
     this.open = true;
     this.layersSideBar = false;
     this.layersSideBarMobile = false;
@@ -132,7 +134,6 @@ export class LeftSideBarComponent implements AfterViewInit {
         show: false
       }
     ];
-    this.displayFilter = false;
 
     this.currentMenu = {
       index: 0,
@@ -151,7 +152,7 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     // this.basesmaps = [
     //   {
     //     name: 'Geopolitico (MapBox)',
@@ -178,9 +179,13 @@ export class LeftSideBarComponent implements AfterViewInit {
     //     checked: false
     //   }
     // ];
-    this.basesmaps =   this.basesmaps.map(bmap => {
-      return bmap['visible'] = bmap.layer.get('visible')
-    });
+
+    if(this.basesmaps){
+      this.basesmaps = this.basesmaps.map(bmap => {
+        return bmap['visible'] = bmap.layer.get('visible')
+      });
+    }
+
     this.lang = this.localizationService.currentLang();
     this.innerHeigth = window.innerHeight - 170;
     this.cdRef.detectChanges();
@@ -259,14 +264,10 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.currentMenu = menu;
     this.layersTitle = this.localizationService.translate('menu.' + menu.key);
 
-    if (menu.key == 'filters' || menu.key == 'statistics') {
+    if (menu.key == 'statistics') {
       if (menu.key == 'statistics') {
         this.displayStatistics = !this.displayStatistics;
-      
-      } 
-      if (menu.key == 'filters') {
-        this.displayFilter = !this.displayFilter;
-      } 
+      }
     } else {
       this.menu[menu.index].show = true;
     }
@@ -276,11 +277,11 @@ export class LeftSideBarComponent implements AfterViewInit {
       // this.onMenuSelected.emit({show: this.layersSideBarMobile, key: menu.key});
 
     } else {
-      if (menu.key == 'filters' || menu.key == 'statistics') {
+      if (menu.key == 'statistics') {
 
-      }else {
-      this.layersSideBar = true;
-      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
+      } else {
+        this.layersSideBar = true;
+        this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
       }
     }
 
@@ -358,5 +359,20 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   changeLayerVisibility(layer, updateSource = false) {
     this.onLayerChangeVisibility.emit({layer: layer, updateSource: updateSource})
+  }
+
+  onFilter(){
+    this.showFilter = !this.showFilter;
+    this.displayFilter.emit(this.showFilter);
+    this.cdRef.detectChanges();
+  }
+  handleMenuActive(menu){
+    let classes = '';
+    if(menu.key == 'statistics'){
+      classes = this.displayStatistics ? 'menu-active' : '';
+    }else{
+      classes =  menu.show ? 'menu-active' : '';
+    }
+    return classes;
   }
 }

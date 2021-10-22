@@ -6,9 +6,15 @@
       </div>
       <ul #leftSidebar class="nav-list">
         <drag-scroll class="nav-list-drag" [scrollbar-hidden]="true" [drag-scroll-x-disabled]="true">
+          <li (click)="onFilter()">
+            <div pRipple [pTooltip]="open ? '' : 'menu.filters_tooltip'  | translate " [class]="showFilter ? 'menu-active' : ''">
+              <i class='fg-map-search'></i>
+              <span class="links_name">{{'menu.filters' | translate}}</span>
+            </div>
+          </li>
           <li *ngFor="let item of menu">
             <div pRipple [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate " (click)="handleMenu(item)"
-                 [class]="item.show ? 'menu-active' : ''">
+                 [class]="handleMenuActive(item)">
               <i class='{{item.icon}}'></i>
               <span class="links_name">{{'menu.' + item.key | translate}}</span>
             </div>
@@ -47,10 +53,10 @@
     (onShow)="onSideBarShow()"
     (visibleChange)="onSideBarToggle.emit(layersSideBar)"
   >
-    <h4 class="title">{{ layersTitle }}</h4>
-    <div class="content" [style]="{width: '100%', height: innerHeigth + 'px'}">
+    <h4 *ngIf="currentMenu?.key !== 'statistics'" class="title">{{ layersTitle }}</h4>
+    <div *ngIf="currentMenu?.key !== 'statistics'" class="content" [style]="{width: '100%', height: innerHeigth + 'px'}">
       <div class="menu-item" *ngIf="currentMenu?.key == 'layers'">
-        <div *ngFor="let group of descriptor.groups">
+        <div *ngFor="let group of descriptor?.groups">
           <div [class]="group.group_expanded ? 'group-card group-card-active' :'group-card'">
             <div (click)="group.group_expanded = !group.group_expanded" class="abstract">
               <span>
@@ -61,7 +67,7 @@
             </div>
             <div class="details">
               <div class="details-inner">
-                <div *ngFor="let layer of group.layers; let i = index" class="layer-card">
+                <div *ngFor="let layer of group?.layers; let i = index" class="layer-card">
                   <div class="layer-card-header">
                     <p-inputSwitch (onChange)="changeLayerVisibility(layer)" [id]=layer.id
                                    (ngModelChange)="layer.visible = !layer.visible"
@@ -70,12 +76,9 @@
                     <i *ngIf="enableMetadata(layer)" class='bx bxs-info-circle' (click)="showMetadata(layer)"></i>
                   </div>
                   <div class="layer-card-body" *ngIf="layer.visible">
-                    <!--                    <div class="layer-card-thumbnail">-->
-                    <!--                      <img alt="{{layer.label}}" src="https://ows.lapig.iesa.ufg.br/ows?SERVICE=WMS&REQUEST=GetMap&VERSION=1.1.1&layers=uso_solo_terraclass,regions_cepf_realce_maior&bbox=-53.2607485164173,-19.45694323783,-45.8974523191428,-12.3861700574049&TRANSPARENT=TRUE&srs=EPSG:4674&width=400&height=400&format=image/png&styles=&ENHANCE=TRUE&MSFILTER=uf%20ilike%20%27go%27&MSREGION=type=%27uf%27%20and%20text%20ilike%20%27go%27">-->
-                    <!--                    </div>-->
                     <div class="layer-card-content">
                       <div *ngIf="layer.types">
-                        <span class="p-float-label" *ngFor="let type of layer.types"
+                        <span class="p-float-label" *ngFor="let type of layer?.types"
                               [hidden]="type.value != layer.selectedType">
                           <p-dropdown id="types-{{type.value}}" *ngIf="layer.types.length > 0" [options]="layer.types"
                                       [(ngModel)]="layer.selectedType" (onChange)="changeLayerVisibility(type)"
@@ -141,13 +144,8 @@
           </div>
         </div>
       </div>
-
       <div class="menu-item" *ngIf="currentMenu?.key == 'area'">
         <app-leftsidebar-area [map]="map" [lang]="lang"></app-leftsidebar-area>
-      </div>
-      <div class="menu-item" *ngIf="currentMenu?.key == 'filters'">
-        <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results"
-                        (completeMethod)="search($event)"></p-autoComplete>
       </div>
       <div class="menu-item options" *ngIf="currentMenu?.key == 'options'">
         <div [class]="optionsGroups.basemaps ? 'group-card group-card-active' :'group-card'">

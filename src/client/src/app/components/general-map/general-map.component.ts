@@ -33,20 +33,20 @@ import CircleStyle from "ol/style/Circle";
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
-import { SelectItem, PrimeNGConfig } from 'primeng/api';
+import {SelectItem, PrimeNGConfig, MessageService} from 'primeng/api';
 import Text from "ol/style/Text";
 
 @Component({
   selector: 'app-general-map',
   templateUrl: './general-map.component.html',
-  styleUrls: ['./general-map.component.scss']
+  styleUrls: ['./general-map.component.scss'],
+  providers: [MessageService]
 })
 
 export class GeneralMapComponent implements OnInit, Ruler {
 
   @Input() displayLayers = true as boolean;
   @Input() openMenu = true as boolean;
-  @Input() showRightSideBar = false as boolean;
   @Input() descriptor: Descriptor;
   @Output() onHide = new EventEmitter<any>();
   @Output() mapInstance = new EventEmitter<Map>();
@@ -63,8 +63,10 @@ export class GeneralMapComponent implements OnInit, Ruler {
   public showFormPoint: boolean;
   public loadingDown: boolean;
   public controlOptions: boolean;
+  public showRightSideBar: boolean;
   public lat: number;
   public lon: number;
+  public classes: string;
 
   public mapControls: Control;
 
@@ -96,7 +98,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(4);
 
-
   public otherLayerFromFilters: any = {
     layer: null,
     strokeColor: '#363230',
@@ -110,16 +111,20 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   public swipeOptions: any[];
   public valueSwipe: any;
+  public legendExpanded: boolean;
 
   constructor(
     public localizationService: LocalizationService,
     private downloadService: DownloadService,
     private cdRef: ChangeDetectorRef,
     private primeNGConfig: PrimeNGConfig,
-    private mapService: MapService
+    private mapService: MapService,
+    private messageService: MessageService,
+    private primengConfig: PrimeNGConfig
   ) {
     this.showFormPoint = false;
     this.loadingDown = false;
+    this.legendExpanded = true;
     this.controlOptions = false;
     this.layersTypes = [];
     this.layersNames = [];
@@ -339,9 +344,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   ngOnInit(): void {
     const self = this;
+    this.primengConfig.ripple = true;
     this.innerHeigth = window.innerHeight;
     this.basemapsAvaliable = [];
-    this.cdRef.detectChanges();
     this.primeNGConfig.ripple = true;
     this.selectedSearchOption = 'region';
 
@@ -393,6 +398,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
     }
 
     setTimeout(() => {
+      this.handleSideBars()
       this.map.updateSize()
     });
   }
@@ -733,9 +739,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.mapControls.swipe = !this.mapControls.swipe
   }
 
-  onSearch() {
+  onSearch(show) {
     this.controlOptions = true;
-    this.mapControls.search = !this.mapControls.search
+    this.mapControls.search = show;
   }
 
   onRuler(): void {
@@ -758,6 +764,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   onPoint(): void {
+    this.messageService.add({severity:'success', summary:'Service Message', detail:'Via MessageService'});
     this.controlOptions = true;
     this.mapControls.point= !this.mapControls.point
     if(this.mapControls.point){
@@ -831,15 +838,14 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   handleSideBars() {
-    let classes = "";
+    this.classes = "";
     if (this.displayLayers) {
-      classes += 'open-layers '
+      this.classes += 'open-layers '
     }
     if (this.showRightSideBar) {
-      classes += 'open-layers-right'
+      this.classes += 'open-layers-right'
     }
 
-    return classes;
   }
 
   addOverlay(overlay: Overlay): void {
@@ -1018,6 +1024,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
     }
     feature.setStyle(style);
   }
+  onAddPropertyFeature(index, feature){
+    console.log(feature)
+  }
   onRemoveFeature(index, feature){
     this.source.removeFeature(feature);
     this.features.splice(index, 1);
@@ -1026,11 +1035,17 @@ export class GeneralMapComponent implements OnInit, Ruler {
   onSave(){
     console.log(this.getGeoJsonFromFeature())
   }
+
   onCancel(){
     this.removeInteraction();
     this.mapControls.drawArea = false;
     this.mapControls.point = false;
     this.controlOptions = false;
+  }
+
+  onRightSideBarOpen(show){
+    this.handleSideBars();
+    this.showRightSideBar = show;
   }
 
 }
