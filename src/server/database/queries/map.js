@@ -12,7 +12,7 @@ module.exports = function (app) {
         return [{
             source: 'general',
             id: 'extent',
-            sql: "SELECT geom_json as geojson FROM regions_geom WHERE type=${type} AND value=${region}",
+            sql: "SELECT geom_json as geojson FROM regions_geom WHERE type=${type} AND unaccent(value) ilike ${key} ORDER BY gid ASC LIMIT 1",
             mantain: true
         }]
     }
@@ -21,7 +21,7 @@ module.exports = function (app) {
         return [{
             source: 'general',
             id: 'search',
-            sql: "SELECT distinct text || ' - ' || uf as text, value, type FROM regions_geom WHERE unaccent(text) ILIKE unaccent(${key}%) AND type NOT in ('country') LIMIT 10",
+            sql: "SELECT distinct concat_ws(' - ', text , uf) as text, value, type FROM regions_geom WHERE unaccent(text) ILIKE unaccent(${key}%) AND type NOT in ('country') LIMIT 10",
             mantain: true
         }]
 
@@ -49,7 +49,7 @@ module.exports = function (app) {
         return [{
             source: 'general',
             id: 'search',
-            sql: "SELECT cod_car || ' - ' || uf as text, uf, area_km2, cd_geocmu, ST_AsGeoJSON(geom) geojson FROM car_cerrado WHERE unaccent(cod_car) ILIKE unaccent(${key}%) order by area_km2 DESC LIMIT 10",
+            sql: "SELECT car_code as text, area_ha, ST_AsGeoJSON(geom) geojson FROM car_brasil WHERE unaccent(car_code) ILIKE unaccent(${key}%) order by area_ha DESC LIMIT 10",
             mantain: true
         }]
     }
