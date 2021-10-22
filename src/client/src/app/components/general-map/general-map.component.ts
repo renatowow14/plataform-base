@@ -915,7 +915,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   private zoomExtent() {
     let map = this.map;
     if (this.selectRegion.type != '') {
-      this.mapService.extent(this.selectRegion).subscribe(extentResult => {
+      this.mapService.getExtent(this.selectRegion).subscribe(extentResult => {
         let features = (new GeoJSON()).readFeatures(extentResult, {
           dataProjection: 'EPSG:4326',
           featureProjection: 'EPSG:3857'
