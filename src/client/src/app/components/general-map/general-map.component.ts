@@ -14,11 +14,11 @@ import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
 import { LocalizationService } from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import {Descriptor, Control, Ruler, TextFilter} from "../../@core/interfaces";
+import { Descriptor, Control, Ruler, TextFilter } from "../../@core/interfaces";
 import { DownloadService, MapService } from "../services";
 import { saveAs } from 'file-saver';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Coordinate, createStringXY} from "ol/coordinate";
+import { Coordinate, createStringXY } from "ol/coordinate";
 import { toLonLat } from "ol/proj";
 import { Graticule, Overlay } from "ol";
 import { BingMaps, XYZ } from "ol/source";
@@ -79,9 +79,11 @@ export class GeneralMapComponent implements OnInit, Ruler {
   public urls: string[];
   public regionFilterDefault: any;
   public msFilterRegion: string;
-  public defaultRegion: any;
   public selectRegion: any;
   public year: any;
+
+  public defaultRegion: any;
+  public regionsLimits: any;
 
   private interaction: Interaction;
 
@@ -94,6 +96,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   public highlightStyle: Style;
   public defaultStyle: Style;
 
+
   private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(4);
 
 
@@ -102,7 +105,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
     strokeColor: '#363230',
   }
 
-  public selectedAutoCompleteText = '';
+  public selectedAutoCompleteText: any = { text: '' };
   public listForAutoComplete: any[];
   public textsComponentesFilters: TextFilter;
   public selectedSearchOption: string;
@@ -145,9 +148,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
     }
 
     this.defaultRegion = {
-      type: 'bioma',
-      text: 'CERRADO',
-      value: 'CERRADO'
+      type: 'country',
+      text: 'Brasil',
+      value: 'BRASIL'
     }
 
     this.selectRegion = this.defaultRegion;
@@ -302,21 +305,38 @@ export class GeneralMapComponent implements OnInit, Ruler {
       target: 'coordinates-label'
     }
 
-    this.defaultStyle = new Style({
-      fill: new Fill({
-        color: 'rgba(255,255,255,0.52)',
-      }),
-      stroke: new Stroke({
-        color: this.readStyleProperty('primary'),
-        width: 2,
-      }),
-      image: new CircleStyle({
-        radius: 5,
-        fill: new Fill({
-          color: this.readStyleProperty('primary'),
-        }),
-      }),
-    });
+    // this.defaultStyle = new Style({
+    //   fill: new Fill({
+    //     color: 'rgba(255,255,255,0.52)',
+    //   }),
+    //   stroke: new Stroke({
+    //     color: this.otherLayerFromFilters.strokeColor,
+    //     width: 6,
+    //     lineCap: 'round'
+    //   }),
+    //   image: new CircleStyle({
+    //     radius: 5,
+    //     fill: new Fill({
+    //       color: this.readStyleProperty('primary'),
+    //     }),
+    //   }),
+    // });
+
+    // this.defaultStyle = [
+    //   new Style({
+    //     stroke: new Stroke({
+    //       color: this.otherLayerFromFilters.strokeColor,
+    //       width: 4
+    //     })
+    //   }),
+    //   new Style({
+    //     stroke: new Stroke({
+    //       color: this.otherLayerFromFilters.strokeColor,
+    //       width: 4,
+    //       lineCap: 'round'
+    //     })
+    //   })
+    // ]
 
     this.highlightStyle = new Style({
       fill: new Fill({
@@ -352,15 +372,15 @@ export class GeneralMapComponent implements OnInit, Ruler {
       // { label: this.language === 'pt-br' ? 'Ponto' : 'Point', value: 'coordinate', icon: 'fa fa-fw fa-map-pin' }
     ];
 
-    this.source.on( 'addfeature', function (ev) {
+    this.source.on('addfeature', function (ev) {
       const id = new Date().valueOf();
       const text = new Style({
         text: new Text({
           text: id.toString(),
           font: 'normal 12px Montserrat',
           offsetY: 14,
-          fill: new Fill({color: 'rgb(0,0,0)'}),
-          stroke: new Stroke({color: 'rgb(255,255,255)', width: 1})
+          fill: new Fill({ color: 'rgb(0,0,0)' }),
+          stroke: new Stroke({ color: 'rgb(255,255,255)', width: 1 })
         }),
         fill: new Fill({
           color: 'rgba(255,255,255,0.52)',
@@ -411,7 +431,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   onChangeDescriptor() {
     // this.map.getLayers().forEach(layer => {
-    //   if(layer){
+    //   if(layer)
     //     const properties = layer.getProperties();
     //     if (properties.type === 'layer') {
     //       this.map.removeLayer(layer)
@@ -455,6 +475,29 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
     this.createLayers();
   }
+
+
+  private createVectorLayer(features, strokeColor, width) {
+    return new VectorLayer({
+      source: new VectorSource({ features }),
+      style: [
+        new Style({
+          stroke: new Stroke({
+            color: '#dedede',
+            width: width + 1
+          })
+        }),
+        new Style({
+          stroke: new Stroke({
+            color: strokeColor,
+            width: width
+          })
+        })
+      ]
+    });
+  }
+
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -559,6 +602,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
       this.limitsTMS[limits.value] = this.createTMSLayer(limits, 'limit')
       this.layers.push(this.limitsTMS[limits.value])
     }
+
+
   }
 
   changeLayerVisibility(ev) {
@@ -709,9 +754,10 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   initVectorLayerInteraction() {
+
     this.vector = new VectorLayer({
       source: this.source,
-      style: this.defaultStyle,
+      style: this.defaultStyle
     });
   }
 
@@ -759,8 +805,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   onPoint(): void {
     this.controlOptions = true;
-    this.mapControls.point= !this.mapControls.point
-    if(this.mapControls.point){
+    this.mapControls.point = !this.mapControls.point
+    if (this.mapControls.point) {
       this.addDrawInteraction('Point');
     } else {
       this.unselect()
@@ -792,7 +838,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   addInteraction(interaction: Interaction, type: string = '', removeInteraction: boolean = false): void {
-    if(removeInteraction){
+    if (removeInteraction) {
       this.removeInteraction();
     }
     this.map.addLayer(this.vector);
@@ -862,11 +908,16 @@ export class GeneralMapComponent implements OnInit, Ruler {
   private zoomExtent() {
     let map = this.map;
     if (this.selectRegion.type != '') {
-      this.mapService.extent(this.selectRegion.value).subscribe(extentResult => {
+      this.mapService.extent(this.selectRegion).subscribe(extentResult => {
         let features = (new GeoJSON()).readFeatures(extentResult, {
           dataProjection: 'EPSG:4326',
           featureProjection: 'EPSG:3857'
         });
+
+        this.regionsLimits = this.createVectorLayer(features, '#666633', 3);
+        this.map.addLayer(this.regionsLimits);
+
+        // this.source = this.regionsLimits.getSource();
         this.source.clear()
         this.source.addFeature(features[0])
         let extent = features[0].getGeometry().getExtent();
@@ -888,16 +939,27 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   updateRegion(region) {
-    if (region == this.defaultRegion) {
-      this.selectedAutoCompleteText = ''
-    }
+
+    this.map.removeLayer(this.otherLayerFromFilters.layer)
+
+    this.map.removeLayer(this.regionsLimits)
 
     this.selectRegion = region;
+    if (region == this.defaultRegion) {
+      this.selectedAutoCompleteText = region
+      this.selectedAutoCompleteText.text = '';
+    }
 
-    if (this.selectRegion.type == 'municipio')
+
+    if (this.selectRegion.type == 'city')
       this.msFilterRegion = "cd_geocmu = '" + this.selectRegion.value + "'"
-    else if (this.selectRegion.type == 'estado')
+    else if (this.selectRegion.type == 'state')
       this.msFilterRegion = "uf = '" + this.selectRegion.value + "'"
+    else if (this.selectRegion.type == 'biome')
+      this.msFilterRegion = "biome = '" + this.selectRegion.value + "'"
+    else if (this.selectRegion.type == 'fronteira') {
+      // this.msFilterRegion = "biome = '" + this.selectRegion.value + "'"
+    }
     else
       this.msFilterRegion = ""
 
@@ -915,21 +977,19 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   obtainSearchSuggestions(event) {
 
+    let query = event.query;
     if (this.selectedSearchOption.toLowerCase() == 'region') {
 
-      let query = event.query;
       this.mapService.getRegions(query).subscribe(result => {
         this.listForAutoComplete = result.search;
       });
     }
     else if (this.selectedSearchOption.toLowerCase() == 'car') {
-      let query = event.query;
       this.mapService.getCARS(query).subscribe(result => {
         this.listForAutoComplete = result.search;
       });
     }
     else if (this.selectedSearchOption.toLowerCase() == 'uc') {
-      let query = event.query;
       this.mapService.getUCs(query).subscribe(result => {
         this.listForAutoComplete = result.search;
       });
@@ -947,8 +1007,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   onChangeSearchOption() {
-    this.textsComponentesFilters.search_placeholder = this.localizationService.translate('controls.filter_texts.search_placeholder_'+ this.selectedSearchOption)
-    this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' +  this.selectedSearchOption)
+    this.textsComponentesFilters.search_placeholder = this.localizationService.translate('controls.filter_texts.search_placeholder_' + this.selectedSearchOption)
+    this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' + this.selectedSearchOption)
   }
 
   private async clearAreaBeforeSearch() {
@@ -1005,9 +1065,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
     return bodyStyles.getPropertyValue('--' + name).trim();
   }
 
-  onHoverFeature(feature, leave: boolean = false){
+  onHoverFeature(feature, leave: boolean = false) {
     const style = feature!.getStyle();
-    if(leave) {
+    if (leave) {
       style.setFill(this.defaultStyle.getFill());
       style.setStroke(this.defaultStyle.getStroke());
       style.setImage(this.defaultStyle.getImage());
@@ -1018,15 +1078,15 @@ export class GeneralMapComponent implements OnInit, Ruler {
     }
     feature.setStyle(style);
   }
-  onRemoveFeature(index, feature){
+  onRemoveFeature(index, feature) {
     this.source.removeFeature(feature);
     this.features.splice(index, 1);
   }
 
-  onSave(){
+  onSave() {
     console.log(this.getGeoJsonFromFeature())
   }
-  onCancel(){
+  onCancel() {
     this.removeInteraction();
     this.mapControls.drawArea = false;
     this.mapControls.point = false;
