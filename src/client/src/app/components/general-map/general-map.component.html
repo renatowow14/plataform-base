@@ -128,16 +128,23 @@
                 </mat-button-toggle-group>
               </div>
               <span>
-                <p-autoComplete [appendTo]="'body'" [placeholder]="textsComponentesFilters.search_placeholder"
-                  [(ngModel)]="selectedAutoCompleteText" [suggestions]="listForAutoComplete"
-                  (completeMethod)="obtainSearchSuggestions($event)" field="text" styleClass="wid100"
-                  (onSelect)="onSelectSuggestion($event)" [emptyMessage]="textsComponentesFilters.search_failed"
-                  [showEmptyMessage]="true">
+                <p-autoComplete
+                  (onClear)="onClearFilter($event)"
+                  [appendTo]="'body'"
+                  [placeholder]="textsComponentesFilters.search_placeholder"
+                  [(ngModel)]="selectedAutoCompleteText"
+                  [suggestions]="listForAutoComplete"
+                  (completeMethod)="obtainSearchSuggestions($event)"
+                  (onSelect)="onSelectSuggestion($event)"
+                  [emptyMessage]="textsComponentesFilters.search_failed"
+                  [showEmptyMessage]="true"
+                  field="text" styleClass="wid100"
+                >
                   <ng-template let-result pTemplate="item">
                     <div class="autocomplete-option">{{result.text}}</div>
                   </ng-template>
                 </p-autoComplete>
-                <i *ngIf="selectedAutoCompleteText?.text !== ''" [pTooltip]="'controls.details.clear' | translate"
+                <i *ngIf="selectedAutoCompleteText?.text" [pTooltip]="'controls.details.clear' | translate"
                   class='close bx bx-x-circle' (click)="updateRegion(defaultRegion)"></i>
               </span>
 

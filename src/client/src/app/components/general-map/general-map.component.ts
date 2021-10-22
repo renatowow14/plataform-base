@@ -380,19 +380,19 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.source.on('addfeature', function (ev) {
       const id = new Date().valueOf();
       const text = new Style({
-        text: new Text({
-          text: id.toString(),
-          font: 'normal 12px Montserrat',
-          offsetY: 14,
-          fill: new Fill({ color: 'rgb(0,0,0)' }),
-          stroke: new Stroke({ color: 'rgb(255,255,255)', width: 1 })
-        }),
-        fill: new Fill({
-          color: 'rgba(255,255,255,0.52)',
-        }),
+        // text: new Text({
+        //   text: id.toString(),
+        //   font: 'normal 12px Montserrat',
+        //   offsetY: 14,
+        //   fill: new Fill({ color: 'rgb(0,0,0)' }),
+        //   stroke: new Stroke({ color: 'rgb(255,255,255)', width: 1 })
+        // }),
+        // fill: new Fill({
+        //   color: 'rgba(255,255,255,0.40)',
+        // }),
         stroke: new Stroke({
           color: self.readStyleProperty('primary'),
-          width: 2,
+          width: 3,
         }),
         image: new CircleStyle({
           radius: 5,
@@ -402,7 +402,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
         }),
       });
       ev.feature!.setStyle(text);
-      ev.feature!.set('id', id)
+      // ev.feature!.set('id', id)
+      console.log(ev.feature!.getProperties())
       self.features.push(ev.feature)
     });
     this.onChangeSearchOption();
@@ -951,11 +952,11 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.map.removeLayer(this.regionsLimits)
 
     this.selectRegion = region;
+
     if (region == this.defaultRegion) {
       this.selectedAutoCompleteText = region
       this.selectedAutoCompleteText.text = '';
     }
-
 
     if (this.selectRegion.type == 'city')
       this.msFilterRegion = "cd_geocmu = '" + this.selectRegion.value + "'"
@@ -971,7 +972,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
     this.zoomExtent();
     this.updateSourceAllLayers()
-
   }
 
   search(ev) {
@@ -1103,6 +1103,10 @@ export class GeneralMapComponent implements OnInit, Ruler {
   onRightSideBarOpen(show){
     this.handleSideBars();
     this.showRightSideBar = show;
+  }
+
+  onClearFilter(ev){
+    this.updateRegion(this.defaultRegion);
   }
 
 }

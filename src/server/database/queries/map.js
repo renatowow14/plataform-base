@@ -12,7 +12,7 @@ module.exports = function (app) {
         return [{
             source: 'general',
             id: 'extent',
-            sql: "SELECT geom_json as geojson FROM regions_geom WHERE type=${type} AND unaccent(value) ilike ${key} ORDER BY gid ASC LIMIT 1",
+            sql: "SELECT geom_json as geojson FROM regions_geom WHERE type=${type} AND unaccent(value) ilike unaccent(${key}%) ORDER BY gid ASC LIMIT 1",
             mantain: true
         }]
     }
