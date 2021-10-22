@@ -33,11 +33,12 @@ export class MapService {
     );
   }
 
-  extent(region): Observable<any> {
-    return this.httpClient.get<any>(this.apiURL + '/extent?region=' + region)
+  getExtent(region): Observable<any> {
+
+    return this.httpClient.get<any>(this.apiURL + '/extent', { params: MapService.PARAMS.set("key", region.value).append("type", region.type) })
       .pipe(map(response => response))
-      .pipe(catchError(this.errorHandler),
-    );
+      .pipe(catchError(this.errorHandler));
+
   }
 
   search(term): Observable<any> {

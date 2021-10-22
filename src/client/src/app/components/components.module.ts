@@ -22,7 +22,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ImageModule } from 'primeng/image';
 import { ToastModule } from 'primeng/toast';
 import { ChartModule } from 'primeng/chart';
-//import { ChartsComponent } from './right-side-bar/charts/charts.component';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -44,7 +43,8 @@ import localePt from '@angular/common/locales/pt';
 import { registerLocaleData, DatePipe, DecimalPipe } from '@angular/common';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import {RippleModule} from 'primeng/ripple';
+import { RippleModule } from 'primeng/ripple';
+
 registerLocaleData(localePt);
 
 

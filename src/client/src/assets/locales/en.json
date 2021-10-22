@@ -193,5 +193,10 @@
         "passwordPrompt": "Enter a password",
         "emptyMessage": "No results found",
         "emptyFilterMessage": "No results found"
+    },
+    "feature": {
+      "point": "Point",
+      "polygon": "Polygon",
+      "remove_feature": "Remove Feature"
     }
 }

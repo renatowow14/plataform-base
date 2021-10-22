@@ -2,7 +2,7 @@
 
   <app-left-side-bar
     #leftSideBar
-    [map]="map"
+    [map]="generalMap.map"
     [descriptor]="descriptor"
     [basesmaps]="generalMap.basemapsAvaliable"
     [loadingDownload]="generalMap.loadingDown"
@@ -14,21 +14,20 @@
     (onLayerChangeTransparency)="generalMap.onChangeTransparency($event)"
     (onDownload)="generalMap.buttonDownload($event)"
     (onChangeMap)="generalMap.onChangeTransparency($event)"
+    (displayFilter)="generalMap.onSearch($event)"
   ></app-left-side-bar>
 
   <app-general-map
     #generalMap
     [descriptor]="descriptor"
-    [showRightSideBar]="rightSideBar.displayOptions"
     [openMenu]="openMenu"
     [displayLayers]="showLayers"
-    (mapInstance)="setMap($event)"
   ></app-general-map>
 
   <app-right-side-bar
-    #rightSideBar
     [displayOptions]="leftSideBar.displayStatistics"
     [descriptor]="descriptor"
+    (onSideBarToggle)="generalMap.onRightSideBarOpen($event)"
   ></app-right-side-bar>
 
 </section>
