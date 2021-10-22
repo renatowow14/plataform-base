@@ -362,6 +362,7 @@ export class LeftSideBarComponent implements OnInit {
   }
 
   onFilter(){
+    this.layersSideBar = false
     this.showFilter = !this.showFilter;
     this.displayFilter.emit(this.showFilter);
     this.cdRef.detectChanges();
