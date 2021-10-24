@@ -221,7 +221,7 @@ export class LeftSideBarComponent implements OnInit {
     if (this.map) {
       setTimeout(() => {
         this.map.updateSize()
-      }, 300);
+      });
     }
   }
 
@@ -244,6 +244,12 @@ export class LeftSideBarComponent implements OnInit {
     this.renderer.insertBefore(this.el.nativeElement.querySelector(".p-sidebar-header"), div, this.el.nativeElement.querySelector(".p-sidebar-close"))
   }
 
+  hideSidebar(){
+    setTimeout(() => {
+      this.map.updateSize()
+    });
+  }
+
 
   onSideBarShowMobile() {
     const div = this.renderer.createElement('div');
@@ -261,15 +267,17 @@ export class LeftSideBarComponent implements OnInit {
     this.menu.map(m => {
       return m.show = false
     });
+
     this.currentMenu = menu;
     this.layersTitle = this.localizationService.translate('menu.' + menu.key);
 
     if (menu.key == 'statistics') {
-      if (menu.key == 'statistics') {
-        this.displayStatistics = !this.displayStatistics;
-      }
+      this.displayStatistics = !this.displayStatistics;
+      this.layersSideBar = false;
+      this.onSideBarToggle.emit(this.layersSideBar);
     } else {
       this.menu[menu.index].show = true;
+      this.layersSideBar = true;
     }
 
     if (mobile) {
@@ -362,11 +370,14 @@ export class LeftSideBarComponent implements OnInit {
   }
 
   onFilter(){
-    this.layersSideBar = false
     this.showFilter = !this.showFilter;
     this.displayFilter.emit(this.showFilter);
+    setTimeout(() => {
+      this.map.updateSize()
+    });
     this.cdRef.detectChanges();
   }
+
   handleMenuActive(menu){
     let classes = '';
     if(menu.key == 'statistics'){

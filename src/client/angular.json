@@ -21,6 +21,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
+              "ol/",
               "ol/format/MVT.js"
             ],
             "outputPath": "dist/client",

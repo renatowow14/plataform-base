@@ -14,11 +14,23 @@
     "draw": "Desenhar Área",
     "measure": "Medir Distância",
     "measureArea": "Medir Área",
+    "point": "Inserir Ponto",
     "print": "Imprimir Mapa",
+    "draw_area": {
+      "title": "Geometrias Desenhadas",
+      "feature": {
+        "point": "Ponto",
+        "polygon": "Polígono",
+        "remove_feature": "Remover Geometria"
+      },
+      "save": "Salvar",
+      "cancel": "Cancelar"
+    },
     "details": {
       "title": "Detalhes do Controle",
       "clear": "Limpar Filtro",
-      "swipe_placeholder": "Escolha uma camada para comparar"
+      "swipe_placeholder": "Escolha uma camada para comparar",
+      "swipe_remove": "Remover Swipe"
     },
     "filter_texts": {
       "search_lateral_title": "Procurar por: ",

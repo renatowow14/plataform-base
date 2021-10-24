@@ -16,7 +16,7 @@ import {ChartsComponent} from './charts/charts.component';
 import {CustomerService} from '../services/customer.service';
 import {Customer} from 'src/app/@core/interfaces/customer';
 import {Layer, Legend, Menu} from "../../@core/interfaces";
-
+import Map from 'ol/Map';
 
 @Component({
   selector: 'app-right-side-bar',
@@ -29,19 +29,23 @@ export class RightSideBarComponent implements OnInit {
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onSideBarToggle = new EventEmitter<boolean>()
   @Input() descriptor: any;
-  @Input() displayOptions: boolean;
+
+  @Input() set displayOptions(value: boolean) {
+    this.onSideBarToggle.emit(value);
+    this._displayOptions = value;
+  }
 
   public dialog: MatDialog;
   public Legendas: Legend[];
   public mapaBase: Layer[];
   public Limites: Layer[];
+  public _displayOptions : boolean;
   public basemap: any;
   public limit: any;
   public innerHeigth: number;
   public timeSeriesResultDeforestation: any = {};
   public timeSeriesResultLulc: any = {};
   public timeSeriesResultLulc2: any = {};
-
   //Charts Variables
   public selectRegion: any;
   public dataSeries: any;
@@ -161,7 +165,7 @@ export class RightSideBarComponent implements OnInit {
     this.lang = this.localizationService.currentLang();
     this.innerHeigth = window.innerHeight;
 
-    this.displayOptions = false
+    this._displayOptions = false;
 
     this.customerService.getCustomersLarge().then(customers => this.customers = customers);
 
@@ -251,12 +255,6 @@ export class RightSideBarComponent implements OnInit {
 
     this.updateDeforestationTimeSeries();
     this.updateLulcTimeSeries();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('displayOptions')) {
-      this.onSideBarToggle.emit(changes.displayOptions.currentValue)
-    }
   }
 
   @HostListener('window:resize', ['$event'])

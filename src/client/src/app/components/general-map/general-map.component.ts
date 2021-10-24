@@ -12,29 +12,30 @@ import TileLayer from "ol/layer/Tile";
 import Map from 'ol/Map';
 import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
-import { LocalizationService } from "../../@core/internationalization/localization.service";
+import {LocalizationService} from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import { Descriptor, Control, Ruler, TextFilter } from "../../@core/interfaces";
-import { DownloadService, MapService } from "../services";
-import { saveAs } from 'file-saver';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Coordinate, createStringXY } from "ol/coordinate";
-import { toLonLat } from "ol/proj";
-import { Graticule, Overlay } from "ol";
-import { BingMaps, XYZ } from "ol/source";
-import { Fill, Stroke, Style } from "ol/style";
-import { Geometry, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
-import { Feature } from "ol";
-import { Draw, Interaction, Modify, Snap } from "ol/interaction";
+import {Descriptor, Control, Ruler, TextFilter} from "../../@core/interfaces";
+import {DownloadService, MapService} from "../services";
+import {saveAs} from 'file-saver';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {Coordinate, createStringXY} from "ol/coordinate";
+import {toLonLat} from "ol/proj";
+import {Graticule, Overlay} from "ol";
+import {BingMaps, XYZ} from "ol/source";
+import {Fill, Stroke, Style} from "ol/style";
+import {Geometry, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon} from 'ol/geom';
+import {Feature} from "ol";
+import {Draw, Interaction, Modify, Snap} from "ol/interaction";
 import VectorSource from "ol/source/Vector";
-import { GeoJSON } from "ol/format";
+import {GeoJSON} from "ol/format";
 import VectorLayer from "ol/layer/Vector";
 import CircleStyle from "ol/style/Circle";
-import { timer } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
+import {timer} from 'rxjs';
+import {take} from 'rxjs/operators';
+import {RulerAreaCtrl, RulerCtrl} from "../../@core/interactions/ruler";
 import {SelectItem, PrimeNGConfig, MessageService} from 'primeng/api';
 import Text from "ol/style/Text";
+import {Swipe} from "../../@core/interfaces/swipe";
 
 @Component({
   selector: 'app-general-map',
@@ -44,8 +45,10 @@ import Text from "ol/style/Text";
 })
 
 export class GeneralMapComponent implements OnInit, Ruler {
-
-  @Input() displayLayers = true as boolean;
+  @Input() set displayLayers(value: boolean) {
+    this._displayLayers = value;
+    this.handleSideBars();
+  }
   @Input() openMenu = true as boolean;
   @Input() descriptor: Descriptor;
   @Output() onHide = new EventEmitter<any>();
@@ -63,12 +66,16 @@ export class GeneralMapComponent implements OnInit, Ruler {
   public showFormPoint: boolean;
   public loadingDown: boolean;
   public controlOptions: boolean;
+  public _displayLayers: boolean;
   public showRightSideBar: boolean;
   public lat: number;
   public lon: number;
   public classes: string;
-
+  public swipeLayers: any[];
+  public swipeOptions: Swipe[];
+  public swipeLayer: any;
   public mapControls: Control;
+
 
   public layersTypes: any[];
   public layersNames: any[];
@@ -106,13 +113,12 @@ export class GeneralMapComponent implements OnInit, Ruler {
     strokeColor: '#363230',
   }
 
-  public selectedAutoCompleteText: any = { text: '' };
+  public selectedAutoCompleteText: any = {text: ''};
   public listForAutoComplete: any[];
   public textsComponentesFilters: TextFilter;
   public selectedSearchOption: string;
   public searchOptions: SelectItem[];
 
-  public swipeOptions: any[];
   public valueSwipe: any;
   public legendExpanded: boolean;
 
@@ -132,8 +138,11 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.layersTypes = [];
     this.layersNames = [];
     this.limitsNames = [];
+    this.swipeLayers = [];
     this.layersTMS = {};
     this.limitsTMS = {};
+
+    this.swipeLayer = {};
 
     this.features = [];
 
@@ -310,38 +319,23 @@ export class GeneralMapComponent implements OnInit, Ruler {
       target: 'coordinates-label'
     }
 
-    // this.defaultStyle = new Style({
-    //   fill: new Fill({
-    //     color: 'rgba(255,255,255,0.52)',
-    //   }),
-    //   stroke: new Stroke({
-    //     color: this.otherLayerFromFilters.strokeColor,
-    //     width: 6,
-    //     lineCap: 'round'
-    //   }),
-    //   image: new CircleStyle({
-    //     radius: 5,
-    //     fill: new Fill({
-    //       color: this.readStyleProperty('primary'),
-    //     }),
-    //   }),
-    // });
+    this.defaultStyle = new Style({
+      fill: new Fill({
+        color: 'rgba(255,255,255,0.52)',
+      }),
+      stroke: new Stroke({
+        color: this.otherLayerFromFilters.strokeColor,
+        width: 6,
+        lineCap: 'round'
+      }),
+      image: new CircleStyle({
+        radius: 5,
+        fill: new Fill({
+          color: this.readStyleProperty('primary'),
+        }),
+      }),
+    });
 
-    // this.defaultStyle = [
-    //   new Style({
-    //     stroke: new Stroke({
-    //       color: this.otherLayerFromFilters.strokeColor,
-    //       width: 4
-    //     })
-    //   }),
-    //   new Style({
-    //     stroke: new Stroke({
-    //       color: this.otherLayerFromFilters.strokeColor,
-    //       width: 4,
-    //       lineCap: 'round'
-    //     })
-    //   })
-    // ]
 
     this.highlightStyle = new Style({
       fill: new Fill({
@@ -370,15 +364,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.primeNGConfig.ripple = true;
     this.selectedSearchOption = 'region';
 
-    this.searchOptions = [
-      { label: this.localizationService.translate('controls.filter_texts.label_region'), value: 'region', icon: 'language' },
-      { label: this.localizationService.translate('controls.filter_texts.label_car'), value: 'car', icon: 'home' },
-      { label: this.localizationService.translate('controls.filter_texts.label_uc'), value: 'uc', icon: 'nature_people' },
-      // { label: this.language === 'pt-br' ? 'Ponto' : 'Point', value: 'coordinate', icon: 'fa fa-fw fa-map-pin' }
-    ];
+    this.setSearchOptions();
 
     this.source.on('addfeature', function (ev) {
-      const id = new Date().valueOf();
       const text = new Style({
         // text: new Text({
         //   text: id.toString(),
@@ -402,8 +390,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
         }),
       });
       ev.feature!.setStyle(text);
-      // ev.feature!.set('id', id)
-      console.log(ev.feature!.getProperties())
       self.features.push(ev.feature)
     });
     this.onChangeSearchOption();
@@ -417,15 +403,10 @@ export class GeneralMapComponent implements OnInit, Ruler {
         this.onChangeDescriptor();
       }
     }
-
-    setTimeout(() => {
-      this.handleSideBars()
-      this.map.updateSize()
-    });
   }
 
   changeVisibilityBasemap(ev) {
-    let { bmap } = ev;
+    let {bmap} = ev;
     this.map.getLayers().forEach(layer => {
       const properties = layer.getProperties();
       if (properties.key == bmap.key && properties.type == bmap.type) {
@@ -436,15 +417,43 @@ export class GeneralMapComponent implements OnInit, Ruler {
     })
   }
 
+  setSearchOptions() {
+    this.searchOptions = [
+      {
+        label: this.localizationService.translate('controls.filter_texts.label_region'),
+        value: 'region',
+        icon: 'language'
+      },
+      {label: this.localizationService.translate('controls.filter_texts.label_car'), value: 'car', icon: 'home'},
+      {label: this.localizationService.translate('controls.filter_texts.label_uc'), value: 'uc', icon: 'nature_people'},
+    ];
+    this.onChangeSearchOption();
+  }
+
+  getSwipeLayers() {
+    this.swipeLayers = [];
+    this.map.getLayers().forEach(layer => {
+      if(layer){
+        const properties = layer.getProperties();
+        if (properties.type === 'layer') {
+          this.swipeLayers.push(layer)
+        }
+      }
+    });
+  }
+
+  onClearSwipe($event){
+    this.valueSwipe = "";
+    this.swipeLayer = {};
+  }
+
+  onSwipeSelectedLayer(ev){
+    this.swipeLayer = ev.layer.get('descriptorLayer');
+    this.swipeLayer.visible = true;
+  }
+
   onChangeDescriptor() {
-    // this.map.getLayers().forEach(layer => {
-    //   if(layer)
-    //     const properties = layer.getProperties();
-    //     if (properties.type === 'layer') {
-    //       this.map.removeLayer(layer)
-    //     }
-    //   }
-    // });
+    this.setSearchOptions();
 
     this.regionFilterDefault = this.descriptor.regionFilterDefault;
 
@@ -481,12 +490,13 @@ export class GeneralMapComponent implements OnInit, Ruler {
     }
 
     this.createLayers();
+
   }
 
 
   private createVectorLayer(features, strokeColor, width) {
     return new VectorLayer({
-      source: new VectorSource({ features }),
+      source: new VectorSource({features}),
       style: [
         new Style({
           stroke: new Stroke({
@@ -503,7 +513,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
       ]
     });
   }
-
 
 
   @HostListener('window:resize', ['$event'])
@@ -598,7 +607,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
   createLayers() {
     for (let layer of this.layersTypes) {
       this.layersTMS[layer.value] = this.createTMSLayer(layer);
-      this.layers.push(this.layersTMS[layer.value])
+      this.layers.push(this.layersTMS[layer.value]);
+      this.addLayersLegend(layer);
     }
 
     for (let bmap of this.basemapsAvaliable) {
@@ -610,11 +620,11 @@ export class GeneralMapComponent implements OnInit, Ruler {
       this.layers.push(this.limitsTMS[limits.value])
     }
 
-
+    this.getSwipeLayers();
   }
 
   changeLayerVisibility(ev) {
-    let { layer, updateSource } = ev;
+    let {layer, updateSource} = ev;
     if (updateSource) {
       this.updateSourceLayer(layer);
     } else {
@@ -627,20 +637,24 @@ export class GeneralMapComponent implements OnInit, Ruler {
       }
       this.layersTMS[layer.selectedType].setVisible(layer.visible);
 
-      if (layer.visible) {
-        this.selectedLayers.push(this.layersTMS[layer.selectedType])
-      } else {
-        this.selectedLayers.forEach((item, index) => {
-          if (item.getProperties().key === layer.selectedType) this.selectedLayers.splice(index, 1);
-        });
-      }
-
-      this.selectedLayers.forEach((item, index) => {
-        item.visible = item.get('visible');
-      });
+      this.addLayersLegend(layer);
 
       this.updateZIndex();
     }
+  }
+
+  addLayersLegend(layer){
+    if (layer.visible) {
+      this.selectedLayers.push(this.layersTMS[layer.selectedType])
+    } else {
+      this.selectedLayers.forEach((item, index) => {
+        if (item.getProperties().key === layer.selectedType) this.selectedLayers.splice(index, 1);
+      });
+    }
+
+    this.selectedLayers.forEach((item, index) => {
+      item.visible = item.get('visible');
+    });
   }
 
   updateZIndex() {
@@ -650,7 +664,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   onChangeTransparency(ev) {
-    let { layer, opacity } = ev;
+    let {layer, opacity} = ev;
     const op = ((100 - opacity) / 100);
     const layerTMS = this.layersTMS[layer.value];
     if (layerTMS) {
@@ -693,8 +707,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
         saveAs(blob, name + '.zip');
         this.loadingDown = false;
       }).catch(error => {
-        this.loadingDown = false;
-      });
+      this.loadingDown = false;
+    });
   }
 
   downloadCSV(layer, yearDownload, filterRegion, columnsCSV) {
@@ -712,13 +726,13 @@ export class GeneralMapComponent implements OnInit, Ruler {
         saveAs(blob, name + '.csv');
         this.loadingDown = false;
       }).catch(error => {
-        this.loadingDown = false;
-      });
+      this.loadingDown = false;
+    });
   }
 
   buttonDownload(ev) {
 
-    let { tipo, layer, e } = ev;
+    let {tipo, layer, e} = ev;
     let yearDownload = '';
     let columnsCSV = '';
     let regionType = this.selectRegion.type;
@@ -782,6 +796,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   onSwipe() {
+    this.getSwipeLayers();
     this.controlOptions = true;
     this.mapControls.swipe = !this.mapControls.swipe
   }
@@ -811,7 +826,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   onPoint(): void {
-    this.messageService.add({severity:'success', summary:'Service Message', detail:'Via MessageService'});
+    this.messageService.add({severity: 'success', summary: 'Service Message', detail: 'Via MessageService'});
     this.controlOptions = true;
     this.mapControls.point = !this.mapControls.point
     if (this.mapControls.point) {
@@ -835,13 +850,16 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.features = [];
     this.source.clear();
     this.map.removeInteraction(this.interaction);
-    // @ts-ignore
     this.map.removeLayer(this.vector);
     this.map.removeInteraction(this.modify);
     this.map.removeInteraction(this.snap);
     // @ts-ignore
-
-    this.interaction = null; this.vector = null; this.modify = null; this.snap = null;
+    this.interaction = null;
+    // @ts-ignore
+    this.vector = null;
+    // @ts-ignore
+    this.modify = null;
+    this.snap = null;
     this.initVectorLayerInteraction();
   }
 
@@ -852,14 +870,14 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.map.addLayer(this.vector);
     this.interaction = interaction;
     if (type === 'Polygon') {
-      this.modify = new Modify({ source: this.source });
+      this.modify = new Modify({source: this.source});
       this.map.addInteraction(this.modify);
       this.map.addInteraction(this.interaction);
     } else {
       this.map.addInteraction(this.interaction);
     }
 
-    this.snap = new Snap({ source: this.source });
+    this.snap = new Snap({source: this.source});
     this.map.addInteraction(this.snap);
   }
 
@@ -886,13 +904,12 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   handleSideBars() {
     this.classes = "";
-    if (this.displayLayers) {
+    if (this._displayLayers) {
       this.classes += 'open-layers '
     }
     if (this.showRightSideBar) {
       this.classes += 'open-layers-right'
     }
-
   }
 
   addOverlay(overlay: Overlay): void {
@@ -928,7 +945,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
         this.source.clear()
         this.source.addFeature(features[0])
         let extent = features[0].getGeometry().getExtent();
-        map.getView().fit(extent, { duration: 1500 });
+        map.getView().fit(extent, {duration: 1500});
       })
     }
   }
@@ -966,8 +983,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
       this.msFilterRegion = "biome = '" + this.selectRegion.value + "'"
     else if (this.selectRegion.type == 'fronteira') {
       // this.msFilterRegion = "biome = '" + this.selectRegion.value + "'"
-    }
-    else
+    } else
       this.msFilterRegion = ""
 
     this.zoomExtent();
@@ -975,10 +991,17 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   search(ev) {
-    this.mapService.search(ev.query).subscribe(options => {
-      this.swipeOptions = options.search;
-    }, error => {
+    this.swipeOptions = [];
+    this.swipeLayers.forEach(layer => {
+      let result = this.normalize(layer.get('label')).includes(this.normalize(ev.query));
+      if(result){
+        this.swipeOptions.push({name: layer.get('label'), key: layer.get('key'), layer: layer });
+      }
     });
+  }
+
+  normalize(value): string {
+    return value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
   obtainSearchSuggestions(event) {
@@ -989,13 +1012,11 @@ export class GeneralMapComponent implements OnInit, Ruler {
       this.mapService.getRegions(query).subscribe(result => {
         this.listForAutoComplete = result.search;
       });
-    }
-    else if (this.selectedSearchOption.toLowerCase() == 'car') {
+    } else if (this.selectedSearchOption.toLowerCase() == 'car') {
       this.mapService.getCARS(query).subscribe(result => {
         this.listForAutoComplete = result.search;
       });
-    }
-    else if (this.selectedSearchOption.toLowerCase() == 'uc') {
+    } else if (this.selectedSearchOption.toLowerCase() == 'uc') {
       this.mapService.getUCs(query).subscribe(result => {
         this.listForAutoComplete = result.search;
       });
@@ -1006,8 +1027,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
     if (this.selectedSearchOption.toLowerCase() == 'region') {
       this.updateRegion(event)
-    }
-    else if (this.selectedSearchOption.toLowerCase() == 'car' || this.selectedSearchOption.toLowerCase() == 'uc') {
+    } else if (this.selectedSearchOption.toLowerCase() == 'car' || this.selectedSearchOption.toLowerCase() == 'uc') {
       this.updateAreaOnMap(event)
     }
   }
@@ -1063,7 +1083,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
     map.addLayer(this.otherLayerFromFilters.layer);
     let extent = this.otherLayerFromFilters.layer.getSource().getExtent();
-    map.getView().fit(extent, { duration: 1800 });
+    map.getView().fit(extent, {duration: 1800});
   }
 
   readStyleProperty(name: string): string {
@@ -1084,6 +1104,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
     }
     feature.setStyle(style);
   }
+
   onRemoveFeature(index, feature) {
     this.source.removeFeature(feature);
     this.features.splice(index, 1);
@@ -1093,19 +1114,24 @@ export class GeneralMapComponent implements OnInit, Ruler {
     console.log(this.getGeoJsonFromFeature())
   }
 
-  onCancel(){
+  onCancel() {
     this.removeInteraction();
     this.mapControls.drawArea = false;
     this.mapControls.point = false;
     this.controlOptions = false;
   }
 
-  onRightSideBarOpen(show){
-    this.handleSideBars();
-    this.showRightSideBar = show;
+  onRightSideBarOpen(show) {
+    if(show != undefined) {
+      this.showRightSideBar = show;
+      this.handleSideBars();
+      setTimeout(() => {
+        this.map.updateSize()
+      });
+    }
   }
 
-  onClearFilter(ev){
+  onClearFilter(ev) {
     this.updateRegion(this.defaultRegion);
   }
 

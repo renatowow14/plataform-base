@@ -10,10 +10,7 @@
 
   :host ::ng-deep .p-sidebar-right{
     width:280px;
-    //background: $primary;
     border: none;
-    border-radius: 15px;
-    /* height:auto !important; */
     height: 200px !important;
     margin-top: 47% !important;
     margin-right: 30px !important;
@@ -261,7 +258,7 @@
     padding:0px;
 
     h5 {
- 
+
       width: 100%;
     }
 
@@ -294,10 +291,10 @@
     width:90% !important;
     text-align:center;
   }
-  
+
 
   .reportButton{
- 
+
     font-size:19px;
 
   }
@@ -317,7 +314,7 @@
   }
 
   .matButton{
-    
+
     display:inline;
   }
   :host ::ng-deep .p-paginator {
@@ -330,7 +327,7 @@
     font-size:12px !important;
   }
 
- 
+
   :host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
     font-size:12px !important;
     height: 2rem;
@@ -345,7 +342,7 @@
   }
 
   :host ::ng-deep .p-datatable .p-datatable-tbody > td{
- 
+
     font-size:11px;
   }
 
@@ -355,22 +352,17 @@
   }
 
   :host ::ng-deep .p-paginator .p-paginator-current{
-  
+
     font-size:14px;
   }
 
   :host ::ng-deep .p-datatable .p-datatable-thead > tr > th{
-  
     font-size:11px;
   }
+
   :host ::ng-deep .p-sidebar-right{
     width:321px;
-    //background: $primary;
-
     border: none;
-    border-radius: 10px;
-   /* height:auto ; */
-
   }
   .group-card {
     position: relative;
@@ -378,7 +370,7 @@
     margin-left: 6px;
     margin-bottom: 10px;
     margin-top: 10px;
-  
+
     border-radius: 5px;
     box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
     overflow: hidden;
@@ -386,19 +378,19 @@
     transform-style: preserve-3d;
     transition: .6s ease all;
   }
-  
+
   .abstract,
   .details {
     $bg: rgba(white, 1);
     width: 100%;
     position: relative;
     background: $bg;
-  
+
     .group-card:hover & {
       background: darken($bg, 2%);
     }
   }
-  
+
   .abstract {
     z-index: 10;
     transition: .6s ease all;
@@ -409,12 +401,12 @@
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
-  
+
     .group-label {
       font-size: 13px;
       margin-left: 2px;
     }
-    
+
     i {
       color: black !important;
       line-height: unset !important;
@@ -422,25 +414,25 @@
       font-size: 18px !important;
       min-width: unset !important;
     }
-  
+
     span {
       display: flex;
       align-items: center;
     }
   }
-  
+
   .details {
     max-height: 0;
     padding: 0;
-  
+
     overflow: hidden;
     visibility: hidden;
-  
+
     transform: rotateX(-180deg);
     transform-origin: top center;
     backface-visibility: hidden;
     transition: .6s ease all;
-  
+
     //&:before {
     //  content: '';
     //  display: block;
@@ -452,7 +444,7 @@
     //  background: grey;
     //}
   }
-  
+
   .group-card-active {
     transition: .6s ease all;
     //border: 1px solid $primary;
@@ -464,11 +456,11 @@
       transform: rotateX(0deg);
     }
   }
-  
+
   .details-inner{
     padding: 8px;
   }
-  
+
   .layer-card {
     box-shadow: 0 .25rem .25rem rgba(0,0,0,0.2), 0 0 1rem rgba(0,0,0,0.2);
     border-radius: 5px;
@@ -493,7 +485,7 @@
 
 
   .chart-region {
-    width: 100%;  
+    width: 100%;
     text-align: center;
     font-size: 16px;
     padding:10px;
@@ -503,14 +495,14 @@
   .title-region {
     padding:10px;
     width: 100%;
-   
+
     font-size: 36pt;
     width: calc(100%);
 
     text-align: center;
     display: table;
-   
-   
+
+
     font-size: 30pt;
     background-color: $primary;
     color: #f7f3f3;

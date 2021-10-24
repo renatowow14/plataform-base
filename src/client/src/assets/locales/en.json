@@ -14,11 +14,23 @@
         "draw": "Draw Area",
         "measure": "Measure Distance",
         "measureArea": "Measure Area",
+        "point": "Insert Point",
         "print": "Print Map",
+        "draw_area": {
+          "title": "Drawn Geometries",
+          "feature": {
+            "point": "Point",
+            "polygon": "Polygon",
+            "remove_feature": "Remove Geometry"
+          },
+          "save": "Save",
+          "cancel": "Cancel"
+        },
         "details": {
             "title": "Controls Details",
             "clear": "Clear Filter",
-            "swipe_placeholder": "Choose a layer to compare"
+            "swipe_placeholder": "Choose a layer to compare",
+            "swipe_remove": "Remove Swipe"
         },
         "filter_texts": {
             "search_lateral_title": "Search by: ",
@@ -193,10 +205,5 @@
         "passwordPrompt": "Enter a password",
         "emptyMessage": "No results found",
         "emptyFilterMessage": "No results found"
-    },
-    "feature": {
-      "point": "Point",
-      "polygon": "Polygon",
-      "remove_feature": "Remove Feature"
     }
 }

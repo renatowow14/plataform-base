@@ -58,7 +58,7 @@ module.exports = function(app) {
                     layers: [{
                         id: "mapa_agricultura_agrosatelite",
                         label: languageJson["title_layer_label"]["agrosatelite"][language],
-                        visible: false,
+                        visible: true,
                         selectedType: 'agricultura_agrosatelite',
                         value: "agricultura_agrosatelite",
                         opacity: 1,
@@ -105,6 +105,7 @@ module.exports = function(app) {
                         types: [{
                             value: "planet",
                             Viewvalue: "Planet",
+                            label: "Planet",
                             order: 10,
                             opacity: 1,
                             visible: false,

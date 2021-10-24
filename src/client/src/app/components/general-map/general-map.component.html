@@ -85,8 +85,8 @@
           <i pRipple [pTooltip]="'controls.measureArea' | translate"
             [class]="mapControls.measureArea ? 'fg-measure-area control-active' : 'fg-measure-area'"
             (click)="onRulerArea()"></i>
-          <i pRipple [pTooltip]="'controls.print' | translate"
-            [class]="mapControls.print ? 'bx bxs-file-pdf control-active' : 'bx bxs-file-pdf'"></i>
+<!--          <i pRipple [pTooltip]="'controls.print' | translate"-->
+<!--            [class]="mapControls.print ? 'bx bxs-file-pdf control-active' : 'bx bxs-file-pdf'"></i>-->
         </div>
       </div>
       <div *ngIf="controlOptions" class="controls-details">
@@ -99,17 +99,51 @@
             <div class="controls-details-card-title">{{'controls.swipe' | translate}}</div>
             <div class="controls-details-card-body">
               <span>
-                <p-autoComplete [appendTo]="'body'" [placeholder]="'controls.details.swipe_placeholder' | translate"
-                  [(ngModel)]="valueSwipe" [suggestions]="swipeOptions" (completeMethod)="search($event)">
-                  <ng-template let-brand pTemplate="item">
-                    <div style="font-size:18px;margin:10px 10px 0 0">{{brand}}</div>
+                <p-autoComplete
+                  (onClear)="onClearSwipe($event)"
+                  [appendTo]="'body'"
+                  [placeholder]="'controls.details.swipe_placeholder' | translate"
+                  [(ngModel)]="valueSwipe"
+                  [suggestions]="swipeOptions"
+                  (onSelect)="onSwipeSelectedLayer($event)"
+                  (completeMethod)="search($event)"
+                  field="name"
+                >
+                  <ng-template let-layer pTemplate="item">
+                    <div class="autocomplete-option">{{layer.name}}</div>
                   </ng-template>
                 </p-autoComplete>
                 <div class="controls-details-card-body-actions">
-                  <i class='bx bx-plus-circle'></i>
-                  <i class='bx bx-trash'></i>
+                  <i *ngIf="valueSwipe" [pTooltip]="'controls.details.clear' | translate" class='bx bx-trash' (click)="onClearSwipe($event)"></i>
                 </div>
               </span>
+              <div class="layer-card-body" *ngIf="swipeLayer.visible">
+                <div class="layer-card-content">
+                  <div *ngIf="swipeLayer.types">
+                        <span class="p-float-label" *ngFor="let type of swipeLayer?.types"
+                              [hidden]="type.value != swipeLayer.selectedType">
+                          <p-dropdown id="types-{{type.value}}" *ngIf="swipeLayer.types.length > 0" [options]="swipeLayer.types"
+                                      [(ngModel)]="swipeLayer.selectedType" (onChange)="changeLayerVisibility(type)"
+                                      optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                          <label for="types-{{type.value}}">{{type.typeLabel}}</label>
+                        </span>
+                    <span *ngFor="let type of swipeLayer.types" [hidden]="type.value != swipeLayer.selectedType"
+                          class="p-float-label">
+                          <p-dropdown id="types-times-{{type.value}}" *ngIf="type.times" [options]="type.times"
+                                      [(ngModel)]="type.timeSelected" (onChange)="changeLayerVisibility({layer: type, updateSource: true})"
+                                      optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                          <label for="types-times-{{type.value}}">{{type.timeLabel}}</label>
+                        </span>
+                  </div>
+                  <span class="p-float-label" *ngIf="swipeLayer.times">
+                      <p-dropdown id="swipe-times-{{swipeLayer.id}}" *ngIf="swipeLayer.times.length > 0" [options]="swipeLayer.times"
+                                  [(ngModel)]="swipeLayer.timeSelected" (onChange)="changeLayerVisibility({layer: swipeLayer, updateSource: true})"
+                                  optionLabel="Viewvalue" optionValue="value">
+                      </p-dropdown>
+                      <label for="swipe-times-{{swipeLayer.id}}">{{swipeLayer.timeLabel}}</label>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
           <div *ngIf="mapControls.search" class="controls-details-card">
@@ -152,29 +186,29 @@
           </div>
           <div *ngIf="(mapControls.drawArea || this.mapControls.point) && features.length > 0"
             class="controls-details-card">
-            <div class="controls-details-card-title">Features desenhadas</div>
+            <div class="controls-details-card-title">{{'controls.draw_area.title' | translate}}</div>
             <div class="controls-details-card-body">
               <div class="features grid">
                 <div class="card-feature col-fixed" *ngFor="let feat of features; let i = index"
                   (mouseenter)="onHoverFeature(feat)" (mouseleave)="onHoverFeature(feat, true)">
                   <div class="card-feature-title">
-                    <span>{{feat.get('id')}}</span>
-                    <span>{{feat.getGeometry().getType()}}</span>
+<!--                    <span>{{feat.get('id')}}</span>-->
+                    <span translate="controls.draw_area.feature.{{feat.getGeometry().getType().toLowerCase()}}"></span>
                   </div>
                   <div class="card-feature-actions">
 <!--                    <i class='bx bx-plus-medical' (click)="onAddPropertyFeature(i, feat)"></i>-->
-                    <i class='bx bx-trash remove' (click)="onRemoveFeature(i, feat)"></i>
+                    <i class='bx bx-trash remove' pTooltip="{{'controls.draw_area.feature.remove_feature' | translate}}" (click)="onRemoveFeature(i, feat)"></i>
                   </div>
                 </div>
               </div>
               <div *ngIf="features.length > 0" class="features-actions">
                 <div pRipple class="btn-action btn-save" (click)="onSave()">
                   <i class='bx bx-save'></i>
-                  <span>Salvar</span>
+                  <span>{{'controls.draw_area.save' | translate}}</span>
                 </div>
-                <div pRipple class="btn-action btn-cancel" (click)="onCancel()">
+                <div pRipple class="btn-action btn-cancel"  (click)="onCancel()">
                   <i class='bx bx-trash'></i>
-                  <span>Cancelar</span>
+                  <span>{{'controls.draw_area.cancel' | translate}}</span>
                 </div>
               </div>
             </div>
