@@ -2,7 +2,7 @@
 // include sass color module
 @use 'sass:color';
 
-$primary: #21413b !default;
+$primary: #2a2141 !default;
 $accent: lighten($primary, 30%) !default;
 $warn: #ffc107 !default;
 $secondary: #6c757d;
@@ -15,7 +15,8 @@ $dark: #343a40;
 
 $background-sidebar: $primary;
 
-$font-family-sans-serif: 'Montserrat', sans-serif;
+$font-family-sans-serif: 'Montserrat',
+sans-serif;
 
 $background-sidebar: #1d3430;
 $body-bg: lighten($primary, 10%);
@@ -43,7 +44,7 @@ $prefix: "--"; //Prefix string for custom CSS properties
 
 //Merges a variable name with $prefix
 @function custom-property-name($name) {
-  @return $prefix + $name;
+  @return $prefix+$name;
 }
 
 // Defines a custom property
@@ -54,5 +55,5 @@ $prefix: "--"; //Prefix string for custom CSS properties
 body {
 
   // Append SASS variables which are desired to be accesible:
-  @include define-custom-property('primary',$primary);
+  @include define-custom-property('primary', $primary);
 }
