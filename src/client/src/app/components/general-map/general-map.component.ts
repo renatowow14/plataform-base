@@ -49,6 +49,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this._displayLayers = value;
     this.handleSideBars();
   }
+
   @Input() openMenu = true as boolean;
   @Input() descriptor: Descriptor;
   @Output() onHide = new EventEmitter<any>();
@@ -454,6 +455,10 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   onChangeDescriptor() {
     this.setSearchOptions();
+    this.layersTypes = [];
+    this.basemapsAvaliable = [];
+    this.limitsNames = [];
+    this.selectedLayers = [];
 
     this.regionFilterDefault = this.descriptor.regionFilterDefault;
 
@@ -490,7 +495,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
     }
 
     this.createLayers();
-
   }
 
 
@@ -605,6 +609,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
   }
 
   createLayers() {
+
     for (let layer of this.layersTypes) {
       this.layersTMS[layer.value] = this.createTMSLayer(layer);
       this.layers.push(this.layersTMS[layer.value]);
@@ -666,8 +671,11 @@ export class GeneralMapComponent implements OnInit, Ruler {
   onChangeTransparency(ev) {
     let {layer, opacity} = ev;
     const op = ((100 - opacity) / 100);
-    const layerTMS = this.layersTMS[layer.value];
+    let layerTMS = this.layersTMS[layer.value];
     if (layerTMS) {
+      layerTMS.setOpacity(op);
+    }else{
+      layerTMS = this.layersTMS[layer.selectedType];
       layerTMS.setOpacity(op);
     }
   }

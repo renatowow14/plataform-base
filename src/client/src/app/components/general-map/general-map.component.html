@@ -43,7 +43,7 @@
         <div class="legends-container">
           <div class="legends-header">
             <h5>{{'legend.title' | translate}}</h5>
-            <i (click)="legendExpanded = !legendExpanded" [class]="legendExpanded ? 'bx bx-collapse' : 'bx bx-expand'"></i>
+            <i  [pTooltip]="legendExpanded? localizationService.translate('minimize') : localizationService.translate('maximize')" (click)="legendExpanded = !legendExpanded" [class]="legendExpanded ? 'bx bx-collapse' : 'bx bx-expand'"></i>
           </div>
           <div class="legends-body" cdkDropList (cdkDropListDropped)="drop($event)">
             <div *ngFor="let layer of selectedLayers" cdkDrag
@@ -51,11 +51,11 @@
               <div class="legend-card-content">
                 <div (click)="layer.visible = !layer.visible" class="abstract">
                   <span>
-                    <i class='bx bx-move'></i>
+                    <i tooltipPosition="left" pTooltip="{{'legend.move' | translate}}" class='bx bx-move'></i>
                     <div class="legend-label">
                       {{ layer.get('key') === 'planet' ? localizationService.translate('planet') : layer.get('label') }}
                     </div>
-                    <i [class]="layer.visible  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+                    <i tooltipPosition="left" [pTooltip]="layer.visible? localizationService.translate('minimize') : localizationService.translate('maximize')" [class]="layer.visible  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
                   </span>
                 </div>
                 <div class="details" *ngIf="layer.get('key') !== 'planet'">

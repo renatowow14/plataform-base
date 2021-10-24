@@ -46,7 +46,13 @@
     }
   },
   "left_sidebar": {
-    "title": "Menu"
+    "title": "Menu",
+    "opacity": "Opacidade",
+    "layer": {
+      "metadata": "Metadados da Camada",
+      "down_shp": "Download SHP",
+      "down_csv": "Download CSV"
+    }
   },
   "map": {
     "coordinates": "Coordenadas",
@@ -108,8 +114,11 @@
     "contato": "Contato"
   },
   "legend": {
-    "title": "Legendas"
+    "title": "Legendas",
+    "move": "Mover Camada"
   },
+  "minimize": "Minimizar",
+  "maximize": "Maximizar",
   "planet": "Mosaicos Planet",
   "options": {
     "basemaps": "Mapas Base",

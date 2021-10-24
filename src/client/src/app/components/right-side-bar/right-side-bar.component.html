@@ -1,6 +1,7 @@
 <p-sidebar
 position="right"
 [modal]="false"
+(onHide)="hideSideBar()"
 [(visible)]="_displayOptions"
 >
 <h4 class="title"> {{'dataSeries.title' | translate}}</h4>

@@ -71,7 +71,7 @@ export class LeftSideBarComponent implements OnInit {
 
   constructor(
     private el: ElementRef,
-    private localizationService: LocalizationService,
+    public localizationService: LocalizationService,
     private renderer: Renderer2,
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef

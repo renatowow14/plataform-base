@@ -29,7 +29,7 @@ export class RightSideBarComponent implements OnInit {
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onSideBarToggle = new EventEmitter<boolean>()
   @Input() descriptor: any;
-
+  @Input() map: Map;
   @Input() set displayOptions(value: boolean) {
     this.onSideBarToggle.emit(value);
     this._displayOptions = value;
@@ -291,6 +291,10 @@ export class RightSideBarComponent implements OnInit {
 
   isLastPage(): boolean {
     return this.customers ? this.first === (this.customers.length - this.rows) : true;
+  }
+
+  hideSideBar(){
+    this.onSideBarToggle.emit(false);
   }
 
   isFirstPage(): boolean {

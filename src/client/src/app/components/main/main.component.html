@@ -25,6 +25,7 @@
   ></app-general-map>
 
   <app-right-side-bar
+    [map]="generalMap.map"
     [displayOptions]="leftSideBar.displayStatistics"
     [descriptor]="descriptor"
     (onSideBarToggle)="generalMap.onRightSideBarOpen($event)"

@@ -46,7 +46,13 @@
         }
     },
     "left_sidebar": {
-        "title": "Menu"
+        "title": "Menu",
+        "opacity": "Opacity",
+        "layer": {
+          "metadata": "Layer Metadata",
+          "down_shp": "Download SHP",
+          "down_csv": "Download CSV"
+        }
     },
     "dataSeries": {
         "title": "Statistics",
@@ -86,8 +92,11 @@
         "contato": "Contact"
     },
     "legend": {
-        "title": "Legends"
+        "title": "Legends",
+        "move": "Move Layer"
     },
+    "minimize": "Minimize",
+    "maximize": "Maximize",
     "planet": "Planet Mosaics",
     "area": {
         "upload_submit": "Submit",
