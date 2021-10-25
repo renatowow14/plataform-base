@@ -667,7 +667,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   updateZIndex() {
     this.selectedLayers.forEach((item, index) => {
-      console.log(item)
       item.setZIndex(index + 1)
     });
   }
