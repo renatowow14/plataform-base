@@ -38,7 +38,6 @@ export class MapService {
     return this.httpClient.get<any>(this.apiURL + '/extent', { params: MapService.PARAMS.set("key", region.value).append("type", region.type) })
       .pipe(map(response => response))
       .pipe(catchError(this.errorHandler));
-
   }
 
   search(term): Observable<any> {
@@ -50,8 +49,6 @@ export class MapService {
     return this.httpClient.get<any>(this.apiURL + '/search', { params: MapService.PARAMS.set("key", term) })
       .pipe(map(response => response))
       .pipe(catchError(this.errorHandler));
-
-
   }
 
   downloadSHP(parameters): Observable<Blob> {
@@ -71,7 +68,6 @@ export class MapService {
     return this.httpClient.get<any>(this.apiURL + '/search', { params: MapService.PARAMS.set("key", term) })
       .pipe(map(response => response))
       .pipe(catchError(this.errorHandler));
-
   }
 
   getCARS(term: string): Observable<any> {
@@ -79,7 +75,6 @@ export class MapService {
     return this.httpClient.get<any>(this.apiURL + '/cars', { params: MapService.PARAMS.set("key", term) })
       .pipe(map(response => response))
       .pipe(catchError(this.errorHandler));
-
   }
 
   getUCs(term: string): Observable<any> {
@@ -101,6 +96,7 @@ export class MapService {
       .pipe(catchError(this.errorHandler));
 
   }
+
 
   errorHandler(error) {
     let errorMessage = '';

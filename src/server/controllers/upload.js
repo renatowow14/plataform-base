@@ -12,7 +12,7 @@ const moment = require("moment");
 const { Pool, Client } = require('pg')
 const pool = new Pool(configJS['pg_general'])
 
-module.exports = function(app) {
+module.exports = function (app) {
     const config = app.config;
 
     const Internal = {};
@@ -52,7 +52,7 @@ module.exports = function(app) {
     ];
     Internal.spatialFiles = ["shp", "kml", "geojson"];
 
-    Internal.clearCache = function(data, callback) {
+    Internal.clearCache = function (data, callback) {
         return callback(true, data);
 
         // fs.readdir(dir_upload, (err, files) => {
@@ -68,10 +68,10 @@ module.exports = function(app) {
         // });
     };
 
-    Internal.toGeoJson = function(shapfile, callback) {
+    Internal.toGeoJson = function (shapfile, callback) {
         let geojson = ogr2ogr(shapfile).timeout(300000); // 5 minutes
 
-        geojson.exec(function(er, data) {
+        geojson.exec(function (er, data) {
             if (er) {
                 Internal.response
                     .status(400)
@@ -85,7 +85,7 @@ module.exports = function(app) {
         });
     };
 
-    Internal.extractFiles = async function(zip, callback) {
+    Internal.extractFiles = async function (zip, callback) {
         let countShps = 0;
         try {
             for await (const entry of zip) {
@@ -110,9 +110,9 @@ module.exports = function(app) {
                 Internal.dirTarget =
                     Internal.dirUpload +
                     fileName
-                    .split("/")
-                    .pop()
-                    .toLowerCase();
+                        .split("/")
+                        .pop()
+                        .toLowerCase();
 
                 if (!fs.existsSync(Internal.dirTarget)) {
                     fs.mkdirSync(Internal.dirTarget);
@@ -129,9 +129,9 @@ module.exports = function(app) {
                         Internal.dirTarget +
                         "/" +
                         fileName
-                        .split("/")
-                        .pop()
-                        .toLowerCase() +
+                            .split("/")
+                            .pop()
+                            .toLowerCase() +
                         time +
                         "." +
                         extension;
@@ -166,7 +166,7 @@ module.exports = function(app) {
         }
 
         if (Internal.targetFilesName.split(".").pop() == "geojson") {
-            fs.readFile(Internal.targetFilesName, "utf8", function(err, data) {
+            fs.readFile(Internal.targetFilesName, "utf8", function (err, data) {
                 if (err) {
                     Internal.response
                         .status(400)
@@ -195,7 +195,7 @@ module.exports = function(app) {
         }
     };
 
-    Internal.finish = function(finished, geoJson) {
+    Internal.finish = function (finished, geoJson) {
         if (finished) {
 
             geoJson = repro.toWgs84(geoJson, undefined, epsg);
@@ -214,7 +214,7 @@ module.exports = function(app) {
         }
     };
 
-    Internal.import_feature = function(token) {
+    Internal.import_feature = function (token) {
         var data_atualizacao = new Date(moment().format('YYYY-MM-DD HH:mm'))
 
         if (Internal.geojson.type.toUpperCase() == 'FeatureCollection'.toUpperCase()) {
@@ -223,13 +223,13 @@ module.exports = function(app) {
                 Internal.insertToPostgis(token, geom, data_atualizacao)
             }
         } else
-        if (Internal.geojson.type.toUpperCase() == 'Feature'.toUpperCase()) {
-            let geom = JSON.stringify((Internal.geojson.geometry))
-            Internal.insertToPostgis(token, geom, data_atualizacao)
-        }
+            if (Internal.geojson.type.toUpperCase() == 'Feature'.toUpperCase()) {
+                let geom = JSON.stringify((Internal.geojson.geometry))
+                Internal.insertToPostgis(token, geom, data_atualizacao)
+            }
     };
 
-    Internal.insertToPostgis = async function(token, geom, data_atualizacao) {
+    Internal.insertToPostgis = async function (token, geom, data_atualizacao) {
 
         let INSERT_STATEMENT = 'INSERT INTO upload_shapes (token, geom, data_insercao, app_origin) values ($1, ST_Transform(ST_SetSRID(ST_Force2D(ST_GeomFromGeoJSON($2)),4326), 4674), $3, $4) returning token;'
 
@@ -238,14 +238,14 @@ module.exports = function(app) {
         const client = await pool.connect()
         try {
             await client.query('BEGIN')
-                /* for initial population*/
+            /* for initial population*/
             var rowValues = [token, geom, data_atualizacao, Internal.app_origin]
             const res = await client.query(INSERT_STATEMENT, rowValues)
-                //console.log(token + ' inserted.')
+            //console.log(token + ' inserted.')
 
             var rowValuesValid = [token]
             const resValid = await client.query(makeValid, rowValuesValid)
-                //console.log(token, " validado!")
+            //console.log(token, " validado!")
 
             await client.query('COMMIT')
         } catch (e) {
@@ -257,16 +257,15 @@ module.exports = function(app) {
         }
     }
 
-    Internal.saveToPostGis = function(geojson) {
+    Internal.saveToPostGis = function (geojson) {
         let token = new Date().getTime()
         Internal.geojson = geojson;
-
         Internal.import_feature(token)
 
         return token;
     };
 
-    Internal.doRequest = function(request, response) {
+    Internal.doRequest = function (request, response) {
         /** Reset Variables */
         Internal.targetFilesName = null;
         Internal.dirTarget = null;
@@ -300,11 +299,27 @@ module.exports = function(app) {
         Internal.extractFiles(zip, Internal.toGeoJson);
     };
 
-    Uploader.getGeoJson = function(request, response) {
+    Uploader.getGeoJson = function (request, response) {
         Internal.doRequest(request, response);
     };
 
-    Uploader.initialanalysis = function(request, response) {
+    Uploader.saveDrawedGeom = function (request, response) {
+        let { geometry, app_origin } = request.body;
+        Internal.app_origin = app_origin;
+
+        let geoJson = JSON.parse(geometry)
+
+        if (gjv.valid(geoJson)) {
+            let token = Internal.saveToPostGis(geoJson)
+            geoJson.token = token;
+            response.status(200).send(geoJson);
+            response.end()
+        } else {
+            Internal.response.status(400).send(languageJson['upload_messages']['invalid_geojson'][Internal.language]);
+        }
+    };
+
+    Uploader.initialanalysis = function (request, response) {
 
         try {
 
@@ -319,7 +334,7 @@ module.exports = function(app) {
             queryResult = request.queryResult['regions_pershape']
             var regions = []
 
-            queryResult.forEach(function(row) {
+            queryResult.forEach(function (row) {
 
                 regions.push({
                     'type': row['type'],
@@ -353,9 +368,9 @@ module.exports = function(app) {
             let uniqueRegionsGrouped = [];
             keysRegionsGrouped.forEach((key, index) => {
                 uniqueRegionsGrouped.push({
-                        [key]: getUniqueListBy(regionGroupedByType[key], 'name')
-                    })
-                    // console.log(`${key}: ${regionGroupedByType[key]} : ${getUniqueListBy(regionGroupedByType[key], 'name')}`);
+                    [key]: getUniqueListBy(regionGroupedByType[key], 'name')
+                })
+                // console.log(`${key}: ${regionGroupedByType[key]} : ${getUniqueListBy(regionGroupedByType[key], 'name')}`);
             });
 
 
@@ -377,7 +392,7 @@ module.exports = function(app) {
 
     };
 
-    Uploader.findGeoJsonByToken = function(request, response) {
+    Uploader.findGeoJsonByToken = function (request, response) {
         try {
             var queryResult = request.queryResult['geojson_upload']
             let geojson = queryResult[0]['geojson']
@@ -397,13 +412,13 @@ module.exports = function(app) {
         }
     }
 
-    Uploader.queimadas = function(request, response) {
+    Uploader.queimadas = function (request, response) {
 
         try {
             var queryResult = request.queryResult['queimadas']
 
             var queimadasByYear = []
-            queryResult.forEach(function(row) {
+            queryResult.forEach(function (row) {
 
                 var year = Number(row['year'])
                 var area = Number(row['area_queimada'])
@@ -434,7 +449,7 @@ module.exports = function(app) {
                 ...rest
             }) => ({
                 ...hash,
-                [value]: (hash[value] || []).concat(omitKey ? {...rest } : {
+                [value]: (hash[value] || []).concat(omitKey ? { ...rest } : {
                     [key]: value,
                     ...rest
                 })
@@ -504,14 +519,14 @@ module.exports = function(app) {
 
     };
 
-    Uploader.terraclass = function(request, response) {
+    Uploader.terraclass = function (request, response) {
 
         try {
 
             queryResult = request.queryResult['terraclass']
             var terraclass = []
 
-            queryResult.forEach(function(row) {
+            queryResult.forEach(function (row) {
 
                 var color = (row['color'])
                 var lulc = (row['lulc'])
@@ -564,14 +579,14 @@ module.exports = function(app) {
         }
     };
 
-    Uploader.mapbiomas = function(request, response) {
+    Uploader.mapbiomas = function (request, response) {
 
         try {
 
             queryResult = request.queryResult['mapbiomas']
             var mapbiomas = []
 
-            queryResult.forEach(function(row) {
+            queryResult.forEach(function (row) {
 
                 var color = (row['color'])
                 var lulc = (row['lulc'])
@@ -624,14 +639,14 @@ module.exports = function(app) {
         }
     };
 
-    Uploader.pastagem = function(request, response) {
+    Uploader.pastagem = function (request, response) {
 
         try {
 
             var queryResult = request.queryResult['pastagem']
 
             var pastagemByYear = []
-            queryResult.forEach(function(row) {
+            queryResult.forEach(function (row) {
 
                 var year = Number(row['year'])
                 var area = Number(row['area_pastagem'])
@@ -648,7 +663,7 @@ module.exports = function(app) {
                 ...rest
             }) => ({
                 ...hash,
-                [value]: (hash[value] || []).concat(omitKey ? {...rest } : {
+                [value]: (hash[value] || []).concat(omitKey ? { ...rest } : {
                     [key]: value,
                     ...rest
                 })
@@ -689,7 +704,7 @@ module.exports = function(app) {
                         borderColor: 'rgb(231, 187, 2)',
                         fill: false,
                         label: "Area de Pastagem"
-                    }, ]
+                    },]
                 }
             }
 
@@ -707,13 +722,13 @@ module.exports = function(app) {
         }
     };
 
-    Uploader.analysisarea = function(request, response) {
+    Uploader.analysisarea = function (request, response) {
 
         try {
             var queryResult = request.queryResult['queimadas']
 
             var queimadasByYear = []
-            queryResult.forEach(function(row) {
+            queryResult.forEach(function (row) {
 
                 var year = Number(row['year'])
                 var area = Number(row['area_queimada'])
@@ -756,7 +771,7 @@ module.exports = function(app) {
                 ...rest
             }) => ({
                 ...hash,
-                [value]: (hash[value] || []).concat(omitKey ? {...rest } : {
+                [value]: (hash[value] || []).concat(omitKey ? { ...rest } : {
                     [key]: value,
                     ...rest
                 })
@@ -814,7 +829,7 @@ module.exports = function(app) {
             queryResult = request.queryResult['terraclass']
             var terraclass = []
 
-            queryResult.forEach(function(row) {
+            queryResult.forEach(function (row) {
 
                 var color = (row['color'])
                 var lulc = (row['lulc'])
@@ -857,7 +872,7 @@ module.exports = function(app) {
             var queryResult = request.queryResult['prodes']
 
             var resultByYear = []
-            queryResult.forEach(function(row) {
+            queryResult.forEach(function (row) {
 
                 var year = Number(row['year'])
                 var area = Number(row['area_desmat'])
@@ -884,13 +899,13 @@ module.exports = function(app) {
         }
     };
 
-    Uploader.prodes = function(request, response) {
+    Uploader.prodes = function (request, response) {
 
         try {
             var queryResult = request.queryResult['prodes']
 
             var resultByYear = []
-            queryResult.forEach(function(row) {
+            queryResult.forEach(function (row) {
 
                 var year = Number(row['year'])
                 var area = Number(row['area_desmat'])
