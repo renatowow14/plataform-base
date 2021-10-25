@@ -62,6 +62,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   @Output() onHide = new EventEmitter<any>();
   @Output() onMapReadyLeftSideBar = new EventEmitter<any>();
   @Output() onMapReadyRightSideBar = new EventEmitter<any>();
+  @Output() onBasemapsReady = new EventEmitter<any>();
+  @Output() onLimitsReady = new EventEmitter<any>();
 
   public innerHeigth: number;
   public options: any = {}
@@ -497,7 +499,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         this.limitsNames.push(types)
       }
     }
-
+    this.onBasemapsReady.emit(this.basemapsAvaliable);
     this.createLayers();
   }
 
@@ -624,13 +626,18 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     for (let bmap of this.basemapsAvaliable) {
       this.layers.push(bmap.layer)
     }
-
+    let limitsLayers: TileLayer<any>[] = [];
     for (let limits of this.limitsNames) {
-      this.limitsTMS[limits.value] = this.createTMSLayer(limits, 'limit')
-      this.layers.push(this.limitsTMS[limits.value])
+      let layer = this.createTMSLayer(limits, 'limit');
+      this.limitsTMS[limits.value] = layer;
+      this.layers.push(this.limitsTMS[limits.value]);
+      limitsLayers.push(layer);
     }
 
+    this.onLimitsReady.emit(limitsLayers);
+
     this.getSwipeLayers();
+    this.updateZIndex();
   }
 
   changeLayerVisibility(ev) {
@@ -638,18 +645,36 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     if (updateSource) {
       this.updateSourceLayer(layer);
     } else {
-      if (layer.types) {
-        for (let layerType of layer.types) {
-          this.layersTMS[layerType.value].setVisible(false)
+      if(layer.hasOwnProperty('types') || layer.hasOwnProperty('selectedType')){
+        if (layer.types) {
+          for (let layerType of layer.types) {
+            this.layersTMS[layerType.value].setVisible(false)
+          }
+        } else {
+          this.layersTMS[layer.value].setVisible(false)
         }
+        this.layersTMS[layer.selectedType].setVisible(layer.visible);
+
+        this.addLayersLegend(layer);
       } else {
-        this.layersTMS[layer.value].setVisible(false)
+        if(layer.layer.get('type') === 'bmap'){
+          this.map.getLayers().forEach(layer => {
+            if(layer.get('type') === 'bmap'){
+              layer.setVisible(false)
+            }
+          });
+          const lay = this.map.getLayers().getArray().find(l => l.get('key') === layer.layer.get('key'));
+          lay.setVisible(true);
+        } else if (layer.layer.get('type') === 'limit'){
+          this.map.getLayers().forEach(layer => {
+            if(layer.get('type') === 'limit'){
+              layer.setVisible(false)
+            }
+          });
+          const lay = this.map.getLayers().getArray().find(l => l.get('key') === layer.layer.get('key'));
+          lay.setVisible(true);
+        }
       }
-      this.layersTMS[layer.selectedType].setVisible(layer.visible);
-
-      this.addLayersLegend(layer);
-
-
     }
   }
 
@@ -664,14 +689,22 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.selectedLayers.forEach((item, index) => {
       item.visible = item.get('visible');
     });
-    this.updateZIndex();
   }
 
   updateZIndex() {
+    // const first = this.map.getLayers().getArray().map(layer => layer.getZIndex()).filter(item => !isNaN(item));
+    // const max = Math.max(...first);
+    // const total = this.selectedLayers.length;
     this.selectedLayers.forEach((item, index) => {
-      item.setZIndex(index + 1)
+      item.setZIndex(index + 1);
     });
+
+    // const layer = this.map.getLayers().getArray().find((l) => {
+    //   console.log(l)
+    //   return l.get('key') === item.get('key')
+    // });
   }
+
 
   onChangeTransparency(ev) {
     let { layer, opacity } = ev;
@@ -880,6 +913,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     if (removeInteraction) {
       this.removeInteraction();
     }
+    this.vector.setZIndex(1000000);
     this.map.addLayer(this.vector);
     this.interaction = interaction;
     if (type === 'Polygon') {

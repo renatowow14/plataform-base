@@ -12,7 +12,6 @@ import {LocalizationService} from "../../@core/internationalization/localization
 import {MenuItem} from 'primeng/api';
 import {ChartService} from '../services/charts.service';
 import {MatDialog} from '@angular/material/dialog';
-import {ChartsComponent} from './charts/charts.component';
 import {CustomerService} from '../services/customer.service';
 import {Customer} from 'src/app/@core/interfaces/customer';
 import {Layer, Legend, Menu} from "../../@core/interfaces";
@@ -34,7 +33,6 @@ export class RightSideBarComponent implements OnInit {
     this._displayOptions = value;
   }
 
-  public dialog: MatDialog;
   public Legendas: Legend[];
   public mapaBase: Layer[];
   public Limites: Layer[];
@@ -89,12 +87,22 @@ export class RightSideBarComponent implements OnInit {
   public displayFilter: boolean;
   public layersSideBar: boolean;
   public layersSideBarMobile: boolean;
+  public displayFullScreenCharts: boolean;
+  public chartObject: any;
 
 
-  constructor(private el: ElementRef, private customerService: CustomerService, private localizationService: LocalizationService, private chartService: ChartService, private renderer: Renderer2) {
+  constructor(
+    private el: ElementRef,
+    private customerService: CustomerService,
+    private localizationService: LocalizationService,
+    private chartService: ChartService,
+    private renderer: Renderer2,
+    public dialog: MatDialog
+  ) {
 
     //Charts Variables
-
+    this.displayFullScreenCharts = false;
+    this.chartObject = {};
     this.changeTabSelected = "";
 
     this.LulcChart = {};
@@ -262,19 +270,21 @@ export class RightSideBarComponent implements OnInit {
     this.innerHeigth = window.innerHeight;
   }
 
-  async openCharts(data, type, options) {
+  openCharts(data, type, options) {
     let ob = {
-      //  title: title,
-      //  description: description,
+       // title: title,
+       // description: description,
       type: type,
       data: data,
       options: options,
     }
-    this.dialog.open(ChartsComponent, {
-      width: 'calc(100% - 5vw)',
-      height: 'calc(100% - 5vh)',
-      data: {ob}
-    });
+    this.displayFullScreenCharts = true;
+    this.chartObject = this.DeforestationChart;
+    // this.dialog.open(ChartsComponent, {
+    //   width: 'calc(100% - 20em)',
+    //   height: 'calc(100% - 10em)',
+    //   data: {ob}
+    // });
   }
 
   next() {
@@ -327,6 +337,7 @@ export class RightSideBarComponent implements OnInit {
       optionsDeforestation: this.optionsTimeSeriesDeforestation,
       typeDeforestation: this.timeSeriesResultDeforestation.type
     }
+
     console.log(this.DeforestationChart);
   }
 

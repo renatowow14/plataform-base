@@ -159,16 +159,16 @@
             </div>
             <div class="details">
               <div class="details-inner">
-                <div class="toggle" *ngFor="let map of basesmaps">
-                  <p-inputSwitch  styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(map.layer)"
-                                  [(ngModel)]="map.visible"></p-inputSwitch>
-                  <p class="inlineSwitchButton"> {{map.layer.get('label')}} </p>
+                <div class="toggle" *ngFor="let bmap of basesmaps">
+                  <p-inputSwitch  styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(bmap)"
+                                  [(ngModel)]="bmap.checked"></p-inputSwitch>
+                  <p class="inlineSwitchButton"> {{bmap.name}} </p>
                   <br><br>
                 </div>
               </div>
             </div>
           </div>
-          <div [class]="optionsGroups.limits ? 'group-card group-card-active' :'group-card'">
+          <div *ngIf="limits.length > 0" [class]="optionsGroups.limits ? 'group-card group-card-active' :'group-card'">
             <div (click)="optionsGroups.limits = !optionsGroups.limits" class="abstract">
             <span>
                 <i class='bx bx-cog'></i>
@@ -179,9 +179,9 @@
             <div class="details">
               <div class="details-inner">
                 <div class="toggle" *ngFor="let limit of limits">
-                  <p-inputSwitch [(ngModel)]="limit.checked"></p-inputSwitch>
-                  <p class="inlineSwitchButton"> {{limit.nome}} </p>
-                  <br>
+                  <p-inputSwitch [(ngModel)]="limit.checked" styleClass="inputSwitchClass" (onChange)="onChangeLimit(limit)"></p-inputSwitch>
+                  <p class="inlineSwitchButton"> {{limit.get('label')}} </p>
+                  <br><br>
                 </div>
               </div>
             </div>

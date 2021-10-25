@@ -236,11 +236,6 @@ module.exports = function(app) {
                         "visible": false
                     },
                     {
-                        "value": "planet",
-                        "viewValue": languageJson["basemap"]["planet"][language],
-                        "visible": false
-                    },
-                    {
                         "value": "google",
                         "viewValue": languageJson["basemap"]["google"][language],
                         "visible": false
@@ -261,20 +256,23 @@ module.exports = function(app) {
                 "id": "limits_bioma",
                 "types": [{
                         "value": "biomas",
+                        "label": languageJson["limits"]["bioma"][language],
                         "Viewvalue": languageJson["limits"]["bioma"][language],
                         "visible": true,
                         "layer_limits": true,
                         "opacity": 1
                     },
                     {
-                        "value": "bi_ce_estados_250_2013_ibge",
+                        "value": "estados",
+                        "label": languageJson["limits"]["estados"][language],
                         "Viewvalue": languageJson["limits"]["estados"][language],
                         "visible": false,
                         "layer_limits": true,
                         "opacity": 1
                     },
                     {
-                        "value": "bi_ce_municipios_250_2019_ibge",
+                        "value": "municipios",
+                        "label": languageJson["limits"]["municipios"][language],
                         "Viewvalue": languageJson["limits"]["municipios"][language],
                         "visible": false,
                         "layer_limits": true,
@@ -282,6 +280,7 @@ module.exports = function(app) {
                     },
                     {
                         "value": "limites_cartas_ibge",
+                        "label": languageJson["limits"]["cartas_ibge"][language],
                         "Viewvalue": languageJson["limits"]["cartas_ibge"][language],
                         "visible": false,
                         "layer_limits": true,

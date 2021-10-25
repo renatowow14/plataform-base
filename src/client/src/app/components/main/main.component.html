@@ -3,7 +3,6 @@
   <app-left-side-bar
     #leftSideBar
     [descriptor]="descriptor"
-    [basesmaps]="generalMap.basemapsAvaliable"
     [loadingDownload]="generalMap.loadingDown"
     (onMenuSelected)="onMenuSelected($event)"
     (onMenuToggle)="onMenuToggle($event)"
@@ -12,7 +11,8 @@
     (onLayerChangeVisibility)="generalMap.changeLayerVisibility($event)"
     (onLayerChangeTransparency)="generalMap.onChangeTransparency($event)"
     (onDownload)="generalMap.buttonDownload($event)"
-    (onChangeMap)="generalMap.onChangeTransparency($event)"
+    (onChangeMap)="generalMap.changeLayerVisibility($event)"
+    (onChangeLimits)="generalMap.changeLayerVisibility($event)"
     (displayFilter)="generalMap.onSearch($event)"
   ></app-left-side-bar>
 
@@ -21,6 +21,8 @@
     [descriptor]="descriptor"
     [openMenu]="openMenu"
     [displayLayers]="showLayers"
+    (onLimitsReady)="leftSideBar.setLimits($event)"
+    (onBasemapsReady)="leftSideBar.setBasemaps($event)"
     (onMapReadyLeftSideBar)="leftSideBar.setMap($event)"
     (onMapReadyRightSideBar)="rightSideBar.setMap($event)"
   ></app-general-map>

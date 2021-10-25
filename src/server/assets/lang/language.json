@@ -2499,8 +2499,8 @@
 	},
 	"limits": {
 		"bioma": {
-			"pt": "Bioma Cerrado",
-			"en": "Cerrado Biome"
+			"pt": "Biomas",
+			"en": "Biomes"
 		},
 		"estados": {
 			"pt": "Estados",
