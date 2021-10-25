@@ -13,4 +13,5 @@ module.exports = function (app) {
 	app.get('/service/upload/terraclass', dataInjector, uploader.terraclass);
 	app.get('/service/upload/mapbiomas', dataInjector, uploader.mapbiomas);
 	app.get('/service/upload/prodes', dataInjector, uploader.prodes);
+	app.post('/service/upload/savegeom', uploader.saveDrawedGeom);
 }

@@ -64,7 +64,7 @@
                 <i class='bx bxs-layer'></i>
                 <div class="group-label">{{group.label}}</div>
               </span>
-                <i [class]="group.group_expanded ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+                <i tooltipPosition="left" [pTooltip]="group.group_expanded? localizationService.translate('minimize') : localizationService.translate('maximize')" [class]="group.group_expanded ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
               </div>
               <div class="details">
                 <div class="details-inner">
@@ -74,7 +74,7 @@
                                      (ngModelChange)="layer.visible = !layer.visible"
                                      [(ngModel)]="layer.visible"></p-inputSwitch>
                       <h5>{{layer.label}}</h5>
-                      <i *ngIf="enableMetadata(layer)" class='bx bxs-info-circle' (click)="showMetadata(layer)"></i>
+                      <i *ngIf="enableMetadata(layer)" pTooltip="{{'left_sidebar.layer.metadata' | translate}}" class='bx bxs-info-circle' (click)="showMetadata(layer)"></i>
                     </div>
                     <div class="layer-card-body" *ngIf="layer.visible">
                       <div class="layer-card-content">
@@ -100,18 +100,18 @@
                                       optionLabel="Viewvalue" optionValue="value"></p-dropdown>
                           <label for="times-{{i}}">{{layer.timeLabel}}</label>
                       </span>
-                        <div *ngIf="layer.typeLayer !== 'raster'" class="layer-transparency">
+                        <div class="layer-transparency">
                           <input (mousemove)="onChangeTransparency(layer, $event)" class="range" type="range" min="0"
                                  max="100" value="0">
-                          <br> <span>Transparência</span>
+                          <br> <span>{{'left_sidebar.opacity' | translate}}</span>
                         </div>
                       </div>
                       <div class="layer-exports" *ngIf="layer.downloadSHP || layer.downloadCSV">
                         <div *ngIf="loadingDownload" class="loader"></div>
-                        <button pButton pRipple type="button" label="SHP" (click)="download('shp', layer, $event)"
+                        <button pTooltip="{{'left_sidebar.layer.down_shp' | translate}}" pButton pRipple type="button" label="SHP" (click)="download('shp', layer, $event)"
                                 *ngIf="layer.downloadSHP && !loadingDownload"
                                 class="p-button-raised p-button-text"></button>
-                        <button pButton pRipple type="button" label="CSV" (click)="download('csv', layer, $event)"
+                        <button pTooltip="{{'left_sidebar.layer.down_csv' | translate}}" pButton pRipple type="button" label="CSV" (click)="download('csv', layer, $event)"
                                 *ngIf="layer.downloadCSV && !loadingDownload"
                                 class="p-button-raised p-button-text"></button>
                       </div>

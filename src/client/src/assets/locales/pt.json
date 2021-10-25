@@ -46,7 +46,13 @@
     }
   },
   "left_sidebar": {
-    "title": "Menu"
+    "title": "Menu",
+    "opacity": "Opacidade",
+    "layer": {
+      "metadata": "Metadados da Camada",
+      "down_shp": "Download SHP",
+      "down_csv": "Download CSV"
+    }
   },
   "map": {
     "coordinates": "Coordenadas",
@@ -65,7 +71,8 @@
     "area_tooltip": "Área de Interesse",
     "filters": "Filtros",
     "filters_tooltip": "Filtros",
-    "options": "Opções"
+    "options": "Opções",
+    "options_tooltip": "Opções"
   },
   "area": {
     "upload_submit": "Submeter",
@@ -108,8 +115,11 @@
     "contato": "Contato"
   },
   "legend": {
-    "title": "Legendas"
+    "title": "Legendas",
+    "move": "Mover Camada"
   },
+  "minimize": "Minimizar",
+  "maximize": "Maximizar",
   "planet": "Mosaicos Planet",
   "options": {
     "basemaps": "Mapas Base",
@@ -206,5 +216,11 @@
     "passwordPrompt": "Enter a password",
     "emptyMessage": "No results found",
     "emptyFilterMessage": "No results found"
+  },
+  "table": {
+    "showing": "Mostrando",
+    "of": "de",
+    "to": "até",
+    "entries": "registros"
   }
 }

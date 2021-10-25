@@ -358,6 +358,8 @@ export class AreaComponent implements OnInit {
 
       let result = await this.areaService.getGeoJsonByToken(params).toPromise()
 
+      console.log("RRR- ", result)
+
       this.layerFromConsulta.analyzedArea = result;
       this.layerFromConsulta.analyzedAreaLoading = false;
       this.loadLayerFromConsultaToMap();
