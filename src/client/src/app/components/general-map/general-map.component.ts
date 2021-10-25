@@ -52,7 +52,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   @Input() set descriptor(value: Descriptor) {
-    if(value){
+    if (value) {
       this._descriptor = value;
       this.onChangeDescriptor();
     }
@@ -223,6 +223,21 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       {
         layer: new TileLayer({
           properties: {
+            key: 'mapbox-dark',
+            type: 'bmap',
+            visible: false,
+          },
+          source: new XYZ({
+            wrapX: false,
+            url:
+              'https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'
+          }),
+          visible: false
+        })
+      },
+      {
+        layer: new TileLayer({
+          properties: {
             key: 'bing',
             type: 'bmap',
             visible: false,
@@ -294,22 +309,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
           }),
           visible: false
         })
-      },
-      {
-        layer: new TileLayer({
-          properties: {
-            key: 'stadia',
-            type: 'bmap',
-            visible: false,
-          },
-          source: new XYZ({
-            transition: 2,
-            url:
-              'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png',
-          }),
-          visible: false
-        })
       }
+
     ];
     this.graticule = new Graticule({
       // the style to use for the lines, optional.
@@ -422,7 +423,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         layer.setVisible(false);
       }
     })
-    console.log('passei')
     this.updateZIndex();
   }
 
@@ -647,7 +647,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     if (updateSource) {
       this.updateSourceLayer(layer);
     } else {
-      if(layer.hasOwnProperty('types') || layer.hasOwnProperty('selectedType')){
+      if (layer.hasOwnProperty('types') || layer.hasOwnProperty('selectedType')) {
         if (layer.types) {
           for (let layerType of layer.types) {
             this.layersTMS[layerType.value].setVisible(false)
@@ -659,17 +659,17 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
         this.addLayersLegend(layer);
       } else {
-        if(layer.layer.get('type') === 'bmap'){
+        if (layer.layer.get('type') === 'bmap') {
           this.map.getLayers().forEach(layer => {
-            if(layer.get('type') === 'bmap'){
+            if (layer.get('type') === 'bmap') {
               layer.setVisible(false)
             }
           });
           const lay = this.map.getLayers().getArray().find(l => l.get('key') === layer.layer.get('key'));
           lay.setVisible(true);
-        } else if (layer.layer.get('type') === 'limit'){
+        } else if (layer.layer.get('type') === 'limit') {
           this.map.getLayers().forEach(layer => {
-            if(layer.get('type') === 'limit'){
+            if (layer.get('type') === 'limit') {
               layer.setVisible(false)
             }
           });
@@ -715,7 +715,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     let layerTMS = this.layersTMS[layer.value];
     if (layerTMS) {
       layerTMS.setOpacity(op);
-    }else{
+    } else {
       layerTMS = this.layersTMS[layer.selectedType];
       layerTMS.setOpacity(op);
     }

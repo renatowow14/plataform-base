@@ -213,8 +213,6 @@ export class AreaComponent implements OnInit {
         self.layerFromConsulta.error = true;
       }
 
-      console.log(this.layerFromConsulta)
-
       // this.layerFromConsulta.heavyAnalysisLoading = true;
       // urlParamsHeavyAnalysis = '/service/upload/analysisarea?' + params.join('&');
       // let resultHeavyAnalysis = await this.http.get(urlParamsHeavyAnalysis).toPromise();
@@ -338,7 +336,6 @@ export class AreaComponent implements OnInit {
 
   async printAnalyzedAreaReport(fromConsulta = false) {
     this.loadingPrintReport = true;
-    console.log("TO DO PRINT")
     this.loadingPrintReport = false;
   }
 
@@ -357,8 +354,6 @@ export class AreaComponent implements OnInit {
       // let result = await this.http.get(urlParams, this.httpOptions).toPromise()
 
       let result = await this.areaService.getGeoJsonByToken(params).toPromise()
-
-      console.log("RRR- ", result)
 
       this.layerFromConsulta.analyzedArea = result;
       this.layerFromConsulta.analyzedAreaLoading = false;

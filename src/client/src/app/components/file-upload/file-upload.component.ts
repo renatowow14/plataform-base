@@ -150,8 +150,6 @@ export class FileUploadComponent implements OnInit {
 
     let urlParams = this.target + params.join('&');
 
-    console.log(urlParams)
-
     const fd = new FormData();
     fd.append(this.param, file.data);
 

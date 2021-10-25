@@ -9,11 +9,11 @@ import {
   Input,
   SimpleChanges, ChangeDetectorRef
 } from '@angular/core';
-import {LocalizationService} from "../../@core/internationalization/localization.service";
+import { LocalizationService } from "../../@core/internationalization/localization.service";
 
-import {Legend, Menu, Layer} from "../../@core/interfaces";
-import {MessageService} from "primeng/api";
-import {MenuItem} from 'primeng/api';
+import { Legend, Menu, Layer } from "../../@core/interfaces";
+import { MessageService } from "primeng/api";
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-left-side-bar',
@@ -163,14 +163,14 @@ export class LeftSideBarComponent implements AfterViewInit {
         checked: true
       },
       {
-        name: this.localizationService.translate('basemaps.google'),
-        key: 'google',
+        name: this.localizationService.translate('basemaps.mapbox-dark'),
+        key: 'mapbox-dark',
         type: 'bmap',
         checked: false
       },
       {
-        name: this.localizationService.translate('basemaps.stadia'),
-        key: 'stadia',
+        name: this.localizationService.translate('basemaps.google'),
+        key: 'google',
         type: 'bmap',
         checked: false
       }
@@ -186,14 +186,14 @@ export class LeftSideBarComponent implements AfterViewInit {
     });
 
     this.basemap = this.basesmaps.find(b => bmap.key === b.key);
-    this.onChangeMap.emit({layer: this.basemap.layer, updateSource: false});
+    this.onChangeMap.emit({ layer: this.basemap.layer, updateSource: false });
   }
 
   onChangeLimit(limit) {
     this.limits.map((l) => {
       l.checked = limit.key === l.key;
     });
-    this.onChangeLimits.emit({layer: {layer: limit}, updateSource: false});
+    this.onChangeLimits.emit({ layer: { layer: limit }, updateSource: false });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -213,7 +213,6 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.open = !this.open;
     this.onMenuToggle.emit(this.open);
     setTimeout(() => {
-      console.log("Executei misera")
       this.map.updateSize()
     });
   }
@@ -237,7 +236,7 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.renderer.insertBefore(this.el.nativeElement.querySelector(".p-sidebar-header"), div, this.el.nativeElement.querySelector(".p-sidebar-close"))
   }
 
-  hideSidebar(){
+  hideSidebar() {
     setTimeout(() => {
       this.map.updateSize()
     });
@@ -281,7 +280,7 @@ export class LeftSideBarComponent implements AfterViewInit {
 
       } else {
         this.layersSideBar = true;
-        this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
+        this.onMenuSelected.emit({ show: this.layersSideBar, key: menu.key })
       }
     }
 
@@ -321,7 +320,7 @@ export class LeftSideBarComponent implements AfterViewInit {
       if (col == 'title') {
         dt.title = metadata[col];
       }
-      dt.data.push({title: this.localizationService.translate('metadata.' + col), description: metadata[col]})
+      dt.data.push({ title: this.localizationService.translate('metadata.' + col), description: metadata[col] })
     });
     return dt;
   }
@@ -350,18 +349,18 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   download(type, layer, ev) {
-    this.onDownload.emit({tipo: type, layer: layer, e: ev});
+    this.onDownload.emit({ tipo: type, layer: layer, e: ev });
   }
 
   onChangeTransparency(layer, ev) {
-    this.onLayerChangeTransparency.emit({layer: layer, opacity: ev.target.value})
+    this.onLayerChangeTransparency.emit({ layer: layer, opacity: ev.target.value })
   }
 
   changeLayerVisibility(layer, updateSource = false) {
-    this.onLayerChangeVisibility.emit({layer: layer, updateSource: updateSource})
+    this.onLayerChangeVisibility.emit({ layer: layer, updateSource: updateSource })
   }
 
-  onFilter(){
+  onFilter() {
     this.showFilter = !this.showFilter;
     this.displayFilter.emit(this.showFilter);
     setTimeout(() => {
@@ -370,19 +369,19 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.cdRef.detectChanges();
   }
 
-  handleMenuActive(menu){
+  handleMenuActive(menu) {
     let classes = '';
-    if(menu.key == 'statistics'){
+    if (menu.key == 'statistics') {
       classes = this.displayStatistics ? 'menu-active' : '';
-    }else{
-      classes =  menu.show ? 'menu-active' : '';
+    } else {
+      classes = menu.show ? 'menu-active' : '';
     }
     return classes;
   }
 
   setBasemaps(bmaps) {
     this.basesmaps.forEach(bmap => {
-      bmap['layer'] = bmaps.find(map => { return map.layer.get('key') === bmap.key})
+      bmap['layer'] = bmaps.find(map => { return map.layer.get('key') === bmap.key })
     });
   }
 
