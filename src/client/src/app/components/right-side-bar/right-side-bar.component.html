@@ -167,5 +167,19 @@ position="right"
 </div>
 </p-sidebar>
 
+<p-dialog
+  [maximizable]="true"
+  [baseZIndex]="10000"
+  [draggable]="false"
+  [resizable]="false"
+  [appendTo]="'body'"
+  [modal]="true"
+  [header]="'sdfsfjkhbsdfbsjhkdf'"
+  [(visible)]="displayFullScreenCharts"
+  [style]="{width: '50vw'}"
+>
+  <p-chart [type]="chartObject.typeDeforestation" [responsive]="true" [data]="chartObject.dataDeforestation" [options]="chartObject.optionsDeforestation"></p-chart>
+</p-dialog>
+
 
 

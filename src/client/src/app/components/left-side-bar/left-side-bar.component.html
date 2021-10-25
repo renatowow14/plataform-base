@@ -46,157 +46,162 @@
       </ul>
     </div>
   </div>
-  <p-sidebar [appendTo]="leftSidebar" [modal]="false" [transitionOptions]="'2ms cubic-bezier(0, 0, 0.2, 1)'"
-    [(visible)]="layersSideBar" (onShow)="onSideBarShow()" (onHide)="hideSidebar()"
-    (visibleChange)="onSideBarToggle.emit(layersSideBar)">
-    <h4 *ngIf="currentMenu?.key !== 'statistics'" class="title">{{ layersTitle }}</h4>
-    <div *ngIf="currentMenu?.key !== 'statistics'" class="content"
-      [style]="{width: '100%', height: innerHeigth + 'px'}">
-      <div class="menu-item" *ngIf="currentMenu?.key == 'layers'">
-        <div *ngFor="let group of descriptor?.groups">
-          <div [class]="group.group_expanded ? 'group-card group-card-active' :'group-card'">
-            <div (click)="group.group_expanded = !group.group_expanded" class="abstract">
+  <p-sidebar
+      [appendTo]="leftSidebar"
+      [modal]="false"
+      [transitionOptions]="'2ms cubic-bezier(0, 0, 0.2, 1)'"
+      [(visible)]="layersSideBar"
+      (onShow)="onSideBarShow()"
+      (onHide)="hideSidebar()"
+      (visibleChange)="onSideBarToggle.emit(layersSideBar)"
+    >
+      <h4 *ngIf="currentMenu?.key !== 'statistics'" class="title">{{ layersTitle }}</h4>
+      <div *ngIf="currentMenu?.key !== 'statistics'" class="content" [style]="{width: '100%', height: innerHeigth + 'px'}">
+        <div class="menu-item" *ngIf="currentMenu?.key == 'layers'">
+          <div *ngFor="let group of descriptor?.groups">
+            <div [class]="group.group_expanded ? 'group-card group-card-active' :'group-card'">
+              <div (click)="group.group_expanded = !group.group_expanded" class="abstract">
               <span>
                 <i class='bx bxs-layer'></i>
                 <div class="group-label">{{group.label}}</div>
               </span>
-              <i tooltipPosition="left"
-                [pTooltip]="group.group_expanded? localizationService.translate('minimize') : localizationService.translate('maximize')"
-                [class]="group.group_expanded ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
-            </div>
-            <div class="details">
-              <div class="details-inner">
-                <div *ngFor="let layer of group?.layers; let i = index" class="layer-card">
-                  <div class="layer-card-header">
-                    <p-inputSwitch (onChange)="changeLayerVisibility(layer)" [id]=layer.id
-                      (ngModelChange)="layer.visible = !layer.visible" [(ngModel)]="layer.visible"></p-inputSwitch>
-                    <h5>{{layer.label}}</h5>
-                    <i *ngIf="enableMetadata(layer)" pTooltip="{{'left_sidebar.layer.metadata' | translate}}"
-                      class='bx bxs-info-circle' (click)="showMetadata(layer)"></i>
-                  </div>
-                  <div class="layer-card-body" *ngIf="layer.visible">
-                    <div class="layer-card-content">
-                      <div *ngIf="layer.types">
+                <i tooltipPosition="left" [pTooltip]="group.group_expanded? localizationService.translate('minimize') : localizationService.translate('maximize')" [class]="group.group_expanded ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+              </div>
+              <div class="details">
+                <div class="details-inner">
+                  <div *ngFor="let layer of group?.layers; let i = index" class="layer-card">
+                    <div class="layer-card-header">
+                      <p-inputSwitch (onChange)="changeLayerVisibility(layer)" [id]=layer.id
+                                     (ngModelChange)="layer.visible = !layer.visible"
+                                     [(ngModel)]="layer.visible"></p-inputSwitch>
+                      <h5>{{layer.label}}</h5>
+                      <i *ngIf="enableMetadata(layer)" pTooltip="{{'left_sidebar.layer.metadata' | translate}}" class='bx bxs-info-circle' (click)="showMetadata(layer)"></i>
+                    </div>
+                    <div class="layer-card-body" *ngIf="layer.visible">
+                      <div class="layer-card-content">
+                        <div *ngIf="layer.types">
                         <span class="p-float-label" *ngFor="let type of layer?.types"
-                          [hidden]="type.value != layer.selectedType">
-                          <div *ngIf="type.value != layer.selectedType">
-                            <p-dropdown id="types-{{type.value}}" *ngIf="layer.types.length > 0" [options]="layer.types"
-                              [(ngModel)]="layer.selectedType" (onChange)="changeLayerVisibility(type)"
-                              optionLabel="Viewvalue" optionValue="value"></p-dropdown>
-                            <label for="types-{{type.value}}">{{type.typeLabel}}</label>
-                          </div>
+                              [hidden]="type.value != layer.selectedType">
+                          <p-dropdown id="types-{{type.value}}" *ngIf="layer.types.length > 0" [options]="layer.types"
+                                      [(ngModel)]="layer.selectedType" (onChange)="changeLayerVisibility(type)"
+                                      optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                          <label for="types-{{type.value}}">{{type.typeLabel}}</label>
                         </span>
-                        <span *ngFor="let type of layer.types" [hidden]="type.value != layer.selectedType"
-                          class="p-float-label">
+                          <span *ngFor="let type of layer.types" [hidden]="type.value != layer.selectedType"
+                                class="p-float-label">
                           <p-dropdown id="types-times-{{type.value}}" *ngIf="type.times" [options]="type.times"
-                            [(ngModel)]="type.timeSelected" (onChange)="changeLayerVisibility(type, true)"
-                            optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                                      [(ngModel)]="type.timeSelected" (onChange)="changeLayerVisibility(type, true)"
+                                      optionLabel="Viewvalue" optionValue="value"></p-dropdown>
                           <label for="types-times-{{type.value}}">{{type.timeLabel}}</label>
                         </span>
-                      </div>
-                      <span class="p-float-label" *ngIf="layer.times">
-                        <p-dropdown id="times-{{i}}" *ngIf="layer.times.length > 0" [options]="layer.times"
-                          [(ngModel)]="layer.timeSelected" (onChange)="changeLayerVisibility(layer, true)"
-                          optionLabel="Viewvalue" optionValue="value"></p-dropdown>
-                        <label for="times-{{i}}">{{layer.timeLabel}}</label>
+                        </div>
+                        <span class="p-float-label" *ngIf="layer.times">
+                          <p-dropdown id="times-{{i}}" *ngIf="layer.times.length > 0" [options]="layer.times"
+                                      [(ngModel)]="layer.timeSelected" (onChange)="changeLayerVisibility(layer, true)"
+                                      optionLabel="Viewvalue" optionValue="value"></p-dropdown>
+                          <label for="times-{{i}}">{{layer.timeLabel}}</label>
                       </span>
-                      <div class="layer-transparency">
-                        <input (mousemove)="onChangeTransparency(layer, $event)" class="range" type="range" min="0"
-                          max="100" value="0">
-                        <br> <span>{{'left_sidebar.opacity' | translate}}</span>
+                        <div class="layer-transparency">
+                          <input (mousemove)="onChangeTransparency(layer, $event)" class="range" type="range" min="0"
+                                 max="100" value="0">
+                          <br> <span>{{'left_sidebar.opacity' | translate}}</span>
+                        </div>
                       </div>
-                    </div>
-                    <div class="layer-exports" *ngIf="layer.downloadSHP || layer.downloadCSV">
-                      <div *ngIf="loadingDownload" class="loader"></div>
-                      <button pTooltip="{{'left_sidebar.layer.down_shp' | translate}}" pButton pRipple type="button"
-                        label="SHP" (click)="download('shp', layer, $event)"
-                        *ngIf="layer.downloadSHP && !loadingDownload" class="p-button-raised p-button-text"></button>
-                      <button pTooltip="{{'left_sidebar.layer.down_csv' | translate}}" pButton pRipple type="button"
-                        label="CSV" (click)="download('csv', layer, $event)"
-                        *ngIf="layer.downloadCSV && !loadingDownload" class="p-button-raised p-button-text"></button>
+                      <div class="layer-exports" *ngIf="layer.downloadSHP || layer.downloadCSV">
+                        <div *ngIf="loadingDownload" class="loader"></div>
+                        <button pTooltip="{{'left_sidebar.layer.down_shp' | translate}}" pButton pRipple type="button" label="SHP" (click)="download('shp', layer, $event)"
+                                *ngIf="layer.downloadSHP && !loadingDownload"
+                                class="p-button-raised p-button-text"></button>
+                        <button pTooltip="{{'left_sidebar.layer.down_csv' | translate}}" pButton pRipple type="button" label="CSV" (click)="download('csv', layer, $event)"
+                                *ngIf="layer.downloadCSV && !loadingDownload"
+                                class="p-button-raised p-button-text"></button>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <p-dialog [maximizable]="true" [baseZIndex]="10000" [draggable]="false" [resizable]="false"
-                  [appendTo]="'body'" [modal]="true" [header]="metadata.title" [(visible)]="displayMetadata"
-                  [style]="{width: '50vw'}">
-                  <table>
-                    <tbody>
+                  <p-dialog
+                    [maximizable]="true"
+                    [baseZIndex]="10000"
+                    [draggable]="false"
+                    [resizable]="false"
+                    [appendTo]="'body'"
+                    [modal]="true"
+                    [header]="metadata.title"
+                    [(visible)]="displayMetadata"
+                    [style]="{width: '50vw'}"
+                  >
+                    <table>
+                      <tbody>
                       <tr class="table-row" *ngFor="let data of metadata.data">
                         <td class="title-row"><b>{{data.title}}</b></td>
-                        <td *ngIf="!isDetails(data.title); else linkDetails" class="content-row">{{data.description}}
-                        </td>
+                        <td *ngIf="!isDetails(data.title); else linkDetails" class="content-row">{{data.description}}</td>
                         <ng-template #linkDetails>
                           <td class="content-row" [innerHTML]="data.description"></td>
                         </ng-template>
                       </tr>
-                    </tbody>
-                  </table>
-                </p-dialog>
+                      </tbody>
+                    </table>
+                  </p-dialog>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="menu-item" *ngIf="currentMenu?.key == 'area'">
-        <app-leftsidebar-area [map]="map" [lang]="lang"></app-leftsidebar-area>
-      </div>
-      <div class="menu-item options" *ngIf="currentMenu?.key == 'options'">
-        <div [class]="optionsGroups.basemaps ? 'group-card group-card-active' :'group-card'">
-          <div (click)="optionsGroups.basemaps = !optionsGroups.basemaps" class="abstract">
+        <div class="menu-item" *ngIf="currentMenu?.key == 'area'">
+          <app-leftsidebar-area [map]="map" [lang]="lang"></app-leftsidebar-area>
+        </div>
+        <div class="menu-item options" *ngIf="currentMenu?.key == 'options'">
+          <div [class]="optionsGroups.basemaps ? 'group-card group-card-active' :'group-card'">
+            <div (click)="optionsGroups.basemaps = !optionsGroups.basemaps" class="abstract">
             <span>
-              <i class='bx bx-cog'></i>
-              <div class="group-label">{{'options.basemaps' | translate}}</div>
-            </span>
-            <i [class]="optionsGroups.basemaps ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <div class="toggle" *ngFor="let map of basesmaps">
-                <p-inputSwitch styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(map.layer)"
-                  [(ngModel)]="map.visible"></p-inputSwitch>
-                <p class="inlineSwitchButton"> {{map.layer.get('label')}} </p>
-                <br><br>
+                <i class='bx bx-cog'></i>
+                <div class="group-label">{{'options.basemaps' | translate}}</div>
+              </span>
+              <i [class]="optionsGroups.basemaps ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+            </div>
+            <div class="details">
+              <div class="details-inner">
+                <div class="toggle" *ngFor="let bmap of basesmaps">
+                  <p-inputSwitch  styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(bmap)"
+                                  [(ngModel)]="bmap.checked"></p-inputSwitch>
+                  <p class="inlineSwitchButton"> {{bmap.name}} </p>
+                  <br><br>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div [class]="optionsGroups.limits ? 'group-card group-card-active' :'group-card'">
-          <div (click)="optionsGroups.limits = !optionsGroups.limits" class="abstract">
+          <div *ngIf="limits.length > 0" [class]="optionsGroups.limits ? 'group-card group-card-active' :'group-card'">
+            <div (click)="optionsGroups.limits = !optionsGroups.limits" class="abstract">
             <span>
-              <i class='bx bx-cog'></i>
-              <div class="group-label">{{'options.limits' | translate}}</div>
-            </span>
-            <i [class]="optionsGroups.limits ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
-          </div>
-          <div class="details">
-            <div class="details-inner">
-              <div class="toggle" *ngFor="let limit of limits">
-                <p-inputSwitch [(ngModel)]="limit.checked"></p-inputSwitch>
-                <p class="inlineSwitchButton"> {{limit.nome}} </p>
-                <br>
+                <i class='bx bx-cog'></i>
+                <div class="group-label">{{'options.limits' | translate}}</div>
+              </span>
+              <i [class]="optionsGroups.limits ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+            </div>
+            <div class="details">
+              <div class="details-inner">
+                <div class="toggle" *ngFor="let limit of limits">
+                  <p-inputSwitch [(ngModel)]="limit.checked" styleClass="inputSwitchClass" (onChange)="onChangeLimit(limit)"></p-inputSwitch>
+                  <p class="inlineSwitchButton"> {{limit.get('label')}} </p>
+                  <br><br>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     <div class="footer">
       <div class="partners">
-        <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
-        <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
-        <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
-        <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
-        <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
-        <div>
-          <a href="https://www.lapig.iesa.ufg.br" target="_blank"><img src="assets/logos/lapig.png" alt=""></a>
+        <div class="">
+          <a href="https://www.lapig.iesa.ufg.br" target="_blank" class="navbar-brand"><img src="assets/logos/lapig.png"
+                                                                                            alt=""></a>
         </div>
-        <div>
-          <a href="https://www.lapig.iesa.ufg.br" target="_blank"><img src="assets/logos/logo_ufg.png" alt=""></a>
+        <div class="">
+          <a href="https://www.lapig.iesa.ufg.br" target="_blank" class="navbar-brand"><img
+            src="assets/logos/logo_ufg.png" alt=""></a>
         </div>
       </div>
     </div>
-  </p-sidebar>
+    </p-sidebar>
 </section>
 
 
@@ -206,7 +211,7 @@
     <li class="navtab-item" *ngFor="let item of menuMobile">
 
       <div align="center" [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate "
-        (click)="handleMenu(item, true)">
+           (click)="handleMenu(item, true)">
         <i style="font-size:28px;width:90px;" class='svg {{item.icon}}'></i>
         <span class="links_name">{{'menu.' + item.key | translate}}</span>
       </div>
@@ -218,7 +223,7 @@
 
 
 <p-sidebar [appendTo]="leftSidebarMobile" [modal]="false" [(visible)]="layersSideBarMobile"
-  (onShow)="onSideBarShowMobile()">
+           (onShow)="onSideBarShowMobile()">
   <h4 class="title">{{ layersTitle }}</h4>
   <p-scrollPanel class="content" [style]="{width: '100%', height: innerHeigth + 'px'}">
     <div class="menu-item" *ngIf="currentMenu?.key == 'layers'">

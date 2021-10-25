@@ -40,6 +40,8 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin-left: 20px;
+    margin-top: 20px;
 
     i {
       color: $background-sidebar;
@@ -117,7 +119,8 @@
       }
     }
 
-    .p-sidebar-content {}
+    .p-sidebar-content {
+    }
   }
 
   /* utilizado para ocultar barra scroll */
@@ -624,6 +627,8 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
+        margin-left: 20px;
+        margin-top: 20px;
 
         i {
           color: $primary;
@@ -679,7 +684,8 @@
         }
       }
 
-      .menu-item {}
+      .menu-item {
+      }
     }
   }
 
@@ -718,7 +724,8 @@
       }
     }
 
-    .p-sidebar-content {}
+    .p-sidebar-content {
+    }
   }
 }
 
@@ -959,6 +966,7 @@
   flex-direction: column;
   margin-right: 8px;
   align-items: center;
+  padding: 7px;
   justify-content: space-evenly;
 }
 

@@ -9,10 +9,9 @@ import {
   Input,
   SimpleChanges, ChangeDetectorRef
 } from '@angular/core';
-import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
 
-import {Legend, Menu, Layer, Metadata} from "../../@core/interfaces";
+import {Legend, Menu, Layer} from "../../@core/interfaces";
 import {MessageService} from "primeng/api";
 import {MenuItem} from 'primeng/api';
 
@@ -22,9 +21,9 @@ import {MenuItem} from 'primeng/api';
   styleUrls: ['./left-side-bar.component.scss'],
   providers: [MessageService]
 })
+
 export class LeftSideBarComponent implements AfterViewInit {
   @Input() descriptor: any;
-  @Input() basesmaps: any[];
   @Input() loadingDownload: any;
   @Output() onSideBarToggle = new EventEmitter<boolean>();
   @Output() onMenuToggle = new EventEmitter<boolean>();
@@ -38,8 +37,9 @@ export class LeftSideBarComponent implements AfterViewInit {
   @Output() displayFilter = new EventEmitter<any>();
 
   public Legendas: Legend[];
-  public limits: Layer[];
   public basemap: any;
+  public basesmaps: any[];
+  public limits: any[];
   public limit: any;
 
   items: MenuItem[];
@@ -83,6 +83,7 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.layersSideBar = false;
     this.layersSideBarMobile = false;
     this.map = {};
+    this.limits = [];
     this.menu = [
       {
         index: 0,
@@ -154,53 +155,45 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // this.basesmaps = [
-    //   {
-    //     name: 'Geopolitico (MapBox)',
-    //     key: 'mapbox',
-    //     type: 'bmap',
-    //     checked: true
-    //   },
-    //   {
-    //     name: 'Google Maps',
-    //     key: 'google',
-    //     type: 'bmap',
-    //     checked: false
-    //   },
-    //   {
-    //     name: 'Mosaico Planet',
-    //     key: 'planet',
-    //     type: 'bmap',
-    //     checked: false
-    //   },
-    //   {
-    //     name: 'Stadia Dark',
-    //     key: 'stadia',
-    //     type: 'bmap',
-    //     checked: false
-    //   }
-    // ];
-
-    if(this.basesmaps){
-      this.basesmaps = this.basesmaps.map(bmap => {
-        return bmap['visible'] = bmap.layer.get('visible')
-      });
-    }
-
+    this.basesmaps = [
+      {
+        name: this.localizationService.translate('basemaps.mapbox'),
+        key: 'mapbox',
+        type: 'bmap',
+        checked: true
+      },
+      {
+        name: this.localizationService.translate('basemaps.google'),
+        key: 'google',
+        type: 'bmap',
+        checked: false
+      },
+      {
+        name: this.localizationService.translate('basemaps.stadia'),
+        key: 'stadia',
+        type: 'bmap',
+        checked: false
+      }
+    ];
     this.lang = this.localizationService.currentLang();
     this.innerHeigth = window.innerHeight - 170;
     this.cdRef.detectChanges();
   }
 
   onChangeBaseMap(bmap) {
-    this.basesmaps = this.basesmaps.map((b) => {
-      if (bmap !== b.key) {
-        b.checked = false;
-      }
-      return b;
-    })
-    this.basemap = this.basesmaps.find(b => bmap === b.key);
-    this.onChangeMap.emit({layer: this.basemap, updateSource: false});
+    this.basesmaps.map((b) => {
+      b.checked = bmap.key === b.key;
+    });
+
+    this.basemap = this.basesmaps.find(b => bmap.key === b.key);
+    this.onChangeMap.emit({layer: this.basemap.layer, updateSource: false});
+  }
+
+  onChangeLimit(limit) {
+    this.limits.map((l) => {
+      l.checked = limit.key === l.key;
+    });
+    this.onChangeLimits.emit({layer: {layer: limit}, updateSource: false});
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -249,7 +242,6 @@ export class LeftSideBarComponent implements AfterViewInit {
       this.map.updateSize()
     });
   }
-
 
   onSideBarShowMobile() {
     const div = this.renderer.createElement('div');
@@ -386,5 +378,19 @@ export class LeftSideBarComponent implements AfterViewInit {
       classes =  menu.show ? 'menu-active' : '';
     }
     return classes;
+  }
+
+  setBasemaps(bmaps) {
+    this.basesmaps.forEach(bmap => {
+      bmap['layer'] = bmaps.find(map => { return map.layer.get('key') === bmap.key})
+    });
+  }
+
+  setLimits(limits: any[]) {
+    limits.forEach(limit => {
+      limit['checked'] = limit.getVisible();
+      limit['key'] = limit.get('key');
+    });
+    this.limits = limits;
   }
 }

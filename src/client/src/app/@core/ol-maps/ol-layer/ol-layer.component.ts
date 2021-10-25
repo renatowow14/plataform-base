@@ -21,6 +21,7 @@ export class OlLayerComponent implements OnInit {
           hasLayer = true;
         }
       });
+
       if(hasLayer){
         // Do nothing
       } else {
