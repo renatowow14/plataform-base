@@ -12,30 +12,31 @@ import TileLayer from "ol/layer/Tile";
 import Map from 'ol/Map';
 import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
-import {LocalizationService} from "../../@core/internationalization/localization.service";
+import { LocalizationService } from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import {Descriptor, Control, Ruler, TextFilter} from "../../@core/interfaces";
-import {DownloadService, MapService} from "../services";
-import {saveAs} from 'file-saver';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {Coordinate, createStringXY} from "ol/coordinate";
-import {toLonLat} from "ol/proj";
-import {Graticule, Overlay} from "ol";
-import {BingMaps, XYZ} from "ol/source";
-import {Fill, Stroke, Style} from "ol/style";
-import {Geometry, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon} from 'ol/geom';
-import {Feature} from "ol";
-import {Draw, Interaction, Modify, Snap} from "ol/interaction";
+import { Descriptor, Control, Ruler, TextFilter } from "../../@core/interfaces";
+import { DownloadService, MapService } from "../services";
+import { saveAs } from 'file-saver';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Coordinate, createStringXY } from "ol/coordinate";
+import { toLonLat } from "ol/proj";
+import { Graticule, Overlay } from "ol";
+import { BingMaps, XYZ } from "ol/source";
+import { Fill, Stroke, Style } from "ol/style";
+import { Geometry, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
+import { Feature } from "ol";
+import { Draw, Interaction, Modify, Snap } from "ol/interaction";
 import VectorSource from "ol/source/Vector";
-import {GeoJSON} from "ol/format";
+import { GeoJSON } from "ol/format";
 import VectorLayer from "ol/layer/Vector";
 import CircleStyle from "ol/style/Circle";
-import {timer} from 'rxjs';
-import {take} from 'rxjs/operators';
-import {RulerAreaCtrl, RulerCtrl} from "../../@core/interactions/ruler";
-import {SelectItem, PrimeNGConfig, MessageService} from 'primeng/api';
+import { timer } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
+import { SelectItem, PrimeNGConfig, MessageService } from 'primeng/api';
 import Text from "ol/style/Text";
-import {Swipe} from "../../@core/interfaces/swipe";
+import { Swipe } from "../../@core/interfaces/swipe";
+import { AreaService } from '../services/area.service';
 
 @Component({
   selector: 'app-general-map',
@@ -122,7 +123,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     strokeColor: '#363230',
   }
 
-  public selectedAutoCompleteText: any = {text: ''};
+  public selectedAutoCompleteText: any = { text: '' };
   public listForAutoComplete: any[];
   public textsComponentesFilters: TextFilter;
   public selectedSearchOption: string;
@@ -137,6 +138,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     private cdRef: ChangeDetectorRef,
     private primeNGConfig: PrimeNGConfig,
     private mapService: MapService,
+    private areaService: AreaService,
     private messageService: MessageService,
     private primengConfig: PrimeNGConfig
   ) {
@@ -409,7 +411,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   changeVisibilityBasemap(ev) {
-    let {bmap} = ev;
+    let { bmap } = ev;
     this.map.getLayers().forEach(layer => {
       const properties = layer.getProperties();
       if (properties.key == bmap.key && properties.type == bmap.type) {
@@ -427,8 +429,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         value: 'region',
         icon: 'language'
       },
-      {label: this.localizationService.translate('controls.filter_texts.label_car'), value: 'car', icon: 'home'},
-      {label: this.localizationService.translate('controls.filter_texts.label_uc'), value: 'uc', icon: 'nature_people'},
+      { label: this.localizationService.translate('controls.filter_texts.label_car'), value: 'car', icon: 'home' },
+      { label: this.localizationService.translate('controls.filter_texts.label_uc'), value: 'uc', icon: 'nature_people' },
     ];
     this.onChangeSearchOption();
   }
@@ -436,7 +438,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   getSwipeLayers() {
     this.swipeLayers = [];
     this.map.getLayers().forEach(layer => {
-      if(layer){
+      if (layer) {
         const properties = layer.getProperties();
         if (properties.type === 'layer') {
           this.swipeLayers.push(layer)
@@ -445,12 +447,12 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     });
   }
 
-  onClearSwipe($event){
+  onClearSwipe($event) {
     this.valueSwipe = "";
     this.swipeLayer = {};
   }
 
-  onSwipeSelectedLayer(ev){
+  onSwipeSelectedLayer(ev) {
     this.swipeLayer = ev.layer.get('descriptorLayer');
     this.swipeLayer.visible = true;
   }
@@ -502,7 +504,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   private createVectorLayer(features, strokeColor, width) {
     return new VectorLayer({
-      source: new VectorSource({features}),
+      source: new VectorSource({ features }),
       style: [
         new Style({
           stroke: new Stroke({
@@ -632,7 +634,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   changeLayerVisibility(ev) {
-    let {layer, updateSource} = ev;
+    let { layer, updateSource } = ev;
     if (updateSource) {
       this.updateSourceLayer(layer);
     } else {
@@ -651,7 +653,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     }
   }
 
-  addLayersLegend(layer){
+  addLayersLegend(layer) {
     if (layer.visible) {
       this.selectedLayers.push(this.layersTMS[layer.selectedType])
     } else {
@@ -672,7 +674,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   onChangeTransparency(ev) {
-    let {layer, opacity} = ev;
+    let { layer, opacity } = ev;
     const op = ((100 - opacity) / 100);
     let layerTMS = this.layersTMS[layer.value];
     if (layerTMS) {
@@ -718,8 +720,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         saveAs(blob, name + '.zip');
         this.loadingDown = false;
       }).catch(error => {
-      this.loadingDown = false;
-    });
+        this.loadingDown = false;
+      });
   }
 
   downloadCSV(layer, yearDownload, filterRegion, columnsCSV) {
@@ -737,13 +739,13 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         saveAs(blob, name + '.csv');
         this.loadingDown = false;
       }).catch(error => {
-      this.loadingDown = false;
-    });
+        this.loadingDown = false;
+      });
   }
 
   buttonDownload(ev) {
 
-    let {tipo, layer, e} = ev;
+    let { tipo, layer, e } = ev;
     let yearDownload = '';
     let columnsCSV = '';
     let regionType = this.selectRegion.type;
@@ -837,7 +839,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   onPoint(): void {
-    this.messageService.add({severity: 'success', summary: 'Service Message', detail: 'Via MessageService'});
+    this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
     this.controlOptions = true;
     this.mapControls.point = !this.mapControls.point
     if (this.mapControls.point) {
@@ -881,14 +883,14 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.map.addLayer(this.vector);
     this.interaction = interaction;
     if (type === 'Polygon') {
-      this.modify = new Modify({source: this.source});
+      this.modify = new Modify({ source: this.source });
       this.map.addInteraction(this.modify);
       this.map.addInteraction(this.interaction);
     } else {
       this.map.addInteraction(this.interaction);
     }
 
-    this.snap = new Snap({source: this.source});
+    this.snap = new Snap({ source: this.source });
     this.map.addInteraction(this.snap);
   }
 
@@ -896,10 +898,11 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     let geom: Feature<any>[] = [];
     this.source.getFeatures().forEach(function (feature) {
       let feat = new Feature(feature.getGeometry()!.clone().transform('EPSG:3857', 'EPSG:4326'));
+      // let feat = new Feature(feature.getGeometry()!.clone());
       feat.setProperties(feature.getProperties())
       geom.push(feat);
     });
-    let writer = new GeoJSON();
+    let writer = new GeoJSON({ dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' });
     return writer.writeFeatures(geom);
   }
 
@@ -956,7 +959,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         this.source.clear()
         this.source.addFeature(features[0])
         let extent = features[0].getGeometry().getExtent();
-        map.getView().fit(extent, {duration: 1500});
+        map.getView().fit(extent, { duration: 1500 });
       })
     }
   }
@@ -1005,8 +1008,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.swipeOptions = [];
     this.swipeLayers.forEach(layer => {
       let result = this.normalize(layer.get('label')).includes(this.normalize(ev.query));
-      if(result){
-        this.swipeOptions.push({name: layer.get('label'), key: layer.get('key'), layer: layer });
+      if (result) {
+        this.swipeOptions.push({ name: layer.get('label'), key: layer.get('key'), layer: layer });
       }
     });
   }
@@ -1094,7 +1097,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
     map.addLayer(this.otherLayerFromFilters.layer);
     let extent = this.otherLayerFromFilters.layer.getSource().getExtent();
-    map.getView().fit(extent, {duration: 1800});
+    map.getView().fit(extent, { duration: 1800 });
   }
 
   readStyleProperty(name: string): string {
@@ -1122,7 +1125,11 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   onSave() {
-    console.log(this.getGeoJsonFromFeature())
+    let drawData = { geometry: this.getGeoJsonFromFeature(), app_origin: 'app-base' }
+    this.areaService.saveDrawedGeometry(drawData)
+      .subscribe(data => {
+        console.log("DATA: ", data)
+      })
   }
 
   onCancel() {
@@ -1133,7 +1140,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   onRightSideBarOpen(show) {
-    if(show != undefined) {
+    if (show != undefined) {
       this.showRightSideBar = show;
       this.handleSideBars();
       setTimeout(() => {
