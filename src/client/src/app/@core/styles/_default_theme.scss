@@ -2,7 +2,7 @@
 // include sass color module
 @use 'sass:color';
 
-$primary: #2a2141 !default;
+$primary: #143625 !default;
 $accent: lighten($primary, 30%) !default;
 $warn: #ffc107 !default;
 $secondary: #6c757d;
