@@ -6,7 +6,7 @@ import {
   Input,
   Output,
   OnInit,
-  SimpleChanges
+  SimpleChanges, AfterContentChecked
 } from '@angular/core';
 import TileLayer from "ol/layer/Tile";
 import Map from 'ol/Map';
@@ -44,16 +44,23 @@ import {Swipe} from "../../@core/interfaces/swipe";
   providers: [MessageService]
 })
 
-export class GeneralMapComponent implements OnInit, Ruler {
+export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   @Input() set displayLayers(value: boolean) {
     this._displayLayers = value;
     this.handleSideBars();
   }
 
+  @Input() set descriptor(value: Descriptor) {
+    if(value){
+      this._descriptor = value;
+      this.onChangeDescriptor();
+    }
+  }
+
   @Input() openMenu = true as boolean;
-  @Input() descriptor: Descriptor;
   @Output() onHide = new EventEmitter<any>();
-  @Output() mapInstance = new EventEmitter<Map>();
+  @Output() onMapReadyLeftSideBar = new EventEmitter<any>();
+  @Output() onMapReadyRightSideBar = new EventEmitter<any>();
 
   public innerHeigth: number;
   public options: any = {}
@@ -62,7 +69,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
   public selectedLayers = [] as any[];
   public limits = [] as any[];
   public graticule: Graticule;
-  public map: Map;
+  public map: any;
+  public _descriptor: Descriptor;
   public mousePositionOptions: any;
   public showFormPoint: boolean;
   public loadingDown: boolean;
@@ -142,7 +150,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.swipeLayers = [];
     this.layersTMS = {};
     this.limitsTMS = {};
-
+    this.map = {};
     this.swipeLayer = {};
 
     this.features = [];
@@ -337,7 +345,6 @@ export class GeneralMapComponent implements OnInit, Ruler {
       }),
     });
 
-
     this.highlightStyle = new Style({
       fill: new Fill({
         color: 'rgba(255,255,255,0.52)',
@@ -397,13 +404,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.cdRef.detectChanges();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('descriptor')) {
-      if (this.map && changes.descriptor.currentValue.hasOwnProperty('regionFilterDefault')) {
-        this.descriptor = changes.descriptor.currentValue;
-        this.onChangeDescriptor();
-      }
-    }
+  ngAfterContentChecked(): void {
+    this.cdRef.detectChanges();
   }
 
   changeVisibilityBasemap(ev) {
@@ -460,9 +462,9 @@ export class GeneralMapComponent implements OnInit, Ruler {
     this.limitsNames = [];
     this.selectedLayers = [];
 
-    this.regionFilterDefault = this.descriptor.regionFilterDefault;
+    this.regionFilterDefault = this._descriptor.regionFilterDefault;
 
-    for (let groups of this.descriptor.groups) {
+    for (let groups of this._descriptor.groups) {
 
       for (let layers of groups.layers) {
         if (layers.types) {
@@ -477,7 +479,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
     }
 
-    for (let basemap of this.descriptor.basemaps) {
+    for (let basemap of this._descriptor.basemaps) {
       for (let types of basemap.types) {
         const baseMapAvaliable = this.bmaps.find(b => {
           return b.layer.get('key') === types.value;
@@ -488,7 +490,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
         }
       }
     }
-    for (let limits of this.descriptor.limits) {
+    for (let limits of this._descriptor.limits) {
       for (let types of limits.types) {
         this.limitsNames.push(types)
       }
@@ -530,7 +532,8 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
   setMap(map) {
     this.map = map;
-    this.mapInstance.emit(map);
+    this.onMapReadyLeftSideBar.emit(map);
+    this.onMapReadyRightSideBar.emit(map);
   }
 
   hideLayers() {
@@ -644,7 +647,7 @@ export class GeneralMapComponent implements OnInit, Ruler {
 
       this.addLayersLegend(layer);
 
-      this.updateZIndex();
+
     }
   }
 
@@ -656,15 +659,16 @@ export class GeneralMapComponent implements OnInit, Ruler {
         if (item.getProperties().key === layer.selectedType) this.selectedLayers.splice(index, 1);
       });
     }
-
     this.selectedLayers.forEach((item, index) => {
       item.visible = item.get('visible');
     });
+    this.updateZIndex();
   }
 
   updateZIndex() {
     this.selectedLayers.forEach((item, index) => {
-      item.setZIndex(index)
+      console.log(item)
+      item.setZIndex(index + 1)
     });
   }
 

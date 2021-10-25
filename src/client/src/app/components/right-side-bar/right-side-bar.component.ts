@@ -29,7 +29,6 @@ export class RightSideBarComponent implements OnInit {
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onSideBarToggle = new EventEmitter<boolean>()
   @Input() descriptor: any;
-  @Input() map: Map;
   @Input() set displayOptions(value: boolean) {
     this.onSideBarToggle.emit(value);
     this._displayOptions = value;
@@ -39,6 +38,7 @@ export class RightSideBarComponent implements OnInit {
   public Legendas: Legend[];
   public mapaBase: Layer[];
   public Limites: Layer[];
+  public map: Map;
   public _displayOptions : boolean;
   public basemap: any;
   public limit: any;
@@ -279,6 +279,10 @@ export class RightSideBarComponent implements OnInit {
 
   next() {
     this.first = this.first + this.rows;
+  }
+
+  setMap(map){
+    this.map = map;
   }
 
   prev() {

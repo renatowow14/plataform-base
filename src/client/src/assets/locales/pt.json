@@ -71,7 +71,8 @@
     "area_tooltip": "Área de Interesse",
     "filters": "Filtros",
     "filters_tooltip": "Filtros",
-    "options": "Opções"
+    "options": "Opções",
+    "options_tooltip": "Opções"
   },
   "area": {
     "upload_submit": "Submeter",
@@ -215,5 +216,11 @@
     "passwordPrompt": "Enter a password",
     "emptyMessage": "No results found",
     "emptyFilterMessage": "No results found"
+  },
+  "table": {
+    "showing": "Mostrando",
+    "of": "de",
+    "to": "até",
+    "entries": "registros"
   }
 }

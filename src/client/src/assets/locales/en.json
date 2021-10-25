@@ -71,7 +71,8 @@
         "area_tooltip": "Area of interest",
         "filters": "Filters",
         "filters_tooltip": "Filters",
-        "options": "Options"
+        "options": "Options",
+        "options_tooltip": "Options"
     },
     "metadata": {
         "title": "Metadata",
@@ -123,6 +124,12 @@
         "basemaps": "Basemaps",
         "legend": "Legend",
         "limits": "Limits"
+    },
+    "table": {
+      "showing": "Showing",
+      "of": "of",
+      "to": "to",
+      "entries": "entries"
     },
     "primeng": {
         "startsWith": "Starts with",

@@ -1,15 +1,14 @@
-import {Component, OnInit, ChangeDetectorRef, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import {MapService} from "../services/map.service";
-import Map from 'ol/Map';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
-import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit {
+
+export class MainComponent implements OnInit, AfterContentChecked {
   public openMenu:boolean;
   public showLayers: boolean;
   public limit : any;
@@ -26,6 +25,8 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDescriptor();
+  }
+  ngAfterContentChecked(): void {
     this.cdRef.detectChanges();
   }
 

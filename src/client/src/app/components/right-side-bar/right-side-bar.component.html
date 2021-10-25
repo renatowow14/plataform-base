@@ -133,7 +133,7 @@ position="right"
         <div class="card">
        <!--   <h5>Implicit Pagination</h5> -->
           <p-table styleClass="p-datatable-sm" [value]="customers" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+              currentPageReportTemplate="{{'table.showing' | translate}} {first} {{'table.to' | translate}} {last} {{'table.of' | translate}} {totalRecords} {{'table.entries' | translate}}" [rowsPerPageOptions]="[10,25,50]">
               <ng-template pTemplate="header">
                   <tr>
                       <th>Name</th>
