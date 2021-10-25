@@ -383,9 +383,16 @@
 
   :host ::ng-deep .p-paginator .p-paginator-current{
     height: 1.5rem;
-    font-size:14px;
+    font-size:13px;
     width:100%;
+    margin: unset;
+    padding: unset;
   }
+
+   :host ::ng-deep  .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+     background: unset;
+     color: $primary;
+   }
 
   :host ::ng-deep .p-datatable .p-datatable-thead > tr > th{
     font-size:11px;

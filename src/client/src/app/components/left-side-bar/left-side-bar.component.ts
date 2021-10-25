@@ -1,7 +1,7 @@
 import {
   Component,
   EventEmitter,
-  OnInit,
+  AfterViewInit,
   Renderer2,
   ElementRef,
   Output,
@@ -22,8 +22,7 @@ import {MenuItem} from 'primeng/api';
   styleUrls: ['./left-side-bar.component.scss'],
   providers: [MessageService]
 })
-export class LeftSideBarComponent implements OnInit {
-  @Input() map: Map;
+export class LeftSideBarComponent implements AfterViewInit {
   @Input() descriptor: any;
   @Input() basesmaps: any[];
   @Input() loadingDownload: any;
@@ -47,6 +46,7 @@ export class LeftSideBarComponent implements OnInit {
 
   public display: boolean;
   public open: boolean;
+  public map: any;
   public lang: string;
   public menu: Menu[];
   public innerHeigth: number;
@@ -71,7 +71,7 @@ export class LeftSideBarComponent implements OnInit {
 
   constructor(
     private el: ElementRef,
-    private localizationService: LocalizationService,
+    public localizationService: LocalizationService,
     private renderer: Renderer2,
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef
@@ -82,6 +82,7 @@ export class LeftSideBarComponent implements OnInit {
     this.open = true;
     this.layersSideBar = false;
     this.layersSideBarMobile = false;
+    this.map = {};
     this.menu = [
       {
         index: 0,
@@ -152,7 +153,7 @@ export class LeftSideBarComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     // this.basesmaps = [
     //   {
     //     name: 'Geopolitico (MapBox)',
@@ -218,11 +219,10 @@ export class LeftSideBarComponent implements OnInit {
   toggleMenu() {
     this.open = !this.open;
     this.onMenuToggle.emit(this.open);
-    if (this.map) {
-      setTimeout(() => {
-        this.map.updateSize()
-      });
-    }
+    setTimeout(() => {
+      console.log("Executei misera")
+      this.map.updateSize()
+    });
   }
 
   handleLang(lng) {

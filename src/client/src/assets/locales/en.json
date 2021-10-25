@@ -46,7 +46,13 @@
         }
     },
     "left_sidebar": {
-        "title": "Menu"
+        "title": "Menu",
+        "opacity": "Opacity",
+        "layer": {
+          "metadata": "Layer Metadata",
+          "down_shp": "Download SHP",
+          "down_csv": "Download CSV"
+        }
     },
     "dataSeries": {
         "title": "Statistics",
@@ -65,7 +71,8 @@
         "area_tooltip": "Area of interest",
         "filters": "Filters",
         "filters_tooltip": "Filters",
-        "options": "Options"
+        "options": "Options",
+        "options_tooltip": "Options"
     },
     "metadata": {
         "title": "Metadata",
@@ -86,8 +93,11 @@
         "contato": "Contact"
     },
     "legend": {
-        "title": "Legends"
+        "title": "Legends",
+        "move": "Move Layer"
     },
+    "minimize": "Minimize",
+    "maximize": "Maximize",
     "planet": "Planet Mosaics",
     "area": {
         "upload_submit": "Submit",
@@ -114,6 +124,12 @@
         "basemaps": "Basemaps",
         "legend": "Legend",
         "limits": "Limits"
+    },
+    "table": {
+      "showing": "Showing",
+      "of": "of",
+      "to": "to",
+      "entries": "entries"
     },
     "primeng": {
         "startsWith": "Starts with",

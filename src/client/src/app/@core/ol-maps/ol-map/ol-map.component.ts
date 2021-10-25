@@ -77,7 +77,9 @@ export class OlMapComponent implements OnInit, AfterViewInit {
       controls: defaultControls({ attribution: false, zoom: false }).extend([]),
     });
 
-    this.onReady.emit(this.map);
+    setTimeout(() => {
+      this.onReady.emit(this.map);
+    });
 
     this.map.on('postrender', function () {
       self.loading = false;
