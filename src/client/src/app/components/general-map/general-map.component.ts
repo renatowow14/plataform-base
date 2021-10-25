@@ -422,6 +422,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         layer.setVisible(false);
       }
     })
+    console.log('passei')
+    this.updateZIndex();
   }
 
   setSearchOptions() {
@@ -676,6 +678,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         }
       }
     }
+    this.updateZIndex();
   }
 
   addLayersLegend(layer) {
