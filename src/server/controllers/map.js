@@ -175,8 +175,6 @@ module.exports = function(app) {
                 }
                 ]
             },
-
-
             {
                 id: "imagens",
                 label: languageJson["descriptor"]["imagens"]["label"][language],
@@ -306,143 +304,10 @@ module.exports = function(app) {
                         downloadSHP: false,
                         downloadCSV: false
                     },
-                        // {
-                        //     value: "landsat",
-                        //     Viewvalue: "Landsat",
-                        //     order: 10,
-                        //     download: [],
-                        //     opacity: 1,
-                        //     timeLabel: languageJson["typelabel_layer"]["year"][language],
-                        //     typeLabel: languageJson["typelabel_layer"]["type"][language],
-                        //     metadata: languageJson["descriptor"]["imagens"]["layers"]['satelite']['landsat']['metadata'],
-                        //     timeLabel: languageJson["descriptor"]["imagens"]["layers"]["satelite"]["timelabel"][language],
-                        //     timeSelected: "bi_ce_mosaico_landsat_completo_30_2020_fip",
-                        //     timeHandler: "layername",
-                        //     times: [{
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2000_fip",
-                        //         Viewvalue: "2000"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2002_fip",
-                        //         Viewvalue: "2002"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2004_fip",
-                        //         Viewvalue: "2004"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2006_fip",
-                        //         Viewvalue: "2006"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2008_fip",
-                        //         Viewvalue: "2008"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2010_fip",
-                        //         Viewvalue: "2010"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2012_fip",
-                        //         Viewvalue: "2012"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2013_fip",
-                        //         Viewvalue: "2013"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2014_fip",
-                        //         Viewvalue: "2014"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2015_fip",
-                        //         Viewvalue: "2015"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2016_fip",
-                        //         Viewvalue: "2016"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2017_fip",
-                        //         Viewvalue: "2017"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2018_fip",
-                        //         Viewvalue: "2018"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2019_fip",
-                        //         Viewvalue: "2019"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_landsat_completo_30_2020_fip",
-                        //         Viewvalue: "2020"
-                        //     }
-                        //     ],
-                        //     metadata: {
-                        //         title: languageJson["metadata"]["agricultura_agrosatelite"]["title"][language],
-                        //         description: languageJson["metadata"]["agricultura_agrosatelite"]["description"][language],
-                        //         format: languageJson["metadata"]["agricultura_agrosatelite"]["format"][language],
-                        //         region: languageJson["metadata"]["agricultura_agrosatelite"]["region"][language],
-                        //         period: languageJson["metadata"]["agricultura_agrosatelite"]["period"][language],
-                        //         scale: languageJson["metadata"]["agricultura_agrosatelite"]["scale"][language],
-                        //         system_coordinator: languageJson["metadata"]["agricultura_agrosatelite"]["system_coordinator"][language],
-                        //         cartographic_projection: languageJson["metadata"]["agricultura_agrosatelite"]["cartographic_projection"][language],
-                        //         cod_caracter: languageJson["metadata"]["agricultura_agrosatelite"]["cod_caracter"][language],
-                        //         fonte: languageJson["metadata"]["agricultura_agrosatelite"]["fonte"][language],
-                        //         contato: "lapig.cepf@gmail.com"
-                        //     }
-                        // },
-                        // {
-                        //     value: "sentinel",
-                        //     Viewvalue: "Sentinel",
-                        //     order: 10,
-                        //     download: [],
-                        //     opacity: 1,
-                        //     timeLabel: languageJson["typelabel_layer"]["year"][language],
-                        //     typeLabel: languageJson["typelabel_layer"]["type"][language],
-                        //     timeLabel: languageJson["descriptor"]["imagens"]["layers"]["satelite"]["timelabel"][language],
-                        //     timeSelected: "bi_ce_mosaico_sentinel_10_2020_lapig",
-                        //     timeHandler: "layername",
-                        //     times: [{
-                        //         value: "bi_ce_mosaico_sentinel_10_2016_lapig",
-                        //         Viewvalue: "2016"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_sentinel_10_2017_lapig",
-                        //         Viewvalue: "2017"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_sentinel_10_2018_lapig",
-                        //         Viewvalue: "2018"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_sentinel_10_2019_lapig",
-                        //         Viewvalue: "2019"
-                        //     },
-                        //     {
-                        //         value: "bi_ce_mosaico_sentinel_10_2020_lapig",
-                        //         Viewvalue: "2020"
-                        //     }
-                        //     ],
-                        //     metadata: {
-                        //         title: languageJson["metadata"]["agricultura_agrosatelite"]["title"][language],
-                        //         description: languageJson["metadata"]["agricultura_agrosatelite"]["description"][language],
-                        //         format: languageJson["metadata"]["agricultura_agrosatelite"]["format"][language],
-                        //         region: languageJson["metadata"]["agricultura_agrosatelite"]["region"][language],
-                        //         period: languageJson["metadata"]["agricultura_agrosatelite"]["period"][language],
-                        //         scale: languageJson["metadata"]["agricultura_agrosatelite"]["scale"][language],
-                        //         system_coordinator: languageJson["metadata"]["agricultura_agrosatelite"]["system_coordinator"][language],
-                        //         cartographic_projection: languageJson["metadata"]["agricultura_agrosatelite"]["cartographic_projection"][language],
-                        //         cod_caracter: languageJson["metadata"]["agricultura_agrosatelite"]["cod_caracter"][language],
-                        //         fonte: languageJson["metadata"]["agricultura_agrosatelite"]["fonte"][language],
-                        //         contato: "lapig.cepf@gmail.com"
-                        //     }
-                        // }
+
                     ]
                 }]
-            }
-            ],
+            }],
             "basemaps": [{
                 "id": "basemaps",
                 "defaultBaseMap": 'mapbox',
