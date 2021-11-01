@@ -61,7 +61,7 @@
                 <div class="details" *ngIf="layer.get('key') !== 'planet'">
                   <div class="details-inner">
                     <img
-                      src="http://ows.lapig.iesa.ufg.br/ows?EXCEPTIONS=application%2Fvnd.ogc.se_xml&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer={{layer.get('key')}}&format=image%2Fpng"
+                      src="https://ows.lapig.iesa.ufg.br/ows?EXCEPTIONS=application%2Fvnd.ogc.se_xml&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer={{layer.get('key')}}&format=image%2Fpng"
                       alt="">
                   </div>
                 </div>
@@ -72,9 +72,9 @@
       </div>
       <div class="controls">
         <div class="controls-container">
-<!--          <i pRipple [pTooltip]="'controls.swipe' | translate"-->
-<!--            [class]="mapControls.swipe ? 'fg-flip-h control-active' : 'fg-flip-h'"-->
-<!--            (click)="onSwipe()"></i>-->
+          <i pRipple [pTooltip]="'controls.swipe' | translate"
+            [class]="mapControls.swipe ? 'fg-flip-h control-active' : 'fg-flip-h'"
+            (click)="onSwipe()"></i>
           <i pRipple [pTooltip]="'controls.point' | translate"
             [class]="mapControls.point ? 'fg-location-poi-o control-active' : 'fg-location-poi-o'"
             (click)="onPoint()"></i>

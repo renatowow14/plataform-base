@@ -10,7 +10,6 @@ import {
   SimpleChanges, ChangeDetectorRef
 } from '@angular/core';
 import {LocalizationService} from "../../@core/internationalization/localization.service";
-
 import {Legend, Menu, Layer} from "../../@core/interfaces";
 import {MessageService} from "primeng/api";
 import {MenuItem} from 'primeng/api';
@@ -393,4 +392,5 @@ export class LeftSideBarComponent implements AfterViewInit {
     });
     this.limits = limits;
   }
+
 }

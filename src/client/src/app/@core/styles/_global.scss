@@ -55,6 +55,10 @@ html, body {
   color: $primary;
 }
 
+.ol-swipe:before{
+  background: $primary;
+}
+
 * {
     margin: 0;
     padding: 0;
