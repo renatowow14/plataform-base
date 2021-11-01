@@ -549,6 +549,11 @@ module.exports = function (app) {
                     "visible": true
                 },
                 {
+                    "value": "mapbox-dark",
+                    "viewValue": languageJson["basemap"]["mapbox-dark"][language],
+                    "visible": false
+                },
+                {
                     "value": "roads",
                     "viewValue": languageJson["basemap"]["roads"][language],
                     "visible": false
@@ -571,11 +576,6 @@ module.exports = function (app) {
                 {
                     "value": "bing",
                     "viewValue": languageJson["basemap"]["bing"][language],
-                    "visible": false
-                },
-                {
-                    "value": "stadia",
-                    "viewValue": languageJson["basemap"]["stadia"][language],
                     "visible": false
                 }
                 ]
