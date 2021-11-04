@@ -74,24 +74,6 @@
         "options": "Options",
         "options_tooltip": "Options"
     },
-    "metadata": {
-        "title": "Metadata",
-        "description": "Description",
-        "format": "Format",
-        "region": "Region",
-        "period": "Period",
-        "data": "Date",
-        "scale": "Scale",
-        "system_coordinator": "System Coordinator",
-        "cartographic_projection": "Cartographic projection",
-        "cod_caracter": "Character encoding",
-        "coordinates": "Reference and Coordinate Systems",
-        "projection": "Cartographic projection",
-        "caracter": "Character encoding",
-        "fonte": "Source",
-        "update": "Update",
-        "contato": "Contact"
-    },
     "legend": {
         "title": "Legends",
         "move": "Move Layer"
@@ -221,5 +203,37 @@
         "passwordPrompt": "Enter a password",
         "emptyMessage": "No results found",
         "emptyFilterMessage": "No results found"
+    },
+    "metadata": {
+        "titles": {
+            "title": "Metadata",
+            "description": "Description",
+            "format": "Format",
+            "region": "Region",
+            "period": "Period",
+            "data": "Date",
+            "scale": "Scale",
+            "system_coordinator": "System Coordinator",
+            "cartographic_projection": "Cartographic projection",
+            "cod_caracter": "Character encoding",
+            "coordinates": "Reference and Coordinate Systems",
+            "projection": "Cartographic projection",
+            "caracter": "Character encoding",
+            "fonte": "Source",
+            "update": "Update",
+            "contato": "Contact"
+        },
+        "agricultura_agrosatelite": {
+            "title": "Agricultura - Agrosatélite",
+            "description": "Dynamics of expanding the area planted with annual crops in the Cerrado Biome.",
+            "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
+            "region": "Cerrado Biome, allowing to analyze the classes of land use by other regions of interest such as: states and municipalities.",
+            "period": "2001; 2007; 2014",
+            "scale": "1:250.000",
+            "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
+            "cartographic_projection": "Universal Transverse Mercator",
+            "cod_caracter": "Latin 1",
+            "fonte": "Agrosatélite Applied Geotechnology, Gordon and Betty Moore Foundation (funders)"
+        }
     }
 }

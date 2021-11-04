@@ -4,6 +4,7 @@ var fs = require('fs'),
     languageJson = require('../assets/lang/language.json'),
     request = require('request'),
     Ows = require('../utils/ows');
+const Metadado = require('../utils/metadados');
 
 module.exports = function (app) {
     var Controller = {}
@@ -74,19 +75,20 @@ module.exports = function (app) {
                         { value: "year=2007", Viewvalue: 2007 },
                         { value: "year=2014", Viewvalue: 2014 }
                     ],
-                    metadata: {
-                        title: languageJson["metadata"]["agricultura_agrosatelite"]["title"][language],
-                        description: languageJson["metadata"]["agricultura_agrosatelite"]["description"][language],
-                        format: languageJson["metadata"]["agricultura_agrosatelite"]["format"][language],
-                        region: languageJson["metadata"]["agricultura_agrosatelite"]["region"][language],
-                        period: languageJson["metadata"]["agricultura_agrosatelite"]["period"][language],
-                        scale: languageJson["metadata"]["agricultura_agrosatelite"]["scale"][language],
-                        system_coordinator: languageJson["metadata"]["agricultura_agrosatelite"]["system_coordinator"][language],
-                        cartographic_projection: languageJson["metadata"]["agricultura_agrosatelite"]["cartographic_projection"][language],
-                        cod_caracter: languageJson["metadata"]["agricultura_agrosatelite"]["cod_caracter"][language],
-                        fonte: languageJson["metadata"]["agricultura_agrosatelite"]["fonte"][language],
-                        contato: "lapig.cepf@gmail.com"
-                    },
+                    metadata: new Metadado("agricultura_agrosatelite", language).getObjectInstance(),
+                    // metadata: {
+                    //     title: languageJson["metadata"]["agricultura_agrosatelite"]["title"][language],
+                    //     description: languageJson["metadata"]["agricultura_agrosatelite"]["description"][language],
+                    //     format: languageJson["metadata"]["agricultura_agrosatelite"]["format"][language],
+                    //     region: languageJson["metadata"]["agricultura_agrosatelite"]["region"][language],
+                    //     period: languageJson["metadata"]["agricultura_agrosatelite"]["period"][language],
+                    //     scale: languageJson["metadata"]["agricultura_agrosatelite"]["scale"][language],
+                    //     system_coordinator: languageJson["metadata"]["agricultura_agrosatelite"]["system_coordinator"][language],
+                    //     cartographic_projection: languageJson["metadata"]["agricultura_agrosatelite"]["cartographic_projection"][language],
+                    //     cod_caracter: languageJson["metadata"]["agricultura_agrosatelite"]["cod_caracter"][language],
+                    //     fonte: languageJson["metadata"]["agricultura_agrosatelite"]["fonte"][language],
+                    //     contato: "lapig.cepf@gmail.com"
+                    // },
                     columnsCSV: "area_ha, classe, year",
                     downloadSHP: true,
                     downloadCSV: true

@@ -96,24 +96,6 @@
     "search_tooltip": "Consultar área por token.",
     "drawed_tooltip": "Analisar área desenhada no Mapa."
   },
-  "metadata": {
-    "title": "Metadados",
-    "description": "Descrição",
-    "format": "Formato",
-    "region": "Região",
-    "data": "Data",
-    "period": "Período",
-    "scale": "Escala",
-    "system_coordinator": "Sistemas de Referência e Coordenadas",
-    "cartographic_projection": "Projeção cartográfica",
-    "cod_caracter": "Codificação de caractere",
-    "coordinates": "Sistemas de Referência e Coordenadas",
-    "projection": "Projeção cartográfica",
-    "caracter": "Codificação de caractere",
-    "fonte": "Fonte",
-    "update": "Atualização",
-    "contato": "Contato"
-  },
   "legend": {
     "title": "Legendas",
     "move": "Mover Camada"
@@ -222,5 +204,37 @@
     "of": "de",
     "to": "até",
     "entries": "registros"
+  },
+  "metadata": {
+    "titles": {
+      "title": "Metadados",
+      "description": "Descrição",
+      "format": "Formato",
+      "region": "Região",
+      "data": "Data",
+      "period": "Período",
+      "scale": "Escala",
+      "system_coordinator": "Sistemas de Referência e Coordenadas",
+      "cartographic_projection": "Projeção cartográfica",
+      "cod_caracter": "Codificação de caractere",
+      "coordinates": "Sistemas de Referência e Coordenadas",
+      "projection": "Projeção cartográfica",
+      "caracter": "Codificação de caractere",
+      "fonte": "Fonte",
+      "update": "Atualização",
+      "contato": "Contato"
+    },
+    "agricultura_agrosatelite": {
+      "title": "Agricultura - Agrosatélite",
+      "description": "Dinâmica da expansão da área plantada com culturas anuais no Bioma Cerrado.",
+      "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
+      "region": "Bioma Cerrado, permitindo analisar as classes de uso do solo por outras regiões de interesse como: estados e municípios.",
+      "period": "2001; 2007; 2014",
+      "scale": "1:250.000",
+      "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
+      "cartographic_projection": "Universal Transversa de Mercator.",
+      "cod_caracter": "Latin 1",
+      "fonte": "Agrosatélite Geotecnologia Aplicada, Fundação Gordon and Betty Moore (Financiadores)"
+    }
   }
 }
