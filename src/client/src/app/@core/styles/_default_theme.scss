@@ -18,9 +18,8 @@ $background-sidebar: $primary;
 $font-family-sans-serif: 'Montserrat',
 sans-serif;
 
-$background-sidebar: #1d3430;
 $body-bg: lighten($primary, 10%);
-$font-size-base: 1rem; // Assumes the browser default, typically `16px`
+$font-size-base: 1rem;
 $font-size-lg: 1.25rem;
 $font-size-sm: .875rem;
 $font-size-xs: .75rem;
@@ -40,7 +39,7 @@ $layers-width: 3rem;
 $map-width: 100%;
 $right-sb-width: 20rem;
 
-$prefix: "--"; //Prefix string for custom CSS properties
+$prefix: "--";
 
 //Merges a variable name with $prefix
 @function custom-property-name($name) {
@@ -53,7 +52,6 @@ $prefix: "--"; //Prefix string for custom CSS properties
 }
 
 body {
-
   // Append SASS variables which are desired to be accesible:
   @include define-custom-property('primary', $primary);
 }

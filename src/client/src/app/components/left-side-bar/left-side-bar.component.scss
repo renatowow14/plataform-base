@@ -37,11 +37,12 @@
 
 
   .partners {
+    width: 50%;
+    padding-top: 17px;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-around;
     align-items: center;
-    margin-left: 20px;
-    margin-top: 20px;
+    justify-content: center;
 
     i {
       color: $background-sidebar;
@@ -527,6 +528,7 @@
       }
 
       .footer {
+
         &-drag {
           width: calc(100% - 12px);
           height: 6rem;
@@ -624,11 +626,12 @@
       }
 
       .partners {
+        width: 50%;
+        margin: 0 auto;
         display: flex;
-        justify-content: space-around;
         align-items: center;
-        margin-left: 20px;
-        margin-top: 20px;
+        justify-content: center;
+
 
         i {
           color: $primary;

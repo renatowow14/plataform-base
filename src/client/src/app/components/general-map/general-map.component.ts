@@ -6,7 +6,7 @@ import {
   Input,
   Output,
   OnInit,
-  SimpleChanges, AfterContentChecked
+  AfterContentChecked
 } from '@angular/core';
 import TileLayer from "ol/layer/Tile";
 import Map from 'ol/Map';
@@ -34,9 +34,9 @@ import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
 import { SelectItem, PrimeNGConfig, MessageService } from 'primeng/api';
-import Text from "ol/style/Text";
-import { Swipe } from "../../@core/interfaces/swipe";
+import { LayerSwipe } from "../../@core/interfaces/swipe";
 import { AreaService } from '../services/area.service';
+import Swipe from 'ol-ext/control/Swipe';
 
 @Component({
   selector: 'app-general-map',
@@ -84,7 +84,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   public lon: number;
   public classes: string;
   public swipeLayers: any[];
-  public swipeOptions: Swipe[];
+  public swipeOptions: LayerSwipe[];
+  public swiperControl: Swipe = new Swipe();
   public swipeLayer: any;
   public mapControls: Control;
 
@@ -454,11 +455,13 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   onClearSwipe($event) {
     this.valueSwipe = "";
     this.swipeLayer = {};
+    this.removeSwipe()
   }
 
   onSwipeSelectedLayer(ev) {
     this.swipeLayer = ev.layer.get('descriptorLayer');
     this.swipeLayer.visible = true;
+    this.addSwipe(ev.layer);
   }
 
   onChangeDescriptor() {
@@ -658,6 +661,12 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         this.layersTMS[layer.selectedType].setVisible(layer.visible);
 
         this.addLayersLegend(layer);
+        if(this.swiperControl.layers.length > 0){
+          if(layer.visible){
+            this.addLayersToLeftSideSwipe(layer);
+          }
+        }
+
       } else {
         if (layer.layer.get('type') === 'bmap') {
           this.map.getLayers().forEach(layer => {
@@ -695,17 +704,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   updateZIndex() {
-    // const first = this.map.getLayers().getArray().map(layer => layer.getZIndex()).filter(item => !isNaN(item));
-    // const max = Math.max(...first);
-    // const total = this.selectedLayers.length;
+    this.selectedLayers.reverse();
     this.selectedLayers.forEach((item, index) => {
       item.setZIndex(index + 1);
     });
-
-    // const layer = this.map.getLayers().getArray().find((l) => {
-    //   console.log(l)
-    //   return l.get('key') === item.get('key')
-    // });
   }
 
 
@@ -1188,6 +1190,32 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   onClearFilter(ev) {
     this.updateRegion(this.defaultRegion);
+  }
+
+  addSwipe(layer) {
+    this.selectedLayers.forEach(lyr => {
+      this.addLayersToLeftSideSwipe(lyr);
+    });
+    this.changeLayerVisibility({layer: layer.get('descriptorLayer'), updateSource: false})
+    this.swiperControl.addLayer(layer, true);
+    this.map.addControl(this.swiperControl);
+    setTimeout(() => {
+      this.map.updateSize()
+    });
+  }
+
+  removeSwipe() {
+    this.map.removeControl(this.swiperControl);
+  }
+  
+  addLayersToLeftSideSwipe(layer){
+    const leftLayers = this.map.getLayers().getArray().find(l => l.get('key') === layer.selectedType);
+    if(leftLayers){
+      this.swiperControl.addLayer(leftLayers);
+    }
+    setTimeout(() => {
+      this.map.updateSize()
+    });
   }
 
 }
