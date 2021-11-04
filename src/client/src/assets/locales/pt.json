@@ -1,12 +1,12 @@
 {
-  "basemans": {
-    "mapbox": "Geopolitico (MapBox)",
+  "basemaps": {
+    "mapbox": "Geopolítico",
     "bing": "Bing Maps",
     "google": "Google",
     "roads": "Estradas",
     "relief": "Relevo",
     "planet": "Planet",
-    "stadia": "Mapa Escuro"
+    "mapbox-dark": "Geopolítico Dark"
   },
   "controls": {
     "swipe": "Swipe",

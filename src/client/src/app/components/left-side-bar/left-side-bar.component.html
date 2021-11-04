@@ -7,14 +7,15 @@
       <ul #leftSidebar class="nav-list">
         <drag-scroll class="nav-list-drag" [scrollbar-hidden]="true" [drag-scroll-x-disabled]="true">
           <li (click)="onFilter()">
-            <div pRipple [pTooltip]="open ? '' : 'menu.filters_tooltip'  | translate " [class]="showFilter ? 'menu-active' : ''">
+            <div pRipple [pTooltip]="open ? '' : 'menu.filters_tooltip'  | translate "
+              [class]="showFilter ? 'menu-active' : ''">
               <i class='fg-map-search'></i>
               <span class="links_name">{{'menu.filters' | translate}}</span>
             </div>
           </li>
           <li *ngFor="let item of menu">
             <div pRipple [pTooltip]="open ? '' : 'menu.'+item.key+'_tooltip'  | translate " (click)="handleMenu(item)"
-                 [class]="handleMenuActive(item)">
+              [class]="handleMenuActive(item)">
               <i class='{{item.icon}}'></i>
               <span class="links_name">{{'menu.' + item.key | translate}}</span>
             </div>
@@ -23,20 +24,13 @@
       </ul>
       <ul class="nav-list footer">
         <div class="footer-drag">
-          <!--          <li>-->
-          <!--            <div [pTooltip]="open ? '' : 'menu.filters_tooltip'  | translate " (click)="handleMenu({key: 'filters'})"-->
-          <!--                 [class]="displayFilter ? 'menu-active' : ''">-->
-          <!--              <i class='fg-map-search'></i>-->
-          <!--              <span class="links_name">{{'menu.filters'  | translate}}</span>-->
-          <!--            </div>-->
-          <!--          </li>-->
-          <li  (click)="handleLang('pt')">
+          <li (click)="handleLang('pt')">
             <div [class]="lang == 'pt' ? 'lng lng-active' : 'lng'">
               <span class="lng_name">PT</span>
             </div>
             <span class="tooltip">Filtrar</span>
           </li>
-          <li (click)="handleLang('en')" >
+          <li (click)="handleLang('en')">
             <div [class]="lang == 'en' ? 'lng lng-active' : 'lng'">
               <span class="lng_name">EN</span>
             </div>
@@ -159,16 +153,16 @@
             </div>
             <div class="details">
               <div class="details-inner">
-                <div class="toggle" *ngFor="let map of basesmaps">
-                  <p-inputSwitch  styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(map.layer)"
-                                  [(ngModel)]="map.visible"></p-inputSwitch>
-                  <p class="inlineSwitchButton"> {{map.layer.get('label')}} </p>
+                <div class="toggle" *ngFor="let bmap of basesmaps">
+                  <p-inputSwitch  styleClass="inputSwitchClass" (onChange)="onChangeBaseMap(bmap)"
+                                  [(ngModel)]="bmap.checked"></p-inputSwitch>
+                  <p class="inlineSwitchButton"> {{bmap.name}} </p>
                   <br><br>
                 </div>
               </div>
             </div>
           </div>
-          <div [class]="optionsGroups.limits ? 'group-card group-card-active' :'group-card'">
+          <div *ngIf="limits.length > 0" [class]="optionsGroups.limits ? 'group-card group-card-active' :'group-card'">
             <div (click)="optionsGroups.limits = !optionsGroups.limits" class="abstract">
             <span>
                 <i class='bx bx-cog'></i>
@@ -179,22 +173,27 @@
             <div class="details">
               <div class="details-inner">
                 <div class="toggle" *ngFor="let limit of limits">
-                  <p-inputSwitch [(ngModel)]="limit.checked"></p-inputSwitch>
-                  <p class="inlineSwitchButton"> {{limit.nome}} </p>
-                  <br>
+                  <p-inputSwitch [(ngModel)]="limit.checked" styleClass="inputSwitchClass" (onChange)="onChangeLimit(limit)"></p-inputSwitch>
+                  <p class="inlineSwitchButton"> {{limit.get('label')}} </p>
+                  <br><br>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="footer">
-        <div class="partners">
-          <i class='bx bxl-c-plus-plus icon'></i>
-          <i class='bx bxl-c-plus-plus icon'></i>
-          <i class='bx bxl-c-plus-plus icon'></i>
+    <div class="footer">
+      <div class="partners">
+        <div class="">
+          <a href="https://www.lapig.iesa.ufg.br" target="_blank" class="navbar-brand"><img src="assets/logos/lapig.png"
+                                                                                            alt=""></a>
+        </div>
+        <div class="">
+          <a href="https://www.lapig.iesa.ufg.br" target="_blank" class="navbar-brand"><img
+            src="assets/logos/logo_ufg.png" alt=""></a>
         </div>
       </div>
+    </div>
     </p-sidebar>
 </section>
 
@@ -242,8 +241,8 @@
 
     </div>
     <div class="menu-item" *ngIf="currentMenu?.key == 'filters'">
-      <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results"
-                      (completeMethod)="search($event)"></p-autoComplete>
+      <p-autoComplete [(ngModel)]="textSearch" [suggestions]="results" (completeMethod)="search($event)">
+      </p-autoComplete>
     </div>
     <div class="menu-item" *ngIf="currentMenu?.key == 'options'">
 
@@ -252,10 +251,16 @@
   <div class="footer">
     <div class="partners">
       <i class='bx bxl-c-plus-plus icon'></i>
-      <i class='bx bxl-c-plus-plus icon'></i>
-      <i class='bx bxl-c-plus-plus icon'></i>
+      <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
+      <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-mb-4 padding-logos">
+        <a href="https://www.lapig.iesa.ufg.br" target="_blank" class="navbar-brand"><img src="assets/logos/lapig.png"
+            alt=""></a>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-mb-4 padding-logos">
+        <a href="https://www.lapig.iesa.ufg.br" target="_blank" class="navbar-brand"><img
+            src="assets/logos/logo_ufg.png" alt=""></a>
+      </div>
     </div>
   </div>
 </p-sidebar>
-
-

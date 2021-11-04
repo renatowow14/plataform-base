@@ -1,12 +1,12 @@
 {
     "basemans": {
-        "mapbox": "Geopolitico (MapBox)",
+        "mapbox": "Geopolitical",
         "bing": "Bing Maps",
         "google": "Google",
         "roads": "Roads",
         "relief": "Relief",
         "planet": "Planet",
-        "stadia": "Dark Mapa Stadia"
+        "mapbox-dark": "Dark Geopolitical"
     },
     "controls": {
         "swipe": "Swipe",
@@ -17,14 +17,14 @@
         "point": "Insert Point",
         "print": "Print Map",
         "draw_area": {
-          "title": "Drawn Geometries",
-          "feature": {
-            "point": "Point",
-            "polygon": "Polygon",
-            "remove_feature": "Remove Geometry"
-          },
-          "save": "Save",
-          "cancel": "Cancel"
+            "title": "Drawn Geometries",
+            "feature": {
+                "point": "Point",
+                "polygon": "Polygon",
+                "remove_feature": "Remove Geometry"
+            },
+            "save": "Save",
+            "cancel": "Cancel"
         },
         "details": {
             "title": "Controls Details",
@@ -49,9 +49,9 @@
         "title": "Menu",
         "opacity": "Opacity",
         "layer": {
-          "metadata": "Layer Metadata",
-          "down_shp": "Download SHP",
-          "down_csv": "Download CSV"
+            "metadata": "Layer Metadata",
+            "down_shp": "Download SHP",
+            "down_csv": "Download CSV"
         }
     },
     "dataSeries": {
@@ -126,10 +126,10 @@
         "limits": "Limits"
     },
     "table": {
-      "showing": "Showing",
-      "of": "of",
-      "to": "to",
-      "entries": "entries"
+        "showing": "Showing",
+        "of": "of",
+        "to": "to",
+        "entries": "entries"
     },
     "primeng": {
         "startsWith": "Starts with",

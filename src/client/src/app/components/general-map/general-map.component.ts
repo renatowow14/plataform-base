@@ -6,7 +6,7 @@ import {
   Input,
   Output,
   OnInit,
-  SimpleChanges, AfterContentChecked
+  AfterContentChecked
 } from '@angular/core';
 import TileLayer from "ol/layer/Tile";
 import Map from 'ol/Map';
@@ -34,9 +34,9 @@ import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
 import { SelectItem, PrimeNGConfig, MessageService } from 'primeng/api';
-import Text from "ol/style/Text";
-import { Swipe } from "../../@core/interfaces/swipe";
+import { LayerSwipe } from "../../@core/interfaces/swipe";
 import { AreaService } from '../services/area.service';
+import Swipe from 'ol-ext/control/Swipe';
 
 @Component({
   selector: 'app-general-map',
@@ -52,7 +52,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   @Input() set descriptor(value: Descriptor) {
-    if(value){
+    if (value) {
       this._descriptor = value;
       this.onChangeDescriptor();
     }
@@ -62,6 +62,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   @Output() onHide = new EventEmitter<any>();
   @Output() onMapReadyLeftSideBar = new EventEmitter<any>();
   @Output() onMapReadyRightSideBar = new EventEmitter<any>();
+  @Output() onBasemapsReady = new EventEmitter<any>();
+  @Output() onLimitsReady = new EventEmitter<any>();
 
   public innerHeigth: number;
   public options: any = {}
@@ -82,7 +84,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   public lon: number;
   public classes: string;
   public swipeLayers: any[];
-  public swipeOptions: Swipe[];
+  public swipeOptions: LayerSwipe[];
+  public swiperControl: Swipe = new Swipe();
   public swipeLayer: any;
   public mapControls: Control;
 
@@ -221,6 +224,21 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       {
         layer: new TileLayer({
           properties: {
+            key: 'mapbox-dark',
+            type: 'bmap',
+            visible: false,
+          },
+          source: new XYZ({
+            wrapX: false,
+            url:
+              'https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'
+          }),
+          visible: false
+        })
+      },
+      {
+        layer: new TileLayer({
+          properties: {
             key: 'bing',
             type: 'bmap',
             visible: false,
@@ -292,22 +310,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
           }),
           visible: false
         })
-      },
-      {
-        layer: new TileLayer({
-          properties: {
-            key: 'stadia',
-            type: 'bmap',
-            visible: false,
-          },
-          source: new XYZ({
-            transition: 2,
-            url:
-              'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png',
-          }),
-          visible: false
-        })
       }
+
     ];
     this.graticule = new Graticule({
       // the style to use for the lines, optional.
@@ -420,6 +424,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         layer.setVisible(false);
       }
     })
+    this.updateZIndex();
   }
 
   setSearchOptions() {
@@ -450,11 +455,13 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   onClearSwipe($event) {
     this.valueSwipe = "";
     this.swipeLayer = {};
+    this.removeSwipe()
   }
 
   onSwipeSelectedLayer(ev) {
     this.swipeLayer = ev.layer.get('descriptorLayer');
     this.swipeLayer.visible = true;
+    this.addSwipe(ev.layer);
   }
 
   onChangeDescriptor() {
@@ -497,7 +504,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         this.limitsNames.push(types)
       }
     }
-
+    this.onBasemapsReady.emit(this.basemapsAvaliable);
     this.createLayers();
   }
 
@@ -624,13 +631,18 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     for (let bmap of this.basemapsAvaliable) {
       this.layers.push(bmap.layer)
     }
-
+    let limitsLayers: TileLayer<any>[] = [];
     for (let limits of this.limitsNames) {
-      this.limitsTMS[limits.value] = this.createTMSLayer(limits, 'limit')
-      this.layers.push(this.limitsTMS[limits.value])
+      let layer = this.createTMSLayer(limits, 'limit');
+      this.limitsTMS[limits.value] = layer;
+      this.layers.push(this.limitsTMS[limits.value]);
+      limitsLayers.push(layer);
     }
 
+    this.onLimitsReady.emit(limitsLayers);
+
     this.getSwipeLayers();
+    this.updateZIndex();
   }
 
   changeLayerVisibility(ev) {
@@ -638,19 +650,44 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     if (updateSource) {
       this.updateSourceLayer(layer);
     } else {
-      if (layer.types) {
-        for (let layerType of layer.types) {
-          this.layersTMS[layerType.value].setVisible(false)
+      if (layer.hasOwnProperty('types') || layer.hasOwnProperty('selectedType')) {
+        if (layer.types) {
+          for (let layerType of layer.types) {
+            this.layersTMS[layerType.value].setVisible(false)
+          }
+        } else {
+          this.layersTMS[layer.value].setVisible(false)
         }
+        this.layersTMS[layer.selectedType].setVisible(layer.visible);
+
+        this.addLayersLegend(layer);
+        if(this.swiperControl.layers.length > 0){
+          if(layer.visible){
+            this.addLayersToLeftSideSwipe(layer);
+          }
+        }
+
       } else {
-        this.layersTMS[layer.value].setVisible(false)
+        if (layer.layer.get('type') === 'bmap') {
+          this.map.getLayers().forEach(layer => {
+            if (layer.get('type') === 'bmap') {
+              layer.setVisible(false)
+            }
+          });
+          const lay = this.map.getLayers().getArray().find(l => l.get('key') === layer.layer.get('key'));
+          lay.setVisible(true);
+        } else if (layer.layer.get('type') === 'limit') {
+          this.map.getLayers().forEach(layer => {
+            if (layer.get('type') === 'limit') {
+              layer.setVisible(false)
+            }
+          });
+          const lay = this.map.getLayers().getArray().find(l => l.get('key') === layer.layer.get('key'));
+          lay.setVisible(true);
+        }
       }
-      this.layersTMS[layer.selectedType].setVisible(layer.visible);
-
-      this.addLayersLegend(layer);
-
-
     }
+    this.updateZIndex();
   }
 
   addLayersLegend(layer) {
@@ -664,14 +701,15 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.selectedLayers.forEach((item, index) => {
       item.visible = item.get('visible');
     });
-    this.updateZIndex();
   }
 
   updateZIndex() {
+    this.selectedLayers.reverse();
     this.selectedLayers.forEach((item, index) => {
-      item.setZIndex(index + 1)
+      item.setZIndex(index + 1);
     });
   }
+
 
   onChangeTransparency(ev) {
     let { layer, opacity } = ev;
@@ -679,7 +717,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     let layerTMS = this.layersTMS[layer.value];
     if (layerTMS) {
       layerTMS.setOpacity(op);
-    }else{
+    } else {
       layerTMS = this.layersTMS[layer.selectedType];
       layerTMS.setOpacity(op);
     }
@@ -880,6 +918,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     if (removeInteraction) {
       this.removeInteraction();
     }
+    this.vector.setZIndex(1000000);
     this.map.addLayer(this.vector);
     this.interaction = interaction;
     if (type === 'Polygon') {
@@ -1151,6 +1190,32 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   onClearFilter(ev) {
     this.updateRegion(this.defaultRegion);
+  }
+
+  addSwipe(layer) {
+    this.selectedLayers.forEach(lyr => {
+      this.addLayersToLeftSideSwipe(lyr);
+    });
+    this.changeLayerVisibility({layer: layer.get('descriptorLayer'), updateSource: false})
+    this.swiperControl.addLayer(layer, true);
+    this.map.addControl(this.swiperControl);
+    setTimeout(() => {
+      this.map.updateSize()
+    });
+  }
+
+  removeSwipe() {
+    this.map.removeControl(this.swiperControl);
+  }
+  
+  addLayersToLeftSideSwipe(layer){
+    const leftLayers = this.map.getLayers().getArray().find(l => l.get('key') === layer.selectedType);
+    if(leftLayers){
+      this.swiperControl.addLayer(leftLayers);
+    }
+    setTimeout(() => {
+      this.map.updateSize()
+    });
   }
 
 }

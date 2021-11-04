@@ -1533,7 +1533,7 @@
 				"pt": "Sano, E. E., Rodrigues, A. A., Martins, E. S., Bettiol, G. M., Bustamante, M. M., Bezerra, A. S., Couto Jr., A. F., Vasconcelos, V., Schüler, J., Bolfe, E. L. 2019. Cerrado ecorregions: A spatial framework to assess and prioritize Brazilian savanna environmentak diversity for conservation. Journal of environmental management, 232, 818-828.",
 				"en": "Sano, E. E., Rodrigues, A. A., Martins, E. S., Bettiol, G. M., Bustamante, M. M., Bezerra, A. S., Couto Jr., A. F., Vasconcelos, V., Schüler, J., Bolfe, E. L. 2019. Cerrado ecorregions: A spatial framework to assess and prioritize Brazilian savanna environmentak diversity for conservation. Journal of environmental management, 232, 818-828."
 			}
-		}, 
+		},
 		"bi_ce_area_conflito_250_cpt": {
 			"title": {
 				"pt": "Áreas em conflitos por terra",
@@ -2492,15 +2492,15 @@
 			"pt": "Landsat - 2018",
 			"en": "Landsat - 2018"
 		},
-		"stadia": {
-			"pt": "Mapa Escuro Stadia",
-			"en": "Dark Mapa Stadia"
+		"mapbox-dark": {
+			"pt": "Geopolítico Dark",
+			"en": "Dark Geopolitical"
 		}
 	},
 	"limits": {
 		"bioma": {
-			"pt": "Bioma Cerrado",
-			"en": "Cerrado Biome"
+			"pt": "Biomas",
+			"en": "Biomes"
 		},
 		"estados": {
 			"pt": "Estados",
