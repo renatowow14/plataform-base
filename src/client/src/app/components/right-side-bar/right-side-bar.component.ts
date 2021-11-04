@@ -325,8 +325,8 @@ export class RightSideBarComponent implements OnInit {
     this.DeforestationChart = {
       dataDeforestation: this.timeSeriesResultDeforestation.data,
       optionsDeforestation: this.optionsTimeSeriesDeforestation,
-      typeDeforestation: this.timeSeriesResultDeforestation.type
-    }
+      typeDeforestation: this.timeSeriesResultDeforestation.type,
+  }
     console.log(this.DeforestationChart);
   }
 
@@ -384,6 +384,7 @@ export class RightSideBarComponent implements OnInit {
     this.chartService.deforestation(textParam).subscribe(result => {
       tempResultDeforestation = result;
       for (let graphic of tempResultDeforestation) {
+        
         graphic.data = {
           labels: graphic.indicators.map(element => element.label),
           datasets: [
@@ -393,12 +394,14 @@ export class RightSideBarComponent implements OnInit {
               fill: false,
               borderColor: '#289628',
               backgroundColor: '#289628'
-            }
+             
+            }          
           ],
 
-        };
+        }
 
       }
+      
       this.timeSeriesResultDeforestation = tempResultDeforestation[0];
     }, error => {
       console.log(error)
@@ -429,11 +432,11 @@ export class RightSideBarComponent implements OnInit {
     this.optionsTimeSeriesDeforestation = {
       responsive: true,
       plugins: {
-        tooltips: {
+        tooltip: {
           callbacks: {
-            label(tooltipItem, data) {
+            label: function(tooltipItem, data) {
               let percent = parseFloat(
-                data['datasets'][0]['data'][tooltipItem['index']]
+                data['datasets'][1]['data'][tooltipItem['index']]
               ).toLocaleString('de-DE');
               return percent + ' km²';
             }
@@ -498,6 +501,7 @@ export class RightSideBarComponent implements OnInit {
           ],
 
         };
+        
 
 
       }
@@ -535,7 +539,7 @@ export class RightSideBarComponent implements OnInit {
       plugins: {
         tooltips: {
           callbacks: {
-            label(tooltipItem, data) {
+            label: function(tooltipItem, data) {
               let percent = parseFloat(
                 data['datasets'][0]['data'][tooltipItem['index']]
               ).toLocaleString('de-DE');
