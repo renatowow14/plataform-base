@@ -45,7 +45,7 @@ position="right"
   <button  class="reportButton"  mat-icon-button>
     <mat-icon>text_snippet</mat-icon>
 </button>
-<h5 class="chart-region inline"> BRASIL</h5>
+<h5 class="chart-region inline"> {{defaultRegion.text}}</h5>
 </div>
 </div>
 </div>
@@ -63,7 +63,7 @@ position="right"
       <div class="details-inner">
 
         <div class="margin">
-          <button class="matButton" color="primary" (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+          <button class="matButton" color="primary" (click)="openCharts(DeforestationChart.dataDeforestation, DeforestationChart.typeDeforestation, DeforestationChart.optionsDeforestation)" mat-icon-button>
               <mat-icon>aspect_ratio</mat-icon>
           </button>
           <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
@@ -78,7 +78,7 @@ position="right"
    </div>
 
   <div  [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'">
-    <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="triggerSeriesChartLulc($event)">
+    <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="triggerSeriesChartLulc()">
       <span>
         <i class='bx bx-trending-up'></i>
         <div class="group-label">Uso do solo</div>
@@ -101,7 +101,7 @@ position="right"
           </p-tabPanel>
           <p-tabPanel header="Gráfico 2">
             <div class="margin">
-              <button class="matButton" color="primary" (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+              <button class="matButton" color="primary" (click)="openCharts(LulcChart2.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
                   <mat-icon>aspect_ratio</mat-icon>
               </button>
               <h4 class="graphicTitle"> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o que representa 39,40 % da sua área total </h4>
@@ -110,7 +110,7 @@ position="right"
 
 
             <br><br>
-            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
+            <p-chart *ngIf="LulcChart2.dataLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
 
           </p-tabPanel>
 
@@ -121,7 +121,7 @@ position="right"
 
 
    <div  [class]="expendGroup3 ? 'group-card group-card-active' :'group-card'">
-    <div (click)="expendGroup3 = !expendGroup3" class="abstract" (click)="triggerSeriesChartLulc($event)">
+    <div (click)="expendGroup3 = !expendGroup3" class="abstract" (click)="triggerSeriesChartLulc()">
       <span>
         <i class='bx bx-trending-up'></i>
         <div class="group-label">Tabela</div>
@@ -174,11 +174,13 @@ position="right"
   [resizable]="false"
   [appendTo]="'body'"
   [modal]="true"
-  [header]="'sdfsfjkhbsdfbsjhkdf'"
+  [header]="'Gráficos'"
   [(visible)]="displayFullScreenCharts"
   [style]="{width: '50vw'}"
 >
-  <p-chart [type]="chartObject.typeDeforestation" [responsive]="true" [data]="chartObject.dataDeforestation" [options]="chartObject.optionsDeforestation"></p-chart>
+
+<p-chart *ngIf="ob.type" [type]="ob.type" [responsive]="true" [data]="ob.data" [options]="ob.options"></p-chart>
+
 </p-dialog>
 
 

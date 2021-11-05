@@ -72,6 +72,7 @@ module.exports = function(app) {
         var chartResult = [{
                 "id": "uso_solo_terraclass",
                 "title": "Terraclass",
+               // "resumo": languageJson["resumo"].replace('_municipio_', municipio).replace('percent', percent),
                 "getText": function(chart) {
 
                     var label = chart['indicators'][0]["label"]
@@ -151,7 +152,6 @@ module.exports = function(app) {
             chart['text'] = chart.getText(chart)
 
         }
-
         response.send(chartResult)
         response.end();
 

@@ -22,6 +22,7 @@
     [openMenu]="openMenu"
     [displayLayers]="showLayers"
     (onLimitsReady)="leftSideBar.setLimits($event)"
+    (onChangeRegion)="rightSideBar.updateStatistics($event)"
     (onBasemapsReady)="leftSideBar.setBasemaps($event)"
     (onMapReadyLeftSideBar)="leftSideBar.setMap($event)"
     (onMapReadyRightSideBar)="rightSideBar.setMap($event)"

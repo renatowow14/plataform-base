@@ -26,7 +26,7 @@ import Map from 'ol/Map';
 export class RightSideBarComponent implements OnInit {
 
   @Output() onMenuSelected = new EventEmitter<any>();
-  @Output() onSideBarToggle = new EventEmitter<boolean>()
+  @Output() onSideBarToggle = new EventEmitter<boolean>();
   @Input() descriptor: any;
   @Input() set displayOptions(value: boolean) {
     this.onSideBarToggle.emit(value);
@@ -55,6 +55,7 @@ export class RightSideBarComponent implements OnInit {
   public changeTabSelected = ""
   public data: any;
   public DeforestationChart: any;
+  public ob: any = {};
   public LulcChart: any;
   public LulcChart2: any;
   public userAppData2: any;
@@ -111,7 +112,7 @@ export class RightSideBarComponent implements OnInit {
 
     this.defaultRegion = {
       type: 'biome',
-      text: 'Cerrado',
+      text: 'BRASIL',
       value: 'Cerrado',
       area_region: 2040047.67930316,
       regionTypeBr: 'Bioma'
@@ -271,7 +272,8 @@ export class RightSideBarComponent implements OnInit {
   }
 
   openCharts(data, type, options) {
-    let ob = {
+    let ob = {};
+     ob = {
        // title: title,
        // description: description,
       type: type,
@@ -279,7 +281,10 @@ export class RightSideBarComponent implements OnInit {
       options: options,
     }
     this.displayFullScreenCharts = true;
-    this.chartObject = this.DeforestationChart;
+
+    this.ob = ob;
+
+    console.log(this.ob);
     // this.dialog.open(ChartsComponent, {
     //   width: 'calc(100% - 20em)',
     //   height: 'calc(100% - 10em)',
@@ -315,7 +320,7 @@ export class RightSideBarComponent implements OnInit {
     return this.customers ? this.first === 0 : true;
   }
 
-  triggerSeriesChartLulc(event: Event) {
+  triggerSeriesChartLulc() {
     this.LulcChart = {
       dataLulc: this.timeSeriesResultLulc.data,
       optionsLulc: this.optionsTimeSeriesLulc,
@@ -439,6 +444,7 @@ export class RightSideBarComponent implements OnInit {
 
     };*/
     this.DeforestationChart = {};
+    this.ob = {};
 
     this.optionsTimeSeriesDeforestation = {
       responsive: true,
@@ -487,18 +493,28 @@ export class RightSideBarComponent implements OnInit {
 
   }
 
+  updateStatistics(region) {
+   this.defaultRegion = region;
+   this.updateLulcTimeSeries();
+   this.triggerSeriesChartLulc();
+  }
+
   updateLulcTimeSeries() {
+    
     let params: string[] = [];
 
-    // params.push('lang=' + this.lang)
-    // params.push('typeRegion=' + this.defaultRegion)
-    // params.push('textRegion=')
+     params.push('lang=' + this.lang);
+     params.push('typeRegion=' + this.defaultRegion.type);
+     params.push('textRegion=' + this.defaultRegion.text);
+
     let textParam = params.join('&');
     let tempResultLulc: any[] = [];
-
+  
     this.chartService.lulc(textParam).subscribe(result => {
+  
       tempResultLulc = result;
       for (let graphic of tempResultLulc) {
+       
         graphic.data = {
           labels: graphic.indicators.map(element => element.label),
           datasets: [
@@ -512,10 +528,9 @@ export class RightSideBarComponent implements OnInit {
           ],
 
         };
-        
-
 
       }
+      console.log("result:", tempResultLulc);
       this.timeSeriesResultLulc = tempResultLulc[0];
       this.timeSeriesResultLulc2 = tempResultLulc[1];
     }, error => {
