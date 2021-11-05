@@ -16,7 +16,7 @@ load('config.js', { 'verbose': false })
     .then('middleware')
     .into(app);
 
-app.database.client.init(function() {
+app.database.client.init(function () {
     app.use(cookie);
 
     app.use(compression());
@@ -26,7 +26,7 @@ app.database.client.init(function() {
 
     app.use(requestTimeout({
         'timeout': 2000 * 60 * 30,
-        'callback': function(err, options) {
+        'callback': function (err, options) {
             let response = options.res;
             if (err) {
                 util.log('Timeout: ' + err);
@@ -39,7 +39,7 @@ app.database.client.init(function() {
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json({ limit: '1gb' }));
 
-    app.use(function(error, request, response, next) {
+    app.use(function (error, request, response, next) {
         console.log('ServerError: ', error.stack);
         next();
     });
@@ -47,17 +47,18 @@ app.database.client.init(function() {
     load('models', { 'verbose': false })
         .then('controllers')
         .then('routes')
+        .then('utils/language.js')
         .into(app);
 
-    app.database.client.init_general(function() {});
+    app.database.client.init_general(function () { });
 
-    const httpServer = http.listen(app.config.port, function() {
+    const httpServer = http.listen(app.config.port, function () {
         console.log('Plataform Base Server @ [port %s] [pid %s]', app.config.port, process.pid.toString());
     });
 
-    [`exit`, `uncaughtException`, ].forEach((event) => {
+    [`exit`, `uncaughtException`,].forEach((event) => {
         if (event === 'uncaughtException') {
-            process.on(event, (e) => {})
+            process.on(event, (e) => { })
         } else {
             process.on(event, (e) => {
                 httpServer.close(() => process.exit())
