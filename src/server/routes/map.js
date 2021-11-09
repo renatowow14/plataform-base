@@ -12,5 +12,7 @@ module.exports = function (app) {
     app.get('/service/map/cars', dataInjector);
     app.get('/service/map/ucs', dataInjector);
 
+    app.get('/service/map/ndescriptor', map.new_descriptor);
+
 
 }

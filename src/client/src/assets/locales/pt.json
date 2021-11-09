@@ -1,13 +1,4 @@
 {
-  "basemaps": {
-    "mapbox": "Geopolítico",
-    "bing": "Bing Maps",
-    "google": "Google",
-    "roads": "Estradas",
-    "relief": "Relevo",
-    "planet": "Planet",
-    "mapbox-dark": "Geopolítico Dark"
-  },
   "controls": {
     "swipe": "Swipe",
     "search": "Filtros do Mapa",
@@ -205,6 +196,168 @@
     "to": "até",
     "entries": "registros"
   },
+  "descriptor_labels": {
+    "groups": {
+      "agropecuaria": {
+        "labelGroup": "Agropecuária",
+        "layers": {
+          "agricultura": {
+            "labelLayer": "Agricultura",
+            "types": {
+              "agricultura_agrosatelite": {
+                "viewValueType": "Agrosatélite",
+                "filters": {
+                  "year=2001": 2001
+                },
+                "metadata": {
+                  "title": "Agricultura - Agrosatélite",
+                  "description": "Dinâmica da expansão da área plantada com culturas anuais no Bioma Cerrado.",
+                  "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
+                  "region": "Bioma Cerrado, permitindo analisar as classes de uso do solo por outras regiões de interesse como: estados e municípios.",
+                  "period": "2001; 2007; 2014",
+                  "scale": "1:250.000",
+                  "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
+                  "cartographic_projection": "Universal Transversa de Mercator.",
+                  "cod_caracter": "Latin 1",
+                  "fonte": "Agrosatélite Geotecnologia Aplicada, Fundação Gordon and Betty Moore (Financiadores)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "imagens": {
+        "labelGroup": "Mosaico de Imagens",
+        "layers": {
+          "satelite": {
+            "labelLayer": "Satélite",
+            "types": {
+              "planet": {
+                "viewValueType": "Planet",
+                "filters": {
+                  "global_quarterly_2016q1_mosaic": "2016/1ºTri"
+                },
+                "metadata": {
+                  "title": "Imagens de Satélite: PLANET",
+                  "description": "Com centenas de satélites em órbita a Planet é capaz de obter imagens com resolução de 3 metros de qualquer local da Terra diariamente.",
+                  "format": "Serviço Consumido do Norway’s International Climate & Forests Initiative",
+                  "region": "Global - O Mundo todo.",
+                  "period": "2016 ~ até hoje",
+                  "scale": "1:250.000",
+                  "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
+                  "cartographic_projection": "Universal Transversa de Mercator.",
+                  "cod_caracter": "Latin 1",
+                  "fonte": "Planet Scope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "areas_especiais": {
+        "labelGroup": "Áreas especiais",
+        "layers": {
+          "terras_indigenas_layer": {
+            "labelLayer": "Terras Indígenas",
+            "types": {
+              "limites_terras_indigenas": {
+                "viewValueType": "INCRA"
+              },
+              "metadata": {
+                "title": "Terras Indígenas (TI)",
+                "description": "Limite das terras indígenas brasileiras.",
+                "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
+                "region": "Brasil",
+                "period": "2017",
+                "scale": "ND",
+                "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
+                "cartographic_projection": "Universal Transversa de Mercator.",
+                "cod_caracter": "UTF-8",
+                "fonte": "Fundação Nacional do Índio (FUNAI)"
+              }
+            }
+          },
+          "assentamentos_layer": {
+            "labelLayer": "Assentamentos",
+            "types": {
+              "assentamentos": {
+                "viewValueType": "INCRA",
+                "metadata": {
+                  "title": "Assentamentos",
+                  "description": "Conjunto de unidades agrícolas, instaladas pelo Incra em um imóvel rural.",
+                  "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
+                  "region": "Bioma Cerrado.",
+                  "period": "",
+                  "scale": "",
+                  "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
+                  "cartographic_projection": "Universal Transversa de Mercator.",
+                  "cod_caracter": "Latin 1",
+                  "fonte": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "areas_declaradas": {
+        "labelGroup": "Áreas Declaradas",
+        "layers": {
+          "propriedades_rurais": {
+            "labelLayer": "CAR - Prop. Rurais",
+            "types": {
+              "geo_car_imovel": {
+                "viewValueType": "SICAR"
+              }
+            }
+          },
+          "planejamento_hidrico": {
+            "labelLayer": "Planejamento Hídrico",
+            "types": {
+              "unidades_planejamento_hidrico": {
+                "viewValueType": "Plan. Hídrico"
+              }
+            }
+          }
+        }
+      }
+    },
+    "basemaps": {
+      "label": "Basemaps",
+      "types": {
+        "mapbox": "Geopolítico",
+        "bing": "Bing Maps",
+        "google": "Google",
+        "roads": "Estradas",
+        "relief": "Relevo",
+        "planet": "Planet",
+        "mapbox-dark": "Geopolítico Dark"
+      }
+    },
+    "limits": {
+      "label": "Limites",
+      "types": {
+        "estados": "Estados do Brasil",
+        "municipios": "Municípios do Brasil",
+        "biomas": "Biomas do Brasil",
+        "limites_cartas_ibge": "Cartas do IBGE"
+      }
+    }
+  },
+  "labels": {
+    "layertype": {
+      "typeLabel": {
+        "type": "Tipo",
+        "quantity": "Quantidade",
+        "area_planted": "Área Plantada",
+        "production": "Produção",
+        "source": "Fonte"
+      },
+      "filterLabel": {
+        "year": "Ano",
+        "period": "Período"
+      }
+    }
+  },
   "metadata": {
     "titles": {
       "title": "Metadados",
@@ -223,18 +376,11 @@
       "fonte": "Fonte",
       "update": "Atualização",
       "contato": "Contato"
-    },
-    "agricultura_agrosatelite": {
-      "title": "Agricultura - Agrosatélite",
-      "description": "Dinâmica da expansão da área plantada com culturas anuais no Bioma Cerrado.",
-      "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
-      "region": "Bioma Cerrado, permitindo analisar as classes de uso do solo por outras regiões de interesse como: estados e municípios.",
-      "period": "2001; 2007; 2014",
-      "scale": "1:250.000",
-      "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
-      "cartographic_projection": "Universal Transversa de Mercator.",
-      "cod_caracter": "Latin 1",
-      "fonte": "Agrosatélite Geotecnologia Aplicada, Fundação Gordon and Betty Moore (Financiadores)"
     }
+  },
+  "region_types": {
+    "city": "Município",
+    "state": "Estado",
+    "biome": "Bioma"
   }
 }

@@ -44,10 +44,10 @@ app.database.client.init(function () {
         next();
     });
 
-    load('models', { 'verbose': false })
-        .then('controllers')
+    load('controllers')
+        // .then('models', { 'verbose': false })
         .then('routes')
-        .then('utils/language.js')
+        .then('utils')
         .into(app);
 
     app.database.client.init_general(function () { });
