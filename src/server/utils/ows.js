@@ -1,6 +1,6 @@
 const config = require('../config.js')
 
-module.exports = class Ows {
+module.exports = new class Ows {
 
     constructor(
         typeShape
@@ -149,7 +149,7 @@ module.exports = class Ows {
 
                 let length = this._msFilter.length - 1;
 
-                this._msFilter.forEach(function(item, index) {
+                this._msFilter.forEach(function (item, index) {
                     if (index < length) {
                         if (item._attr === "default") {
                             url += item._value + "%20AND%20";
