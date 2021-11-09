@@ -44,7 +44,6 @@ import { registerLocaleData, DatePipe, DecimalPipe } from '@angular/common';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RippleModule } from 'primeng/ripple';
-// import { ChartsComponent } from './right-side-bar/charts/charts.component';
 
 registerLocaleData(localePt);
 

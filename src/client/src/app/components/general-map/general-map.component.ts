@@ -662,8 +662,12 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
         this.addLayersLegend(layer);
         if(this.swiperControl.layers.length > 0){
-          if(layer.visible){
-            this.addLayersToLeftSideSwipe(layer);
+
+          const existInSwipe = this.swiperControl.layers.find(l => {
+            return l.layer.get('key') === layer.selectedType
+          });
+          if(layer.visible && !existInSwipe ){
+            this.swiperControl.addLayer(layer, false);
           }
         }
 
@@ -704,7 +708,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   updateZIndex() {
-    this.selectedLayers.reverse();
     this.selectedLayers.forEach((item, index) => {
       item.setZIndex(index + 1);
     });
@@ -1193,13 +1196,11 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   addSwipe(layer) {
-    this.selectedLayers.forEach(lyr => {
-      this.addLayersToLeftSideSwipe(lyr);
-    });
+    this.addLayersToLeftSideSwipe();
     this.changeLayerVisibility({layer: layer.get('descriptorLayer'), updateSource: false})
     this.swiperControl.addLayer(layer, true);
-    this.map.addControl(this.swiperControl);
     setTimeout(() => {
+      this.map.addControl(this.swiperControl);
       this.map.updateSize()
     });
   }
@@ -1207,11 +1208,11 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   removeSwipe() {
     this.map.removeControl(this.swiperControl);
   }
-  
-  addLayersToLeftSideSwipe(layer){
-    const leftLayers = this.map.getLayers().getArray().find(l => l.get('key') === layer.selectedType);
+
+  addLayersToLeftSideSwipe(){
+    const leftLayers = this.map.getLayers().getArray().find(l => l.get('type') === 'layer');
     if(leftLayers){
-      this.swiperControl.addLayer(leftLayers);
+      this.swiperControl.addLayer(leftLayers, false);
     }
     setTimeout(() => {
       this.map.updateSize()

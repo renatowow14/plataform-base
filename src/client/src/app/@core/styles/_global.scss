@@ -142,11 +142,6 @@ li:after {
     bottom: 21px !important;
 }
 
-//.ol-scale-text,
-//.ol-scale-step-text {
-//    text-shadow: unset !important;
-//}
-
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
     color: $primary !important;;
 }
@@ -234,6 +229,107 @@ table tr{
   border-bottom: 5px solid white;
   border-top: 5px solid white;
   border-radius: 5px;
+}
+
+.map .ol-tooltip {
+  position: relative;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  color: white;
+  padding: 4px 8px;
+  opacity: 0.7;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.map .ol-tooltip-measure {
+  opacity: 1;
+  font-weight: bold;
+}
+
+.map .ol-tooltip-static {
+  background-color: #ffcc33;
+  color: black;
+  border: 1px solid white;
+}
+
+.ol-popup {
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  bottom: 12px;
+  left: -50px;
+  min-width: 400px;
+  color: black;
+}
+
+.ol-popup:after, .ol-popup:before {
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.ol-popup:after {
+  border-top-color: white;
+  border-width: 10px;
+  left: 48px;
+  margin-left: -10px;
+}
+
+.ol-popup:before {
+  border-top-color: #cccccc;
+  border-width: 11px;
+  left: 48px;
+  margin-left: -11px;
+}
+
+.ol-popup h2 {
+  margin-top: 0;
+}
+
+.ol-popup .latitude {
+  margin-bottom: 0;
+}
+
+.ol-popup-closer {
+  text-decoration: none !important;
+  position: absolute;
+  top: 2px;
+  right: 8px;
+}
+
+.ol-popup-closer:after {
+  content: "✖";
+}
+
+.ol-popup .ol-popup-info {
+  background-color: #fff;
+  opacity: 1;
+  color: black;
+  border: 1px solid #000;
+}
+
+.map .ol-tooltip-measure:before,
+.map .ol-tooltip-static:before {
+  border-top: 6px solid rgba(0, 0, 0, 0.5);
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  margin-left: -7px;
+  left: 50%;
+}
+
+.map .ol-tooltip-static:before {
+  border-top-color: #ffcc33;
 }
 
 

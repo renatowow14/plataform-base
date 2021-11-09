@@ -5,6 +5,7 @@ import {getArea, getLength} from 'ol/sphere';
 import {Geometry, LineString, Polygon} from 'ol/geom';
 import {unByKey} from 'ol/Observable';
 import { Ruler } from "../interfaces";
+import { DecimalPipe } from '@angular/common';
 
 abstract class RulerControl {
 
@@ -12,10 +13,13 @@ abstract class RulerControl {
 
     private measureTooltip: Overlay;
 
+    protected decimalPipe: DecimalPipe;
+
     // @ts-ignore
     private sketch: Feature;
 
     protected constructor(protected component: Ruler, private type: string) {
+      this.decimalPipe = new DecimalPipe('pt-BR');
     }
 
     getDraw(): Draw {
@@ -80,6 +84,9 @@ abstract class RulerControl {
                 }),
                 image: new CircleStyle({
                     radius: 7,
+                    stroke: new Stroke({
+                      color: '#ffcc33',
+                    }),
                     fill: new Fill({
                         color: '#ffcc33',
                     }),
@@ -90,7 +97,7 @@ abstract class RulerControl {
             // @ts-ignore
             this.measureTooltipElement = null;
             this.sketch.overlay = this.measureTooltip;
-            this.sketch.regua = true;
+            this.sketch.ruler = true;
 
             // unset sketch
             this.sketch = null;
@@ -138,11 +145,11 @@ export class RulerCtrl extends RulerControl {
         let output: string;
 
         if (length > 1000) {
-            output = Math.round((length / 1000) * 100) / 100 + ' ' + 'km';
+            output = this.decimalPipe.transform(Math.round((length / 1000) * 100) / 100, '1.2-2')  + ' ' + 'km';
         } else if (length >= 1) {
-            output = Math.round(length * 100) / 100 + ' ' + 'm';
+            output = this.decimalPipe.transform(Math.round(length * 100) / 100, '1.2-2')  + ' ' + 'm';
         } else {
-            output = Math.round(length * 10000) / 100 + ' ' + 'cm';
+            output = this.decimalPipe.transform( Math.round(length * 10000) / 100, '1.2-2') + ' ' + 'cm';
         }
 
         return output;
@@ -151,16 +158,17 @@ export class RulerCtrl extends RulerControl {
 
 export function calculaArea(area: number): string {
     let output: string;
+    const decimalPipe: DecimalPipe = new DecimalPipe('pt-BR');
 
     if (area > 100000) {
-        output = Math.round((area / 100000) * 100) / 100 + ' ' + 'km<sup>2</sup>';
+        output = decimalPipe.transform( Math.round((area / 100000) * 100) / 100, '1.2-2')  + ' ' + 'km<sup>2</sup>';
     } else if (area >= 10) {
-        output = Math.round((area / 10) * 100) / 100 + ' ' + 'm<sup>2</sup>';
+        output = decimalPipe.transform( Math.round((area / 10) * 100) / 100, '1.2-2')  + ' ' + 'm<sup>2</sup>';
     } else {
-        output = Math.round(area * 100000) / 100 + ' ' + 'cm<sup>2</sup>';
+        output = decimalPipe.transform( Math.round(area * 100000) / 100, '1.2-2') + ' ' + 'cm<sup>2</sup>';
     }
 
-    output += ' ou ' + Math.round((area / 100000) * 10000) / 100 + ' ' + 'ha';
+    output += ' ou ' + decimalPipe.transform( Math.round((area / 100000) * 10000) / 100, '1.2-2') + ' ' + 'ha';
 
     return output;
 }
