@@ -11,9 +11,6 @@
       <ol-control control="Zoom">
       </ol-control>
 
-      <!-- add graticule-->
-      <ol-layer [layer]="graticule"></ol-layer>
-
       <!-- add layers-->
       <ol-layer *ngFor="let layer of layers" [layer]="layer"></ol-layer>
 

@@ -137,6 +137,24 @@ li:after {
         }
     }
 }
+.ol-compassctrl.top {
+  top: 4em;
+  right: 2em;
+  width: 80px;
+  height: 80px;
+  //transform: translate(0,-50%);
+}
+
+
+.p-checkbox {
+  .p-checkbox-box.p-highlight{
+    border-color: $primary;
+    background: $primary;
+  }
+  &:hover{
+    background: $primary;
+  }
+}
 
 .ol-scale-bar {
     bottom: 21px !important;

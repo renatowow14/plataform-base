@@ -14,7 +14,7 @@ import {ChartService} from '../services/charts.service';
 import {MatDialog} from '@angular/material/dialog';
 import {CustomerService} from '../services/customer.service';
 import {Customer} from 'src/app/@core/interfaces/customer';
-import {Layer, Legend, Menu} from "../../@core/interfaces";
+import {Descriptor, Layer, Legend, Menu} from "../../@core/interfaces";
 import Map from 'ol/Map';
 
 @Component({
@@ -27,7 +27,7 @@ export class RightSideBarComponent implements OnInit {
 
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onSideBarToggle = new EventEmitter<boolean>()
-  @Input() descriptor: any;
+  @Input() descriptor: Descriptor;
   @Input() set displayOptions(value: boolean) {
     this.onSideBarToggle.emit(value);
     this._displayOptions = value;

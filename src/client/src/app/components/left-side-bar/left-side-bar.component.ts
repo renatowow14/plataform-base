@@ -11,9 +11,21 @@ import {
 } from '@angular/core';
 
 import {LocalizationService} from "../../@core/internationalization/localization.service";
-import {Legend, Menu, Layer} from "../../@core/interfaces";
+import {
+  Legend,
+  Menu,
+  Descriptor,
+  DescriptorType,
+  DescriptorLayer,
+  DescriptorMetadata,
+  Metadata
+} from "../../@core/interfaces";
 import {MessageService} from "primeng/api";
 import {MenuItem} from 'primeng/api';
+import {Fill, Stroke, Style} from "ol/style";
+import Text from "ol/style/Text";
+import Graticule from 'ol-ext/control/Graticule';
+import Compass from 'ol-ext/control/Compass';
 
 @Component({
   selector: 'app-left-side-bar',
@@ -23,7 +35,7 @@ import {MenuItem} from 'primeng/api';
 })
 
 export class LeftSideBarComponent implements AfterViewInit {
-  @Input() descriptor: any;
+  @Input() descriptor: Descriptor;
   @Input() loadingDownload: any;
   @Output() onSideBarToggle = new EventEmitter<boolean>();
   @Output() onMenuToggle = new EventEmitter<boolean>();
@@ -41,6 +53,9 @@ export class LeftSideBarComponent implements AfterViewInit {
   public basesmaps: any[];
   public limits: any[];
   public limit: any;
+
+  public options: any[];
+  public option: any;
 
   items: MenuItem[];
 
@@ -66,7 +81,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   public results: string[];
   public groupLayers: any[];
 
-  public metadata: any;
+  public metadata: Metadata;
   public displayMetadata: boolean;
 
   constructor(
@@ -76,7 +91,7 @@ export class LeftSideBarComponent implements AfterViewInit {
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef
   ) {
-    this.metadata = {};
+    this.metadata = { header: {title: '', description: ''}, data:[]};
     this.displayMetadata = false;
     this.showFilter = false;
     this.open = true;
@@ -84,6 +99,7 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.layersSideBarMobile = false;
     this.map = {};
     this.limits = [];
+    this.options = [];
     this.menu = [
       {
         index: 0,
@@ -147,8 +163,10 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.optionsGroups = {
       basemaps: false,
       limits: false,
-      settings: false
+      settings: false,
+      options: false
     };
+
     this.expendGroup = false;
     this.expendGroup2 = false;
 
@@ -175,8 +193,49 @@ export class LeftSideBarComponent implements AfterViewInit {
         checked: false
       }
     ];
+    this.options = [
+      {
+        name: this.localizationService.translate('options.graticule'),
+        key: 'graticule',
+        type: 'bmap',
+        control: new Graticule({
+          stepCoord: 1,
+          margin: 5,
+          style: new Style({
+            fill: new Fill({
+              color: 'rgb(255,255,255)',
+            }),
+            stroke: new Stroke({
+              color: 'rgb(0,0,0)',
+              lineDash: [.1, 5],
+              width: 0.14,
+            }),
+            text: new Text({
+              font: 'bold 10px Montserrat',
+              offsetY: 20,
+              fill: new Fill({color: 'rgb(0,0,0)'}),
+              stroke: new Stroke({color: 'rgb(255,255,255)', width: 1})
+            })
+          }),
+          projection: 'EPSG:4326',
+          formatCoord:function(c){
+            return c.toFixed(1)+"°"
+          }
+        }),
+        checked: false
+      },
+      // {
+      //   name: this.localizationService.translate('options.compass'),
+      //   key: 'compass',
+      //   type: 'options',
+      //   control: this.createCompass(0),
+      //   showLines: false,
+      //   checked: false
+      // }
+    ];
+
     this.lang = this.localizationService.currentLang();
-    this.innerHeigth = window.innerHeight - 170;
+    this.innerHeigth = window.innerHeight - 200;
     this.cdRef.detectChanges();
   }
 
@@ -196,6 +255,37 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.onChangeLimits.emit({ layer: { layer: limit }, updateSource: false });
   }
 
+  onChangeOption(option){
+    if(option.checked){
+      this.map.addControl(option.control);
+    }else{
+      this.map.removeControl(option.control)
+    }
+    if(option.key === 'compass' && !option.checked){
+      option.showLines = false;
+    }
+  }
+
+  createCompass(showLines: number): Compass{
+    return new Compass({
+      className: "top",
+      rotateWithView: true,
+      style: new Stroke ({ color: this.readStyleProperty('primary'), width: showLines })
+    });
+  }
+
+  onChangeCompass(option){
+    if(option.checked && option.showLines){
+      this.map.removeControl(option.control);
+      option.control = this.createCompass(1);
+      this.map.addControl(option.control);
+    } else {
+      this.map.removeControl(option.control);
+      option.control = this.createCompass(0);
+      this.map.addControl(option.control);
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('descriptor')) {
       if (changes.descriptor.currentValue) {
@@ -206,7 +296,7 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.innerHeigth = window.innerHeight - 170;
+    this.innerHeigth = window.innerHeight - 200;
   }
 
   toggleMenu() {
@@ -297,50 +387,39 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   enableMetadata(layer) {
-    let enable = false;
-
-    if (layer.hasOwnProperty('types')) {
-      const seleted = layer.types.find(type => {
-        return type.value = layer.selectedType;
-      });
-      enable = seleted.hasOwnProperty('metadata');
-    } else {
-      enable = layer.hasOwnProperty('metadata')
-    }
-
-    return enable && layer.visible;
+    return layer.type.hasOwnProperty('metadata') && layer.type.visible;
   }
 
-  formatMetadata(metadata) {
-    let dt: any = {
-      title: '',
+  getType(types: DescriptorType[], selectedType: string){
+    return types.find(type => type.valueType === selectedType)
+  }
+
+  formatMetadata(metadata: DescriptorMetadata[]) {
+    let dt: Metadata = {
+      header: { title: '', description: '' },
       data: []
     };
-    Object.getOwnPropertyNames(metadata).forEach(col => {
-      if (col == 'title') {
-        dt.title = metadata[col];
+    metadata.forEach((item, index ) => {
+      if (index > 0) {
+        dt.data.push(item)
+      }else{
+        dt.header = item;
       }
-      dt.data.push({ title: this.localizationService.translate('metadata.' + col), description: metadata[col] })
     });
     return dt;
   }
 
-  showMetadata(layer) {
-    this.metadata = null;
-    if (layer.hasOwnProperty('types')) {
-      const seleted = layer.types.find(type => {
-        return type.value == layer.selectedType;
-      });
-      if (seleted.metadata) {
-        this.metadata = this.formatMetadata(seleted.metadata);
-        this.displayMetadata = true;
-      } else {
-        this.metadata = null;
-        this.displayMetadata = false;
-      }
-    } else {
-      this.metadata = this.formatMetadata(layer.metadata);
+  showMetadata(layer: DescriptorLayer) {
+    this.metadata = { header: {title: '', description: ''}, data:[]};
+    const layerType = layer.types.find(type => {
+      return type.valueType === layer.selectedType;
+    });
+    if (layerType!.metadata) {
+      this.metadata = this.formatMetadata(layerType!.metadata);
       this.displayMetadata = true;
+    } else {
+      this.metadata = { header: {title: '', description: ''}, data:[]};
+      this.displayMetadata = false;
     }
   }
 
@@ -356,8 +435,10 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.onLayerChangeTransparency.emit({ layer: layer, opacity: ev.target.value })
   }
 
-  changeLayerVisibility(layer, updateSource = false) {
-    this.onLayerChangeVisibility.emit({ layer: layer, updateSource: updateSource })
+  changeLayerVisibility(layer: DescriptorLayer, updateSource = false) {
+    layer.type = this.getType(layer.types, layer.selectedType);
+    layer.type!.visible = layer.visible;
+    this.onLayerChangeVisibility.emit({ layer: layer.type, updateSource: updateSource })
   }
 
   onFilter() {
@@ -381,7 +462,9 @@ export class LeftSideBarComponent implements AfterViewInit {
 
   setBasemaps(bmaps) {
     this.basesmaps.forEach(bmap => {
-      bmap['layer'] = bmaps.find(map => { return map.layer.get('key') === bmap.key })
+      const layerBasemap = bmaps.find(map => { return map.layer.get('key') === bmap.key });
+      bmap['layer'] = layerBasemap
+      bmap['name'] = layerBasemap.layer.get('label')
     });
   }
 
@@ -391,6 +474,10 @@ export class LeftSideBarComponent implements AfterViewInit {
       limit['key'] = limit.get('key');
     });
     this.limits = limits;
+  }
+  readStyleProperty(name: string): string {
+    let bodyStyles = window.getComputedStyle(document.body);
+    return bodyStyles.getPropertyValue('--' + name).trim();
   }
 
 }

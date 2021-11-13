@@ -42,6 +42,7 @@ import { LOCALE_ID } from '@angular/core';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData, DatePipe, DecimalPipe } from '@angular/common';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { CheckboxModule } from 'primeng/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RippleModule } from 'primeng/ripple';
 
@@ -76,6 +77,7 @@ registerLocaleData(localePt);
     CardModule,
     DragScrollModule,
     ComponentsRoutingModule,
+    CheckboxModule,
     ButtonModule,
     ChartModule,
     DropdownModule,

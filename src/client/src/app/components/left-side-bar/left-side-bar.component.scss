@@ -626,24 +626,17 @@
       }
 
       .partners {
-        width: 50%;
-        margin: 13px auto;
         display: flex;
         align-items: center;
         justify-content: center;
-
-
         i {
           color: $primary;
         }
 
-        div {
-          a {
-            img {
-              width: 80%;
-
-            }
-          }
+        img {
+          padding-top: 15px;
+          max-width: 75%;
+          width: 80%;
         }
       }
 
@@ -919,7 +912,7 @@
 }
 
 .layer-transparency {
-  width: 12rem;
+  width: 17rem;
   margin: 5px;
   color: black;
   text-align: center;
@@ -950,7 +943,7 @@
 }
 
 :host ::ng-deep .p-dropdown {
-  width: 12rem;
+  width: 17rem;
   margin: 5px;
 
   .p-inputtext {
@@ -966,7 +959,6 @@
 
 .layer-exports {
   display: flex;
-  flex-direction: column;
   margin-right: 8px;
   align-items: center;
   padding: 7px;
@@ -1011,6 +1003,10 @@
 
 .loader:after {
   left: 1.5em;
+}
+
+.compass{
+  margin: 8px;
 }
 
 @-webkit-keyframes load1 {

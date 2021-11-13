@@ -8,7 +8,8 @@ module.exports = class LayerType {
 
     languageOb;
     valueType;
-    type
+    type;
+    visible;
     obj;
 
     constructor(language, params, ids) {
@@ -29,9 +30,9 @@ module.exports = class LayerType {
                 regionFilter: this.type.toUpperCase() === 'layer'.toUpperCase() ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
 
                 columnsCSV: params.hasOwnProperty('columnsCSV') ? params.columnsCSV : null,
-                downloadSHP: this.type.toUpperCase() === 'layer'.toUpperCase() ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
-                downloadCSV: params.hasOwnProperty('columnsCSV') ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
-                downloadRaster: this.type.toUpperCase() === 'raster'.toUpperCase() ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
+                downloadSHP: params.hasOwnProperty('downloadSHP') ? params.downloadSHP : this.type.toUpperCase() === 'layer'.toUpperCase() ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
+                downloadCSV: params.hasOwnProperty('downloadCSV') ? params.downloadCSV : params.hasOwnProperty('columnsCSV') ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
+                downloadRaster:  params.hasOwnProperty('downloadRaster') ? params.downloadRaster : this.type.toUpperCase() === 'raster'.toUpperCase() ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
 
                 layerLimits: this.type.toUpperCase() === 'limit'.toUpperCase() ? true : null,
 
@@ -40,7 +41,10 @@ module.exports = class LayerType {
 
                 filters: params.hasOwnProperty('filters') ? this.getFiltersArray(params.filters, ids) : null,
 
-                metadados: new Metadado(language, this.type, { idGroup: ids.idGroup, idLayer: ids.idLayer, idValueType: this.valueType }).getMetadadoInstance().length > 0 ? new Metadado(language, this.type, { idGroup: ids.idGroup, idLayer: ids.idLayer, idValueType: this.valueType }).getMetadadoInstance() : null
+                visible: params.hasOwnProperty('visible') ? params.visible : false,
+                opacity: params.hasOwnProperty('opacity') ? params.opacity : 1.0,
+
+                metadata: new Metadado(language, this.type, { idGroup: ids.idGroup, idLayer: ids.idLayer, idValueType: this.valueType }).getMetadadoInstance().length > 0 ? new Metadado(language, this.type, { idGroup: ids.idGroup, idLayer: ids.idLayer, idValueType: this.valueType }).getMetadadoInstance() : null
             };
             this.obj = Auxiliar.removeNullProperties(temp);
         }

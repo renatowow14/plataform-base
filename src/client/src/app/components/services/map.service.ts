@@ -27,7 +27,7 @@ export class MapService {
   constructor(private httpClient: HttpClient) { }
 
   getDescriptor(lng): Observable<any> {
-    return this.httpClient.get<any>(this.apiURL + '/descriptor?lang=' + lng)
+    return this.httpClient.get<any>(this.apiURL + '/ndescriptor?lang=' + lng)
       .pipe(map(response => response))
       .pipe(catchError(this.errorHandler),
     );
