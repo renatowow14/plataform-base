@@ -1,0 +1,40 @@
+[
+    {
+        "idLayer": "basemaps",
+        "labelLayer": "Basemaps",
+        "visible": true,
+        "selectedType": "mapbox",
+        "types": [
+            {
+                "valueType": "mapbox",
+                "type": "basemap",
+                "typeLayer": "vectorial",
+                "viewValueType": "translate"
+            },
+            {
+                "valueType": "mapbox-dark",
+                "type": "basemap",
+                "typeLayer": "vectorial",
+                "viewValueType": "translate"
+            },
+            {
+                "valueType": "google",
+                "type": "basemap",
+                "typeLayer": "vectorial",
+                "viewValueType": "translate"
+            },
+            {
+                "valueType": "roads",
+                "type": "basemap",
+                "typeLayer": "vectorial",
+                "viewValueType": "translate"
+            },
+            {
+                "valueType": "bing",
+                "type": "basemap",
+                "typeLayer": "vectorial",
+                "viewValueType": "translate"
+            }
+        ]
+    }
+]
