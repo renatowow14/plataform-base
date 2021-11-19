@@ -1,7 +1,11 @@
-var languageJson = require('../assets/lang/language.json');
+const languageJson = require('../assets/lang/language.json');
+const lang = require('../utils/language');
+
 module.exports = function(app) {
     var Controller = {}
     var Internal = {}
+
+    const languageOb = lang();
 
     function numberFormat(numero) {
         numero = numero.toFixed(2).split('.');
@@ -51,12 +55,15 @@ module.exports = function(app) {
     }
 
     Controller.chartslulc = function(request, response) {
+      
         var language = request.param('lang')
         var typeRegion = request.param('typeRegion');
         var textRegion = request.param('textRegion');
+
        // let {lang, typeRegion, textRegion} = request.body;
       //  let language = lang;
         var region = languageJson["charts_regions"]["biome"][language]
+        //console.log(languageOb.getLang(language));
 
         if (typeRegion == 'municipio' || typeRegion == 'estado') {
             if (typeRegion == 'municipio')

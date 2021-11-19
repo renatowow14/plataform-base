@@ -16,6 +16,7 @@ import {CustomerService} from '../services/customer.service';
 import {Customer} from 'src/app/@core/interfaces/customer';
 import {Layer, Legend, Menu} from "../../@core/interfaces";
 import Map from 'ol/Map';
+import { reduce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-right-side-bar',
@@ -113,9 +114,7 @@ export class RightSideBarComponent implements OnInit {
     this.defaultRegion = {
       type: 'biome',
       text: 'BRASIL',
-      value: 'Cerrado',
-      area_region: 2040047.67930316,
-      regionTypeBr: 'Bioma'
+      value: 'Brasil'
     };
     this.selectRegion = this.defaultRegion;
 
@@ -452,49 +451,43 @@ export class RightSideBarComponent implements OnInit {
         tooltip: {
           callbacks: {
             label: function(tooltipItem, data) {
+              console.log('data:', data);
               let percent = parseFloat(
-                data['datasets'][1]['data'][tooltipItem['index']]
+                data['datasets'][0]['data'][tooltipItem['index']]
               ).toLocaleString('de-DE');
               return percent + ' km²';
             }
-          }
+          },
+          usePointStyle: true
         },
+        title: {
+          align: 'bottom'
+        },
+        legend: {
+          align: 'end',
+          position: 'bottom'
+        }
+      },
         scales: {
-          x: [
+          y: 
             {
               ticks: {
                 callback(value) {
                   return value.toLocaleString('de-DE') + ' km²';
-                }
+                },
+                color: 'red'
               }
             }
-          ],
-
         },
-        title: {
-          display: false,
-          fontSize: 14
-        },
-        legend: {
-          labels: {
-            usePointStyle: true,
-            fontSize: 14
-          },
-          // onHover(event) {
-          //   event.target.style.cursor = 'pointer';
-          // },
-          // onLeave(event) {
-          //   event.target.style.cursor = 'default';
-          // },
-          position: 'bottom'
-        }
-      }
+       
+      
     };
 
   }
 
   updateStatistics(region) {
-   this.defaultRegion = region;
+   this.selectRegion = region;
+   console.log("region:", region);
    this.updateLulcTimeSeries();
    this.triggerSeriesChartLulc();
   }
@@ -504,8 +497,8 @@ export class RightSideBarComponent implements OnInit {
     let params: string[] = [];
 
      params.push('lang=' + this.lang);
-     params.push('typeRegion=' + this.defaultRegion.type);
-     params.push('textRegion=' + this.defaultRegion.text);
+     params.push('type=' + this.selectRegion.type);
+     params.push('value=' + this.selectRegion.value);
 
     let textParam = params.join('&');
     let tempResultLulc: any[] = [];
@@ -565,16 +558,18 @@ export class RightSideBarComponent implements OnInit {
       plugins: {
         tooltips: {
           callbacks: {
-            label: function(tooltipItem, data) {
+            text: function(tooltipItem, data) {
+              console.log('data:', data);
               let percent = parseFloat(
                 data['datasets'][0]['data'][tooltipItem['index']]
               ).toLocaleString('de-DE');
               return percent + ' km²';
             }
           }
-        },
+        }
+      },
         scales: {
-          yAxes: [
+          y: 
             {
               ticks: {
                 callback(value) {
@@ -582,7 +577,6 @@ export class RightSideBarComponent implements OnInit {
                 }
               }
             }
-          ]
         },
         title: {
           display: false,
@@ -601,7 +595,7 @@ export class RightSideBarComponent implements OnInit {
           // },
           position: 'bottom'
         }
-      }
+     
     };
   }
 

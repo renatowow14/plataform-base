@@ -29,14 +29,14 @@ export class ChartService {
   constructor(private httpClient: HttpClient) { }
 
   deforestation(parameters): Observable<any> {
-    return this.httpClient.get<any>(this.apiURL + '/deforestation')
+    return this.httpClient.get<any>(this.apiURL + '/deforestation?' + parameters)
       .pipe(
         catchError(this.errorHandler),
       );
   }
 
   lulc(parameters): Observable<any> {
-    return this.httpClient.get(this.apiURL + "/lulc")
+    return this.httpClient.get(this.apiURL + "/lulc?" + parameters)
       .pipe(
         catchError(this.errorHandler),
       );   

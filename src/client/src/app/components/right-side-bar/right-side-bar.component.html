@@ -67,12 +67,10 @@ position="right"
               <mat-icon>aspect_ratio</mat-icon>
           </button>
           <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
-
         </div>
       <br><br>
         <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
        <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation" [responsive]="true" [data]="DeforestationChart.dataDeforestation" [options]="DeforestationChart.optionsDeforestation"></p-chart>
-
       </div>
     </div>
    </div>
@@ -95,7 +93,6 @@ position="right"
               </button>
               <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
          </div>
-
             <br><br>
             <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
           </p-tabPanel>
@@ -105,20 +102,14 @@ position="right"
                   <mat-icon>aspect_ratio</mat-icon>
               </button>
               <h4 class="graphicTitle"> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o que representa 39,40 % da sua área total </h4>
-
             </div>
-
-
             <br><br>
             <p-chart *ngIf="LulcChart2.dataLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
-
           </p-tabPanel>
-
       </p-tabView>
       </div>
     </div>
    </div>
-
 
    <div  [class]="expendGroup3 ? 'group-card group-card-active' :'group-card'">
     <div (click)="expendGroup3 = !expendGroup3" class="abstract" (click)="triggerSeriesChartLulc()">
