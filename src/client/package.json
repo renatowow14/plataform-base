@@ -27,7 +27,7 @@
     "@types/proj4": "^2.5.1",
     "chart.js": "^3.6.0",
     "file-saver": "^2.0.5",
-    "font-gis": "^1.0.3",
+    "font-gis": "^1.0.4",
     "lodash-es": "^4.17.21",
     "ngx-drag-scroll": "^12.0.0-beta.1",
     "ol": "^6.6.1",

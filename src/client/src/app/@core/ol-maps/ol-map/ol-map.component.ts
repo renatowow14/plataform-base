@@ -105,7 +105,7 @@ export class OlMapComponent implements OnInit, AfterViewInit {
     this.map.addLayer(vector);
     this.cdRef.detectChanges();
   }
-  public setControl(control: Control) {
+  public setControl(control: any) {
     this.map.addControl(control);
   }
 

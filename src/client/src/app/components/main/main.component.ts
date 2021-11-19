@@ -1,6 +1,7 @@
 import {Component, OnInit, ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import {MapService} from "../services/map.service";
 import {LocalizationService} from "../../@core/internationalization/localization.service";
+import {Descriptor} from "../../@core/interfaces";
 
 @Component({
   selector: 'app-main',
@@ -12,7 +13,7 @@ export class MainComponent implements OnInit, AfterContentChecked {
   public openMenu:boolean;
   public showLayers: boolean;
   public limit : any;
-  public descriptor: any;
+  public descriptor: Descriptor;
 
   constructor(
     private mapService: MapService,
@@ -31,7 +32,7 @@ export class MainComponent implements OnInit, AfterContentChecked {
   }
 
   getDescriptor(){
-    this.mapService.getDescriptor(this.localizationService.currentLang()).subscribe(descriptor => {
+    this.mapService.getDescriptor(this.localizationService.currentLang()).subscribe((descriptor: Descriptor) => {
       setTimeout(() => this.descriptor = descriptor, 0);
     }, error => {
       console.log(error)

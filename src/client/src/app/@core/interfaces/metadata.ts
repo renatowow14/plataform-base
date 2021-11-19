@@ -1,4 +1,6 @@
+import { DescriptorMetadata } from "./descriptor";
+
 export interface Metadata {
-  title: string;
-  description: string;
+  header: DescriptorMetadata;
+  data: DescriptorMetadata[];
 }

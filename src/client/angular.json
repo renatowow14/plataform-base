@@ -22,7 +22,7 @@
           "options": {
             "allowedCommonJsDependencies": [
               "ol/",
-              "ol/format/MVT.js"
+              "ol/format/"
             ],
             "outputPath": "dist/client",
             "index": "src/index.html",

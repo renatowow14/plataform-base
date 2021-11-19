@@ -55,15 +55,9 @@ module.exports = function(app) {
     }
 
     Controller.chartslulc = function(request, response) {
-      
-        var language = request.param('lang')
-        var typeRegion = request.param('typeRegion');
-        var textRegion = request.param('textRegion');
-
-       // let {lang, typeRegion, textRegion} = request.body;
-      //  let language = lang;
-        var region = languageJson["charts_regions"]["biome"][language]
-        //console.log(languageOb.getLang(language));
+        const { lang, typeRegion, textRegion } = request.query;
+        const language = lang;
+        let region = languageJson["charts_regions"]["biome"][language]
 
         if (typeRegion == 'municipio' || typeRegion == 'estado') {
             if (typeRegion == 'municipio')
@@ -76,19 +70,19 @@ module.exports = function(app) {
             region = languageJson["charts_regions"]["region_fronteira"][language] + textRegion
         }
 
-        var chartResult = [{
+        const chartResult = [{
                 "id": "uso_solo_terraclass",
                 "title": "Terraclass",
                // "resumo": languageJson["resumo"].replace('_municipio_', municipio).replace('percent', percent),
                 "getText": function(chart) {
 
-                    var label = chart['indicators'][0]["label"]
-                    var value = chart['indicators'][0]["value"]
-                    var areaMun = chart['indicators'][0]["area_mun"]
+                    const label = chart['indicators'][0]["label"]
+                    const value = chart['indicators'][0]["value"]
+                    const areaMun = chart['indicators'][0]["area_mun"]
 
-                    var percentual_area_ha = ((value * 100) / areaMun);
-                    var parttext = languageJson["charts_text"]["uso_solo_terraclass"];
-                    var text = parttext["part1"][language] + region +
+                    const percentual_area_ha = ((value * 100) / areaMun);
+                    const parttext = languageJson["charts_text"]["uso_solo_terraclass"];
+                    const text = parttext["part1"][language] + region +
                         parttext["part2"][language] + numberFormat(parseFloat(areaMun)) + parttext["part3"][language] +
                         parttext["part4"][language] + label + parttext["part5"][language] + numberFormat(parseFloat(value)) +
                         parttext["part6"][language] + Math.round(percentual_area_ha) + parttext["part7"][language]
@@ -106,13 +100,13 @@ module.exports = function(app) {
                 "id": "uso_solo_probio",
                 "title": "PROBIO",
                 "getText": function(chart) {
-                    var label = chart['indicators'][0]["label"]
-                    var value = chart['indicators'][0]["value"]
-                    var areaMun = chart['indicators'][0]["area_mun"]
-                    var parttext = languageJson["charts_text"]["uso_solo_probio"];
-                    var percentual_area_ha = ((value * 100) / areaMun);
+                    const label = chart['indicators'][0]["label"]
+                    const value = chart['indicators'][0]["value"]
+                    const areaMun = chart['indicators'][0]["area_mun"]
+                    const parttext = languageJson["charts_text"]["uso_solo_probio"];
+                    const percentual_area_ha = ((value * 100) / areaMun);
 
-                    var text = parttext["part1"][language] +
+                    const text = parttext["part1"][language] +
                         parttext["part2"][language] + label + parttext["part3"][language] +
                         numberFormat(parseFloat(value)) + parttext["part4"][language] +
                         Math.round(percentual_area_ha) + parttext["part5"][language]
@@ -165,11 +159,10 @@ module.exports = function(app) {
     }
 
     Controller.deforestation = function(request, response) {
-        var language = request.param('lang')
-        var typeRegion = request.param('typeRegion');
-        var textRegion = request.param('textRegion');
+        const { lang, typeRegion, textRegion } = request.query;
+        const language = lang;
 
-        var region = languageJson["charts_regions"]["biome"][language]
+        let region = languageJson["charts_regions"]["biome"][language]
 
         if (typeRegion == 'municipio' || typeRegion == 'estado') {
             if (typeRegion == 'municipio')
@@ -182,7 +175,7 @@ module.exports = function(app) {
             region = languageJson["charts_regions"]["region_fronteira"][language] + textRegion
         }
 
-        var chartResult = [{
+        const chartResult = [{
                 "id": "prodes",
                 "title": "PRODES",
                 "getText": function(chart) {

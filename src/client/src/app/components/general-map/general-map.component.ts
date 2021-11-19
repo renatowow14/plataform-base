@@ -14,22 +14,23 @@ import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
 import { LocalizationService } from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import { Descriptor, Control, Ruler, TextFilter } from "../../@core/interfaces";
+import {Descriptor, Control, Ruler, TextFilter, DescriptorType, DescriptorLayer} from "../../@core/interfaces";
 import { DownloadService, MapService } from "../services";
 import { saveAs } from 'file-saver';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Coordinate, createStringXY } from "ol/coordinate";
 import { toLonLat } from "ol/proj";
-import { Graticule, Overlay } from "ol";
+import { Overlay } from "ol";
 import { BingMaps, XYZ } from "ol/source";
 import { Fill, Stroke, Style } from "ol/style";
 import { Geometry, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
-import { Feature } from "ol";
+import {Feature} from "ol";
 import { Draw, Interaction, Modify, Snap } from "ol/interaction";
 import VectorSource from "ol/source/Vector";
 import { GeoJSON } from "ol/format";
 import VectorLayer from "ol/layer/Vector";
 import CircleStyle from "ol/style/Circle";
+import Text from "ol/style/Text";
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
@@ -37,6 +38,8 @@ import { SelectItem, PrimeNGConfig, MessageService } from 'primeng/api';
 import { LayerSwipe } from "../../@core/interfaces/swipe";
 import { AreaService } from '../services/area.service';
 import Swipe from 'ol-ext/control/Swipe';
+import Graticule from 'ol-ext/control/Graticule';
+import Compass from 'ol-ext/control/Compass';
 
 @Component({
   selector: 'app-general-map',
@@ -73,6 +76,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   public selectedLayers = [] as any[];
   public limits = [] as any[];
   public graticule: Graticule;
+  public compass: Compass;
   public map: any;
   public _descriptor: Descriptor;
   public mousePositionOptions: any;
@@ -87,7 +91,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   public swipeLayers: any[];
   public swipeOptions: LayerSwipe[];
   public swiperControl: Swipe = new Swipe();
-  public swipeLayer: any;
+  public swipeLayer: DescriptorLayer;
   public mapControls: Control;
 
 
@@ -100,7 +104,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   public tileGrid: TileGrid;
   public projection: any;
   public urls: string[];
-  public regionFilterDefault: any;
   public msFilterRegion: string;
   public selectRegion: any;
   public year: any;
@@ -154,10 +157,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.layersNames = [];
     this.limitsNames = [];
     this.swipeLayers = [];
+    this.swipeLayer = {idLayer:'', labelLayer:'', selectedType:'', visible: false, types: []};
     this.layersTMS = {};
     this.limitsTMS = {};
     this.map = {};
-    this.swipeLayer = {};
 
     this.features = [];
 
@@ -315,16 +318,35 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
     ];
     this.graticule = new Graticule({
-      // the style to use for the lines, optional.
-      zIndex: 10001,
-      strokeStyle: new Stroke({
-        color: 'rgb(23,22,22)',
-        width: 0.7,
-        lineDash: [0.9, 5]
+      stepCoord: 1,
+      margin: 5,
+      style: new Style({
+        fill: new Fill({
+          color: 'rgb(255,255,255)',
+        }),
+        stroke: new Stroke({
+          color: 'rgb(0,0,0)',
+          lineDash: [.1, 5],
+          width: 0.14,
+        }),
+        text: new Text({
+          font: 'bold 10px Montserrat',
+          offsetY: 20,
+          fill: new Fill({color: 'rgb(0,0,0)'}),
+          stroke: new Stroke({color: 'rgb(255,255,255)', width: 1})
+        })
       }),
-      showLabels: true,
-      wrapX: false,
+      projection: 'EPSG:4326',
+      formatCoord:function(c){
+        return c.toFixed(1)+"°"
+      }
     });
+    this.compass = new Compass({
+      className: "top",
+      rotateWithView: true,
+      style: new Stroke ({ color: this.readStyleProperty('primary'), width: 0 })
+    });
+
     this.mousePositionOptions = {
       coordinateFormat: (coordinate: Coordinate) => {
         const c: Coordinate = toLonLat(coordinate, this.map.getView().getProjection());
@@ -455,12 +477,13 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   onClearSwipe($event) {
     this.valueSwipe = "";
-    this.swipeLayer = {};
+    this.swipeLayer = {idLayer:'', labelLayer:'', selectedType:'', visible: false, types: []};
     this.removeSwipe()
   }
 
   onSwipeSelectedLayer(ev) {
     this.swipeLayer = ev.layer.get('descriptorLayer');
+    console.log('onSwipeSelectedLayer', this.swipeLayer)
     this.swipeLayer.visible = true;
     this.addSwipe(ev.layer);
   }
@@ -472,40 +495,46 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.limitsNames = [];
     this.selectedLayers = [];
 
-    this.regionFilterDefault = this._descriptor.regionFilterDefault;
-
     for (let groups of this._descriptor.groups) {
-
-      for (let layers of groups.layers) {
-        if (layers.types) {
-          for (let types of layers.types) {
-            this.layersTypes.push(types)
-          }
-        } else {
-          this.layersTypes.push(layers);
+      for (let layer of groups.layers) {
+        layer.type = layer.types.find(type => type.valueType === layer.selectedType);
+        layer.type!.visible = layer.visible;
+        for (let types of layer.types) {
+          this.layersTypes.push(types)
         }
-        this.layersNames.push(layers);
+        this.layersNames.push(layer);
       }
-
     }
 
     for (let basemap of this._descriptor.basemaps) {
+      basemap.type = basemap.types.find(type => type.valueType === basemap.selectedType);
+      basemap.type!.visible = basemap.visible;
+
       for (let types of basemap.types) {
+
         const baseMapAvaliable = this.bmaps.find(b => {
-          return b.layer.get('key') === types.value;
+          return b.layer.get('key') === types.valueType;
         })
+
         if (baseMapAvaliable) {
-          baseMapAvaliable.layer.set('label', types.viewValue)
+          baseMapAvaliable.layer.set('label', types.viewValueType)
           this.basemapsAvaliable.push(baseMapAvaliable)
         }
+
       }
     }
-    for (let limits of this._descriptor.limits) {
-      for (let types of limits.types) {
+
+    for (let limit of this._descriptor.limits) {
+      limit.type = limit.types.find(type => type.valueType === limit.selectedType);
+      limit.type!.visible = limit.visible;
+
+      for (let types of limit.types) {
         this.limitsNames.push(types)
       }
     }
+
     this.onBasemapsReady.emit(this.basemapsAvaliable);
+
     this.createLayers();
   }
 
@@ -556,35 +585,37 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     }
   }
 
-  private parseUrls(layer) {
+  private parseUrls(layerType: DescriptorType) {
     let result: string[] = []
 
     let filters: any[] = []
 
-    if (layer.value == "planet") {
-      result.push(`https://tiles.planet.com/basemaps/v1/planet-tiles/${layer.timeSelected}/gmap/{z}/{x}/{y}.png?api_key=d6f957677fbf40579a90fb3a9c74be1a`);
+    if (layerType!.valueType == "planet") {
+      result.push(`https://tiles.planet.com/basemaps/v1/planet-tiles/${layerType!.filterSelected}/gmap/{z}/{x}/{y}.png?api_key=d6f957677fbf40579a90fb3a9c74be1a`);
     } else {
-      if (layer.timeHandler == 'msfilter' && layer.times) {
-        filters.push(layer.timeSelected)
+      if (layerType!.filterHandler == 'msfilter' && layerType!.filters) {
+        filters.push(layerType!.filterSelected)
       }
-      if (layer.layerfilter)
-        filters.push(layer.layerfilter)
-      if (this.regionFilterDefault)
-        filters.push(this.regionFilterDefault)
-      if (layer.regionFilter && this.msFilterRegion)
+      if (layerType!.regionFilter)
+        filters.push(layerType!.regionFilter)
+
+      if (layerType!.regionFilter && this.msFilterRegion)
         filters.push(this.msFilterRegion)
 
       let msfilter = '&MSFILTER=' + filters.join(' AND ')
 
 
-      let layername = layer.value
+      let layername = layerType!.valueType
 
-      if (layer.value == "uso_solo_mapbiomas") {
-        this.year = layer.timeSelected
+      if (layerType!.valueType == "uso_solo_mapbiomas") {
+        this.year = layerType!.filterSelected
       }
 
-      if (layer.timeHandler == 'layername')
-        layername = layer.timeSelected
+      if (layerType!.filterHandler == 'layername'){
+        if (layerType!.filterSelected != null) {
+          layername = layerType!.filterSelected
+        }
+      }
 
       for (let url of this.urls) {
         result.push(url + "?layers=" + layername + msfilter + "&mode=tile&tile={x}+{y}+{z}" + "&tilemode=gmap" + "&map.imagetype=png");
@@ -594,20 +625,19 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     return result;
   }
 
-  private createTMSLayer(layer, type = 'layer') {
+  private createTMSLayer(layerType: DescriptorType, type = 'layer') {
     return new TileLayer({
       properties: {
-        key: layer.value,
-        label: layer.label,
-        descriptorLayer: layer,
+        key: layerType!.valueType,
+        label: layerType!.viewValueType,
+        descriptorLayer: layerType,
         type: type,
-        visible: layer.visible,
+        visible: layerType.visible
       },
       source: new XYZ({
-        urls: this.parseUrls(layer)
+        urls: this.parseUrls(layerType)
       }),
-      visible: layer.visible,
-      opacity: layer.opacity
+      visible: layerType.visible
     });
   }
 
@@ -624,19 +654,20 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   createLayers() {
 
     for (let layer of this.layersTypes) {
-      this.layersTMS[layer.value] = this.createTMSLayer(layer);
-      this.layers.push(this.layersTMS[layer.value]);
+      this.layersTMS[layer.valueType] = this.createTMSLayer(layer);
+      this.layers.push(this.layersTMS[layer.valueType]);
       this.addLayersLegend(layer);
     }
-
     for (let bmap of this.basemapsAvaliable) {
       this.layers.push(bmap.layer)
     }
+
     let limitsLayers: TileLayer<any>[] = [];
+
     for (let limits of this.limitsNames) {
       let layer = this.createTMSLayer(limits, 'limit');
-      this.limitsTMS[limits.value] = layer;
-      this.layers.push(this.limitsTMS[limits.value]);
+      this.limitsTMS[limits.valueType] = layer;
+      this.layers.push(this.limitsTMS[limits.valueType]);
       limitsLayers.push(layer);
     }
 
@@ -648,23 +679,25 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   changeLayerVisibility(ev) {
     let { layer, updateSource } = ev;
-    if (updateSource) {
-      this.updateSourceLayer(layer);
-    } else {
-      if (layer.hasOwnProperty('types') || layer.hasOwnProperty('selectedType')) {
-        if (layer.types) {
-          for (let layerType of layer.types) {
-            this.layersTMS[layerType.value].setVisible(false)
-          }
-        } else {
-          this.layersTMS[layer.value].setVisible(false)
-        }
-        this.layersTMS[layer.selectedType].setVisible(layer.visible);
 
-        this.addLayersLegend(layer);
+    const layerType: DescriptorType = layer;
+
+    if (updateSource) {
+      this.updateSourceLayer(layerType);
+    } else {
+      if (layerType.type === 'layer') {
+        this.layersTMS[layerType.valueType].setVisible(layerType.visible);
+
+        this.addLayersLegend(layerType);
+
         if(this.swiperControl.layers.length > 0){
-          if(layer.visible){
-            this.addLayersToLeftSideSwipe(layer);
+
+          const existInSwipe = this.swiperControl.layers.find(l => {
+            return l.layer.get('key') === layerType.valueType
+          });
+
+          if(layer.visible && !existInSwipe ){
+            this.swiperControl.addLayer(layerType, false);
           }
         }
 
@@ -691,21 +724,27 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.updateZIndex();
   }
 
-  addLayersLegend(layer) {
-    if (layer.visible) {
-      this.selectedLayers.push(this.layersTMS[layer.selectedType])
+  addLayersLegend(layerType: DescriptorType) {
+    if (layerType.visible) {
+      let layerExist = false;
+      this.selectedLayers.forEach((item, index) => {
+        if (item.get('key') === layerType.valueType) layerExist = true;
+      });
+      if(!layerExist){
+        this.selectedLayers.push(this.layersTMS[layerType.valueType]);
+      }
+
     } else {
       this.selectedLayers.forEach((item, index) => {
-        if (item.getProperties().key === layer.selectedType) this.selectedLayers.splice(index, 1);
+        if (item.get('key') === layerType.valueType) this.selectedLayers.splice(index, 1);
       });
     }
-    this.selectedLayers.forEach((item, index) => {
+    this.selectedLayers.forEach((item) => {
       item.visible = item.get('visible');
     });
   }
 
   updateZIndex() {
-    this.selectedLayers.reverse();
     this.selectedLayers.forEach((item, index) => {
       item.setZIndex(index + 1);
     });
@@ -805,11 +844,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       columnsCSV = '&columnsCSV=' + layer.columnsCSV;
     }
 
-    if (this.msFilterRegion == "") {
-      filterRegion = this.regionFilterDefault
-    } else {
-      filterRegion = this.msFilterRegion
-    }
+    filterRegion = this.msFilterRegion
 
     if (this.selectRegion.type == 'state')
       regionType = "uf"
@@ -1005,7 +1040,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   private updateSourceLayer(layer) {
-    let sourceLayers = this.layersTMS[layer.value].getSource();
+    let sourceLayers = this.layersTMS[layer.valueType].getSource();
     sourceLayers.setUrls(this.parseUrls(layer))
     sourceLayers.refresh();
   }
@@ -1091,7 +1126,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' + this.selectedSearchOption)
   }
 
-  private async clearAreaBeforeSearch() {
+  async clearAreaBeforeSearch() {
     await this.updateRegion(this.defaultRegion)
 
     await timer(2000).pipe(take(1)).toPromise();
@@ -1194,10 +1229,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   addSwipe(layer) {
-    this.selectedLayers.forEach(lyr => {
-      this.addLayersToLeftSideSwipe(lyr);
-    });
-    this.changeLayerVisibility({layer: layer.get('descriptorLayer'), updateSource: false})
+    this.changeLayerVisibility({layer: layer.get('descriptorLayer'), updateSource: false });
+    this.addLayersToLeftSideSwipe(layer);
     this.swiperControl.addLayer(layer, true);
     this.map.addControl(this.swiperControl);
     setTimeout(() => {
@@ -1208,12 +1241,14 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   removeSwipe() {
     this.map.removeControl(this.swiperControl);
   }
-  
-  addLayersToLeftSideSwipe(layer){
-    const leftLayers = this.map.getLayers().getArray().find(l => l.get('key') === layer.selectedType);
-    if(leftLayers){
-      this.swiperControl.addLayer(leftLayers);
-    }
+
+  addLayersToLeftSideSwipe(lay){
+    this.map.getLayers().getArray().forEach(layer => {
+      console.log('addLayersToLeftSideSwipe', layer)
+      if(layer.get('type') === 'layer' && layer.get('key') !== lay.get('key') && layer.getVisible()) {
+        this.swiperControl.addLayer(layer, false);
+      }
+    });
     setTimeout(() => {
       this.map.updateSize()
     });
