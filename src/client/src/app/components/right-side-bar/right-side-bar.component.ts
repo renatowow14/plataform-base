@@ -90,6 +90,7 @@ export class RightSideBarComponent implements OnInit {
   public layersSideBar: boolean;
   public layersSideBarMobile: boolean;
   public displayFullScreenCharts: boolean;
+  public displayDashboard: boolean;
   public chartObject: any;
 
 
@@ -104,6 +105,7 @@ export class RightSideBarComponent implements OnInit {
 
     //Charts Variables
     this.displayFullScreenCharts = false;
+    this.displayDashboard = false;
     this.chartObject = {};
     this.changeTabSelected = "";
 
@@ -270,6 +272,11 @@ export class RightSideBarComponent implements OnInit {
     this.innerHeigth = window.innerHeight;
   }
 
+  
+  openDashboard() {
+    this.displayDashboard = true;
+  }
+
   openCharts(data, type, options) {
     let ob = {};
      ob = {
@@ -389,7 +396,6 @@ export class RightSideBarComponent implements OnInit {
 
   updateDeforestationTimeSeries() {
     let params: string[] = [];
-
     // params.push('lang=' + this.lang)
     // params.push('typeRegion=' + this.defaultRegion)
     // params.push('textRegion=')
@@ -566,6 +572,19 @@ export class RightSideBarComponent implements OnInit {
               return percent + ' km²';
             }
           }
+        },
+        legend: {
+          labels: {
+            usePointStyle: true,
+            fontSize: 14
+          },
+          // onHover(event) {
+          //   event.target.style.cursor = 'pointer';
+          // },
+          // onLeave(event) {
+          //   event.target.style.cursor = 'default';
+          // },
+          position: 'bottom'
         }
       },
         scales: {
@@ -582,19 +601,7 @@ export class RightSideBarComponent implements OnInit {
           display: false,
           fontSize: 14
         },
-        legend: {
-          labels: {
-            usePointStyle: true,
-            fontSize: 14
-          },
-          // onHover(event) {
-          //   event.target.style.cursor = 'pointer';
-          // },
-          // onLeave(event) {
-          //   event.target.style.cursor = 'default';
-          // },
-          position: 'bottom'
-        }
+
      
     };
   }
