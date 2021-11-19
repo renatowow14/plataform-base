@@ -1,7 +1,7 @@
 module.exports = function (app) {
 
-    var dataInjector = app.middleware.dataInjector;
-    var map = app.controllers.map;
+    const dataInjector = app.middleware.dataInjector;
+    const map = app.controllers.map;
 
     app.get('/service/map/descriptor', map.descriptor);
     app.get('/service/map/extent', dataInjector, map.extent);
@@ -11,8 +11,4 @@ module.exports = function (app) {
     app.get('/service/map/cdgeocmu', dataInjector);
     app.get('/service/map/cars', dataInjector);
     app.get('/service/map/ucs', dataInjector);
-
-    app.get('/service/map/ndescriptor', map.new_descriptor);
-
-
 }

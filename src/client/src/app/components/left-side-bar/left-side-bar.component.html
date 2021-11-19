@@ -84,11 +84,11 @@
                         </span>
                       </div>
                       <span *ngIf="layer.type!.filters" class="p-float-label">
-                          <p-dropdown id="type-filters-{{layer.type!.filterSelected}}" *ngIf="layer.type!.filters" [options]="layer.type!.filters"
-                                      [(ngModel)]="layer.type!.filterSelected" (onChange)="changeLayerVisibility(layer, true)"
-                                      optionLabel="viewValueFilter" optionValue="valueFilter"></p-dropdown>
-                          <label for="type-filters-{{layer.type!.filterSelected}}">{{layer.type!.filterLabel}}</label>
-                        </span>
+                        <p-dropdown id="type-filters-{{layer.type!.filterSelected}}" *ngIf="layer.type!.filters" [options]="layer.type!.filters"
+                                    [(ngModel)]="layer.type!.filterSelected" (onChange)="changeLayerVisibility(layer, true)"
+                                    optionLabel="viewValueFilter" optionValue="valueFilter"></p-dropdown>
+                        <label for="type-filters-{{layer.type!.filterSelected}}">{{layer.type!.filterLabel}}</label>
+                      </span>
                       <div class="layer-transparency">
                         <input (mousemove)="onChangeTransparency(layer, $event)" class="range" type="range" min="0"
                           max="100" value="0">
@@ -186,9 +186,6 @@
                 <p-inputSwitch [(ngModel)]="option.checked" styleClass="inputSwitchClass"
                                (onChange)="onChangeOption(option)"></p-inputSwitch>
                 <p class="inlineSwitchButton"> {{option.name}}</p>
-<!--                <div *ngIf="option.key === 'compass' && option.checked" class="compass">-->
-<!--                  <p-checkbox [label]="'Show Lines'" [binary]="true"  [(ngModel)]="option.showLines" (ngModelChange)="onChangeCompass(option)"></p-checkbox>-->
-<!--                </div>-->
                 <br><br>
               </div>
             </div>

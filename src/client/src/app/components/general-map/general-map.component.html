@@ -116,28 +116,11 @@
               </span>
               <div class="layer-card-body" *ngIf="swipeLayer.visible">
                 <div class="layer-card-content">
-                  <div *ngIf="swipeLayer.types">
-                        <span class="p-float-label" *ngFor="let type of swipeLayer?.types"
-                              [hidden]="type.value != swipeLayer.selectedType">
-                          <p-dropdown id="types-{{type.value}}" *ngIf="swipeLayer.types.length > 0" [options]="swipeLayer.types"
-                                      [(ngModel)]="swipeLayer.selectedType" (onChange)="changeLayerVisibility(type)"
-                                      optionLabel="Viewvalue" optionValue="value"></p-dropdown>
-                          <label for="types-{{type.value}}">{{type.typeLabel}}</label>
-                        </span>
-                    <span *ngFor="let type of swipeLayer.types" [hidden]="type.value != swipeLayer.selectedType"
-                          class="p-float-label">
-                          <p-dropdown id="types-times-{{type.value}}" *ngIf="type.times" [options]="type.times"
-                                      [(ngModel)]="type.timeSelected" (onChange)="changeLayerVisibility({layer: type, updateSource: true})"
-                                      optionLabel="Viewvalue" optionValue="value"></p-dropdown>
-                          <label for="types-times-{{type.value}}">{{type.timeLabel}}</label>
-                        </span>
-                  </div>
-                  <span class="p-float-label" *ngIf="swipeLayer.times">
-                      <p-dropdown id="swipe-times-{{swipeLayer.id}}" *ngIf="swipeLayer.times.length > 0" [options]="swipeLayer.times"
-                                  [(ngModel)]="swipeLayer.timeSelected" (onChange)="changeLayerVisibility({layer: swipeLayer, updateSource: true})"
-                                  optionLabel="Viewvalue" optionValue="value">
-                      </p-dropdown>
-                      <label for="swipe-times-{{swipeLayer.id}}">{{swipeLayer.timeLabel}}</label>
+                  <span *ngIf="swipeLayer.type!.filters" class="p-float-label">
+                    <p-dropdown id="type-filters-{{swipeLayer.type!.filterSelected}}" *ngIf="swipeLayer.type!.filters" [options]="swipeLayer.type!.filters"
+                                [(ngModel)]="swipeLayer.type!.filterSelected" (onChange)="changeLayerVisibility({layer: swipeLayer.type, updateSource: true})"
+                                optionLabel="viewValueFilter" optionValue="valueFilter"></p-dropdown>
+                    <label for="type-filters-{{swipeLayer.type!.filterSelected}}">{{swipeLayer.type!.filterLabel}}</label>
                   </span>
                 </div>
               </div>

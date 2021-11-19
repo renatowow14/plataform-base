@@ -14,7 +14,7 @@ import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
 import { LocalizationService } from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import {Descriptor, Control, Ruler, TextFilter, DescriptorType} from "../../@core/interfaces";
+import {Descriptor, Control, Ruler, TextFilter, DescriptorType, DescriptorLayer} from "../../@core/interfaces";
 import { DownloadService, MapService } from "../services";
 import { saveAs } from 'file-saver';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -90,7 +90,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   public swipeLayers: any[];
   public swipeOptions: LayerSwipe[];
   public swiperControl: Swipe = new Swipe();
-  public swipeLayer: any;
+  public swipeLayer: DescriptorLayer;
   public mapControls: Control;
 
 
@@ -156,10 +156,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.layersNames = [];
     this.limitsNames = [];
     this.swipeLayers = [];
+    this.swipeLayer = {idLayer:'', labelLayer:'', selectedType:'', visible: false, types: []};
     this.layersTMS = {};
     this.limitsTMS = {};
     this.map = {};
-    this.swipeLayer = {};
 
     this.features = [];
 
@@ -476,12 +476,13 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   onClearSwipe($event) {
     this.valueSwipe = "";
-    this.swipeLayer = {};
+    this.swipeLayer = {idLayer:'', labelLayer:'', selectedType:'', visible: false, types: []};
     this.removeSwipe()
   }
 
   onSwipeSelectedLayer(ev) {
     this.swipeLayer = ev.layer.get('descriptorLayer');
+    console.log('onSwipeSelectedLayer', this.swipeLayer)
     this.swipeLayer.visible = true;
     this.addSwipe(ev.layer);
   }
@@ -681,7 +682,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     const layerType: DescriptorType = layer;
 
     if (updateSource) {
-      this.updateSourceLayer(layer);
+      this.updateSourceLayer(layerType);
     } else {
       if (layerType.type === 'layer') {
         this.layersTMS[layerType.valueType].setVisible(layerType.visible);
@@ -1038,7 +1039,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   private updateSourceLayer(layer) {
-    let sourceLayers = this.layersTMS[layer.value].getSource();
+    let sourceLayers = this.layersTMS[layer.valueType].getSource();
     sourceLayers.setUrls(this.parseUrls(layer))
     sourceLayers.refresh();
   }
@@ -1124,7 +1125,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.textsComponentesFilters.search_failed = this.localizationService.translate('controls.filter_texts.search_failed_' + this.selectedSearchOption)
   }
 
-  private async clearAreaBeforeSearch() {
+  async clearAreaBeforeSearch() {
     await this.updateRegion(this.defaultRegion)
 
     await timer(2000).pipe(take(1)).toPromise();
@@ -1227,11 +1228,11 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   addSwipe(layer) {
-    this.addLayersToLeftSideSwipe();
-    this.changeLayerVisibility({layer: layer.get('descriptorLayer'), updateSource: false})
+    this.changeLayerVisibility({layer: layer.get('descriptorLayer'), updateSource: false });
+    this.addLayersToLeftSideSwipe(layer);
     this.swiperControl.addLayer(layer, true);
+    this.map.addControl(this.swiperControl);
     setTimeout(() => {
-      this.map.addControl(this.swiperControl);
       this.map.updateSize()
     });
   }
@@ -1240,11 +1241,13 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.map.removeControl(this.swiperControl);
   }
 
-  addLayersToLeftSideSwipe(){
-    const leftLayers = this.map.getLayers().getArray().find(l => l.get('type') === 'layer');
-    if(leftLayers){
-      this.swiperControl.addLayer(leftLayers, false);
-    }
+  addLayersToLeftSideSwipe(lay){
+    this.map.getLayers().getArray().forEach(layer => {
+      console.log('addLayersToLeftSideSwipe', layer)
+      if(layer.get('type') === 'layer' && layer.get('key') !== lay.get('key') && layer.getVisible()) {
+        this.swiperControl.addLayer(layer, false);
+      }
+    });
     setTimeout(() => {
       this.map.updateSize()
     });
