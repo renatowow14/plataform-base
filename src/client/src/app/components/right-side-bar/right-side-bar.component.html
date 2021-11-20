@@ -1,12 +1,7 @@
-<p-sidebar
-position="right"
-[modal]="false"
-(onHide)="hideSideBar()"
-[(visible)]="_displayOptions"
->
-<h4 class="title"> {{'dataSeries.title' | translate}}</h4>
+<p-sidebar position="right" [modal]="false" (onHide)="hideSideBar()" [(visible)]="_displayOptions">
+  <h4 class="title"> {{'right_sidebar.title' | translate}}</h4>
 
-<!-- <div class="chart-region">
+  <!-- <div class="chart-region">
     <h5>
         <button [matTooltip]="titlesLayerBox.region_tooltip" *ngIf="selectRegion.type != 'biome'" color="primary" (click)="openRegionReport()" style="font-size: 30px;" mat-icon-button>
             <mat-icon>text_snippet</mat-icon>
@@ -14,7 +9,7 @@ position="right"
         <strong> {{ selectRegion.text }} </strong>
     </h5>
 </div> -->
-<!-- <div class="row">
+  <!-- <div class="row">
     <p-accordion class="dados" [multiple]="true" (onOpen)="onOpenLateralAccordionLULCTab($event)" (onClose)="onCloseLateralAccordionLULCTab($event)">
         <p-accordionTab class="tabs" header="{{dataSeries.label}}" [selected]="true">
             <p style="text-align:justify; margin-bottom: 10px">
@@ -27,159 +22,160 @@ position="right"
         </p-accordionTab>
         </p-accordion>
 </div> -->
-<!--  <p-chart type="line" [data]="data" [options]="options"></p-chart> -->
-<!--<p-chart [type]="dataSeries.type" [responsive]="true" [data]="dataSeries" [options]="optionsTimeSeries">
+  <!--  <p-chart type="line" [data]="data" [options]="options"></p-chart> -->
+  <!--<p-chart [type]="dataSeries.type" [responsive]="true" [data]="dataSeries" [options]="optionsTimeSeries">
 </p-chart> -->
 
-<!-- <button [matTooltip]="titlesLayerBox.region_tooltip" *ngIf="selectRegion.type != 'biome'" color="primary" (click)="openRegionReport()" style="font-size: 30px;" mat-icon-button>
+  <!-- <button [matTooltip]="titlesLayerBox.region_tooltip" *ngIf="selectRegion.type != 'biome'" color="primary" (click)="openRegionReport()" style="font-size: 30px;" mat-icon-button>
   <mat-icon>text_snippet</mat-icon>
 </button> -->
 
 
-<div class="content"  >
+  <div class="content">
 
 
-<div class="layer-merge" align="center">
-  <div class="layer-card-header">
-<div class="chart-region divReportButton">
-  <button  class="reportButton"  mat-icon-button>
-    <mat-icon>text_snippet</mat-icon>
-</button>
-<h5 class="chart-region inline"> BRASIL</h5>
-</div>
-</div>
-</div>
-
-  <div  [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-    <div (click)="expendGroup = !expendGroup" class="abstract" (click)="triggerSeriesChartDeforestation($event)">
-      <span>
-        <i class='bx bx-trending-up'></i>
-        <div class="group-label">{{'dataSeries.graphictitle' | translate}}</div>
-      </span>
-      <i [class]="expendGroup ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
-
-    </div>
-    <div class="details">
-      <div class="details-inner">
-
-        <div class="margin">
-          <button class="matButton" color="primary" (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
-              <mat-icon>aspect_ratio</mat-icon>
+    <div class="layer-merge" align="center">
+      <div class="layer-card-header">
+        <div class="chart-region divReportButton">
+          <button class="reportButton" mat-icon-button>
+            <mat-icon>text_snippet</mat-icon>
           </button>
-          <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
+          <h5 class="chart-region inline"> BRASIL</h5>
+        </div>
+      </div>
+    </div>
+
+    <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
+      <div (click)="expendGroup = !expendGroup" class="abstract" (click)="triggerSeriesChartDeforestation($event)">
+        <span>
+          <i class='bx bx-trending-up'></i>
+          <div class="group-label">{{'right_sidebar.cards_titles.deforestation_timeseries' | translate}}</div>
+        </span>
+        <i [class]="expendGroup ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+
+      </div>
+      <div class="details">
+        <div class="details-inner">
+
+          <div class="margin">
+            <button class="matButton" color="primary"
+              (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+              <mat-icon>aspect_ratio</mat-icon>
+            </button>
+            <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que
+              representa 44,42 % da sua área total. </h4>
+
+          </div>
+          <br><br>
+          <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
+          <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation"
+            [responsive]="true" [data]="DeforestationChart.dataDeforestation"
+            [options]="DeforestationChart.optionsDeforestation"></p-chart>
 
         </div>
-      <br><br>
-        <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
-       <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation" [responsive]="true" [data]="DeforestationChart.dataDeforestation" [options]="DeforestationChart.optionsDeforestation"></p-chart>
-
       </div>
     </div>
-   </div>
 
-  <div  [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'">
-    <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="triggerSeriesChartLulc($event)">
-      <span>
-        <i class='bx bx-trending-up'></i>
-        <div class="group-label">Uso do solo</div>
-      </span>
-      <i [class]="expendGroup2 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
-    </div>
-    <div class="details">
-      <div class="details-inner">
-        <p-tabView >
-          <p-tabPanel header="Gráfico 1">
-         <div class="margin">
-              <button class="matButton"color="primary" (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+    <div [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'">
+      <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="triggerSeriesChartLulc($event)">
+        <span>
+          <i class='bx bx-trending-up'></i>
+          <div class="group-label">{{'right_sidebar.cards_titles.lulc_pie' | translate}}</div>
+        </span>
+        <i [class]="expendGroup2 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+      </div>
+      <div class="details">
+        <div class="details-inner">
+          <p-tabView>
+            <p-tabPanel header="Gráfico 1">
+              <div class="margin">
+                <button class="matButton" color="primary"
+                  (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
                   <mat-icon>aspect_ratio</mat-icon>
-              </button>
-              <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
-         </div>
+                </button>
+                <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o
+                  que representa 44,42 % da sua área total. </h4>
+              </div>
 
-            <br><br>
-            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
-          </p-tabPanel>
-          <p-tabPanel header="Gráfico 2">
-            <div class="margin">
-              <button class="matButton" color="primary" (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+              <br><br>
+              <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true"
+                [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
+            </p-tabPanel>
+            <p-tabPanel header="Gráfico 2">
+              <div class="margin">
+                <button class="matButton" color="primary"
+                  (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
                   <mat-icon>aspect_ratio</mat-icon>
-              </button>
-              <h4 class="graphicTitle"> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o que representa 39,40 % da sua área total </h4>
+                </button>
+                <h4 class="graphicTitle"> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o
+                  que representa 39,40 % da sua área total </h4>
 
-            </div>
+              </div>
 
 
-            <br><br>
-            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
+              <br><br>
+              <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true"
+                [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
 
-          </p-tabPanel>
+            </p-tabPanel>
 
-      </p-tabView>
+          </p-tabView>
+        </div>
       </div>
     </div>
-   </div>
 
 
-   <div  [class]="expendGroup3 ? 'group-card group-card-active' :'group-card'">
-    <div (click)="expendGroup3 = !expendGroup3" class="abstract" (click)="triggerSeriesChartLulc($event)">
-      <span>
-        <i class='bx bx-trending-up'></i>
-        <div class="group-label">Tabela</div>
-      </span>
-      <i [class]="expendGroup3 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
-    </div>
-    <div class="details">
-      <div class="details-inner">
-        <div class="card">
-       <!--   <h5>Implicit Pagination</h5> -->
-          <p-table styleClass="p-datatable-sm" [value]="customers" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
-              currentPageReportTemplate="{{'table.showing' | translate}} {first} {{'table.to' | translate}} {last} {{'table.of' | translate}} {totalRecords} {{'table.entries' | translate}}" [rowsPerPageOptions]="[10,25,50]">
+    <div [class]="expendGroup3 ? 'group-card group-card-active' :'group-card'">
+      <div (click)="expendGroup3 = !expendGroup3" class="abstract" (click)="triggerSeriesChartLulc($event)">
+        <span>
+          <i class='bx bx-trending-up'></i>
+          <div class="group-label">{{'right_sidebar.cards_titles.table_example' | translate}}</div>
+        </span>
+        <i [class]="expendGroup3 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+      </div>
+      <div class="details">
+        <div class="details-inner">
+          <div class="card">
+            <!--   <h5>Implicit Pagination</h5> -->
+            <p-table styleClass="p-datatable-sm" [value]="customers" [paginator]="true" [rows]="10"
+              [showCurrentPageReport]="true" responsiveLayout="scroll"
+              currentPageReportTemplate="{{'right_sidebar.table_example_card.showing' | translate}} {first} {{'right_sidebar.table_example_card.to' | translate}} {last} {{'right_sidebar.table_example_card.of' | translate}} {totalRecords} {{'right_sidebar.table_example_card.entries' | translate}}"
+              [rowsPerPageOptions]="[10,25,50]">
               <ng-template pTemplate="header">
-                  <tr>
-                      <th>Name</th>
-                      <th>Country</th>
-                      <th>Company</th>
-                      <th>Representative</th>
-                  </tr>
+                <tr>
+                  <th>Name</th>
+                  <th>Country</th>
+                  <th>Company</th>
+                  <th>Representative</th>
+                </tr>
               </ng-template>
               <ng-template pTemplate="body" let-customer>
-                  <tr>
-                      <td>{{customer.name}}</td>
-                      <td>{{customer.country.name}}</td>
-                      <td>{{customer.company}}</td>
-                      <td>{{customer.representative.name}}</td>
-                  </tr>
+                <tr>
+                  <td>{{customer.name}}</td>
+                  <td>{{customer.country.name}}</td>
+                  <td>{{customer.company}}</td>
+                  <td>{{customer.representative.name}}</td>
+                </tr>
               </ng-template>
               <ng-template pTemplate="paginatorleft">
-                  <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+                <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
               </ng-template>
               <ng-template pTemplate="paginatorright">
-                  <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+                <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
               </ng-template>
-          </p-table>
-      </div>
+            </p-table>
+          </div>
+        </div>
       </div>
     </div>
-   </div>
 
 
 
-</div>
+  </div>
 </p-sidebar>
 
-<p-dialog
-  [maximizable]="true"
-  [baseZIndex]="10000"
-  [draggable]="false"
-  [resizable]="false"
-  [appendTo]="'body'"
-  [modal]="true"
-  [header]="'sdfsfjkhbsdfbsjhkdf'"
-  [(visible)]="displayFullScreenCharts"
-  [style]="{width: '50vw'}"
->
-  <p-chart [type]="chartObject.typeDeforestation" [responsive]="true" [data]="chartObject.dataDeforestation" [options]="chartObject.optionsDeforestation"></p-chart>
+<p-dialog [maximizable]="true" [baseZIndex]="10000" [draggable]="false" [resizable]="false" [appendTo]="'body'"
+  [modal]="true" [header]="'sdfsfjkhbsdfbsjhkdf'" [(visible)]="displayFullScreenCharts" [style]="{width: '50vw'}">
+  <p-chart [type]="chartObject.typeDeforestation" [responsive]="true" [data]="chartObject.dataDeforestation"
+    [options]="chartObject.optionsDeforestation"></p-chart>
 </p-dialog>
-
-
-

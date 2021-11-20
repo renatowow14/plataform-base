@@ -1,246 +1,236 @@
 {
-    "basemans": {
-        "mapbox": "Geopolitical",
-        "bing": "Bing Maps",
-        "google": "Google",
-        "roads": "Roads",
-        "relief": "Relief",
-        "planet": "Planet",
-        "mapbox-dark": "Dark Geopolitical"
+  "basemans": {
+    "mapbox": "Geopolitical",
+    "bing": "Bing Maps",
+    "google": "Google",
+    "roads": "Roads",
+    "relief": "Relief",
+    "planet": "Planet",
+    "mapbox-dark": "Dark Geopolitical"
+  },
+  "controls": {
+    "swipe": "Swipe",
+    "search": "Filters of Map",
+    "draw": "Draw Area",
+    "measure": "Measure Distance",
+    "measureArea": "Measure Area",
+    "point": "Insert Point",
+    "print": "Print Map",
+    "draw_area": {
+      "title": "Drawn Geometries",
+      "feature": {
+        "point": "Point",
+        "polygon": "Polygon",
+        "remove_feature": "Remove Geometry"
+      },
+      "save": "Save",
+      "cancel": "Cancel"
     },
-    "controls": {
-        "swipe": "Swipe",
-        "search": "Filters of Map",
-        "draw": "Draw Area",
-        "measure": "Measure Distance",
-        "measureArea": "Measure Area",
-        "point": "Insert Point",
-        "print": "Print Map",
-        "draw_area": {
-            "title": "Drawn Geometries",
-            "feature": {
-                "point": "Point",
-                "polygon": "Polygon",
-                "remove_feature": "Remove Geometry"
-            },
-            "save": "Save",
-            "cancel": "Cancel"
-        },
-        "details": {
-            "title": "Controls Details",
-            "clear": "Clear Filter",
-            "swipe_placeholder": "Choose a layer to compare",
-            "swipe_remove": "Remove Swipe"
-        },
-        "filter_texts": {
-            "search_lateral_title": "Search by: ",
-            "label_region": "Region",
-            "label_car": "CAR",
-            "label_uc": "Cons. Unit",
-            "search_placeholder_region": "Choose a biome, state or county",
-            "search_placeholder_car": "Please enter the Rural Property Code",
-            "search_placeholder_uc": "Please enter the name of the Conservation Unit",
-            "search_failed_region": "Sorry, region not found.",
-            "search_failed_car": "Sorry, CAR not found.",
-            "search_failed_uc": "Sorry, none Conservation unit were found."
-        }
+    "details": {
+      "title": "Controls Details",
+      "clear": "Clear Filter",
+      "swipe_placeholder": "Choose a layer to compare",
+      "swipe_remove": "Remove Swipe"
     },
-    "left_sidebar": {
-        "title": "Menu",
-        "opacity": "Opacity",
-        "layer": {
-            "metadata": "Layer Metadata",
-            "down_shp": "Download SHP",
-            "down_csv": "Download CSV",
-            "down_raster": "Download TIFF"
-        }
+    "filter_texts": {
+      "search_lateral_title": "Search by: ",
+      "label_region": "Region",
+      "label_car": "CAR",
+      "label_uc": "Cons. Unit",
+      "search_placeholder_region": "Choose a biome, state or county",
+      "search_placeholder_car": "Please enter the Rural Property Code",
+      "search_placeholder_uc": "Please enter the name of the Conservation Unit",
+      "search_failed_region": "Sorry, region not found.",
+      "search_failed_car": "Sorry, CAR not found.",
+      "search_failed_uc": "Sorry, none Conservation unit were found."
+    }
+  },
+  "left_sidebar": {
+    "title": "Menu",
+    "opacity": "Opacity",
+    "layer": {
+      "metadata": "Layer Metadata",
+      "down_shp": "Download SHP",
+      "down_csv": "Download CSV",
+      "down_raster": "Download TIFF"
+    }
+  },
+  "map": {
+    "coordinates": "Coordinates",
+    "find_point": "Find point"
+  },
+  "menu": {
+    "layers": "Layers",
+    "layers_tooltip": "Layers",
+    "statistics": "Statistics",
+    "statistics_tooltip": "Statistics",
+    "area": "Area",
+    "area_tooltip": "Area of interest",
+    "filters": "Filters",
+    "filters_tooltip": "Filters",
+    "options": "Options",
+    "options_tooltip": "Options"
+  },
+  "legend": {
+    "title": "Legends",
+    "move": "Move Layer"
+  },
+  "minimize": "Minimize",
+  "maximize": "Maximize",
+  "planet": "Planet Mosaics",
+  "area": {
+    "upload_submit": "Submit",
+    "upload_msg": "<p> Click the button below to upload your compressed file (.zip or .kmz).</p> <p>Supported formats: geojson, kml and shp.</p>",
+    "upload_max_size_msg": "Este arquivo tem [current-size] MB. O tamanho máximo permitido é de [max-size] MB.",
+    "upload_tooltip": "Send a spatial file",
+    "upload_title_file": "Your file",
+    "upload_token": "Access Token (numbers only): ",
+    "upload_warning": "Area under analysis. This process may take a while due to the geometry area and the amount of space crossings being performed.",
+    "upload_not_found": "Token not found. Please inform a valid token.",
+    "btn_analyze": "Analyze",
+    "btn_clear": "Clear",
+    "btn_search": "Find",
+    "search_title": "Search",
+    "draw_title": "Drawed Area",
+    "analyzed_area_title": "Report of the submitted area",
+    "analyzed_area_total_area": "Total area submitted: ",
+    "analyzed_area_table_city_title": "Municipalities that intersect with the submitted area",
+    "analyzed_area_table_state_title": "States that intersect with the submitted area",
+    "search_tooltip": "Search area using a token.",
+    "drawed_tooltip": "Analyze drawed area on Map."
+  },
+  "options": {
+    "basemaps": "Basemaps",
+    "legend": "Legend",
+    "limits": "Limits",
+    "options": "Other Options",
+    "compass": "Compass",
+    "graticule": "Graticule"
+  },
+  "primeng": {
+    "startsWith": "Starts with",
+    "contains": "Contains",
+    "notContains": "Not contains",
+    "endsWith": "Ends with",
+    "equals": "Equals",
+    "notEquals": "Not equals",
+    "noFilter": "No Filter",
+    "lt": "Less than",
+    "lte": "Less than or equal to",
+    "gt": "Greater than",
+    "gte": "Great then or equals",
+    "is": "Is",
+    "isNot": "Is not",
+    "before": "Before",
+    "after": "After",
+    "clear": "Clear",
+    "apply": "Apply",
+    "matchAll": "Match All",
+    "matchAny": "Match Any",
+    "addRule": "Add Rule",
+    "removeRule": "Remove Rule",
+    "accept": "Yes",
+    "reject": "No",
+    "choose": "Choose",
+    "upload": "Upload",
+    "cancel": "Cancel",
+    "dayNames": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "dayNamesShort": [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "dayNamesMin": [
+      "Su",
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa"
+    ],
+    "monthNames": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "monthNamesShort": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "today": "Today",
+    "weekHeader": "Wk",
+    "weak": "Weak",
+    "medium": "Medium",
+    "strong": "Strong",
+    "passwordPrompt": "Enter a password",
+    "emptyMessage": "No results found",
+    "emptyFilterMessage": "No results found"
+  },
+  "metadata": {
+    "titles": {
+      "title": "Metadata",
+      "description": "Description",
+      "format": "Format",
+      "region": "Region",
+      "period": "Period",
+      "data": "Date",
+      "scale": "Scale",
+      "system_coordinator": "System Coordinator",
+      "cartographic_projection": "Cartographic projection",
+      "cod_caracter": "Character encoding",
+      "coordinates": "Reference and Coordinate Systems",
+      "projection": "Cartographic projection",
+      "caracter": "Character encoding",
+      "fonte": "Source",
+      "update": "Update",
+      "contato": "Contact"
     },
-    "dataSeries": {
-        "title": "Statistics",
-        "graphictitle": "Timeseries"
-    },
-    "map": {
-        "coordinates": "Coordinates",
-        "find_point": "Find point"
-    },
-    "menu": {
-        "layers": "Layers",
-        "layers_tooltip": "Layers",
-        "statistics": "Statistics",
-        "statistics_tooltip": "Statistics",
-        "area": "Area",
-        "area_tooltip": "Area of interest",
-        "filters": "Filters",
-        "filters_tooltip": "Filters",
-        "options": "Options",
-        "options_tooltip": "Options"
-    },
-    "legend": {
-        "title": "Legends",
-        "move": "Move Layer"
-    },
-    "minimize": "Minimize",
-    "maximize": "Maximize",
-    "planet": "Planet Mosaics",
-    "area": {
-        "upload_submit": "Submit",
-        "upload_msg": "<p> Click the button below to upload your compressed file (.zip or .kmz).</p> <p>Supported formats: geojson, kml and shp.</p>",
-        "upload_max_size_msg": "Este arquivo tem [current-size] MB. O tamanho máximo permitido é de [max-size] MB.",
-        "upload_tooltip": "Send a spatial file",
-        "upload_title_file": "Your file",
-        "upload_token": "Access Token (numbers only): ",
-        "upload_warning": "Area under analysis. This process may take a while due to the geometry area and the amount of space crossings being performed.",
-        "upload_not_found": "Token not found. Please inform a valid token.",
-        "btn_analyze": "Analyze",
-        "btn_clear": "Clear",
-        "btn_search": "Find",
-        "search_title": "Search",
-        "draw_title": "Drawed Area",
-        "analyzed_area_title": "Report of the submitted area",
-        "analyzed_area_total_area": "Total area submitted: ",
-        "analyzed_area_table_city_title": "Municipalities that intersect with the submitted area",
-        "analyzed_area_table_state_title": "States that intersect with the submitted area",
-        "search_tooltip": "Search area using a token.",
-        "drawed_tooltip": "Analyze drawed area on Map."
-    },
-    "options": {
-        "basemaps": "Basemaps",
-        "legend": "Legend",
-        "limits": "Limits",
-        "options": "Other Options",
-        "compass": "Compass",
-        "graticule": "Graticule"
-    },
-    "table": {
-        "showing": "Showing",
-        "of": "of",
-        "to": "to",
-        "entries": "entries"
-    },
-    "primeng": {
-        "startsWith": "Starts with",
-        "contains": "Contains",
-        "notContains": "Not contains",
-        "endsWith": "Ends with",
-        "equals": "Equals",
-        "notEquals": "Not equals",
-        "noFilter": "No Filter",
-        "lt": "Less than",
-        "lte": "Less than or equal to",
-        "gt": "Greater than",
-        "gte": "Great then or equals",
-        "is": "Is",
-        "isNot": "Is not",
-        "before": "Before",
-        "after": "After",
-        "clear": "Clear",
-        "apply": "Apply",
-        "matchAll": "Match All",
-        "matchAny": "Match Any",
-        "addRule": "Add Rule",
-        "removeRule": "Remove Rule",
-        "accept": "Yes",
-        "reject": "No",
-        "choose": "Choose",
-        "upload": "Upload",
-        "cancel": "Cancel",
-        "dayNames": [
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday"
-        ],
-        "dayNamesShort": [
-            "Sun",
-            "Mon",
-            "Tue",
-            "Wed",
-            "Thu",
-            "Fri",
-            "Sat"
-        ],
-        "dayNamesMin": [
-            "Su",
-            "Mo",
-            "Tu",
-            "We",
-            "Th",
-            "Fr",
-            "Sa"
-        ],
-        "monthNames": [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-        ],
-        "monthNamesShort": [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec"
-        ],
-        "today": "Today",
-        "weekHeader": "Wk",
-        "weak": "Weak",
-        "medium": "Medium",
-        "strong": "Strong",
-        "passwordPrompt": "Enter a password",
-        "emptyMessage": "No results found",
-        "emptyFilterMessage": "No results found"
-    },
-    "metadata": {
-        "titles": {
-            "title": "Metadata",
-            "description": "Description",
-            "format": "Format",
-            "region": "Region",
-            "period": "Period",
-            "data": "Date",
-            "scale": "Scale",
-            "system_coordinator": "System Coordinator",
-            "cartographic_projection": "Cartographic projection",
-            "cod_caracter": "Character encoding",
-            "coordinates": "Reference and Coordinate Systems",
-            "projection": "Cartographic projection",
-            "caracter": "Character encoding",
-            "fonte": "Source",
-            "update": "Update",
-            "contato": "Contact"
-        },
-        "agricultura_agrosatelite": {
-            "title": "Agricultura - Agrosatélite",
-            "description": "Dynamics of expanding the area planted with annual crops in the Cerrado Biome.",
-            "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
-            "region": "Cerrado Biome, allowing to analyze the classes of land use by other regions of interest such as: states and municipalities.",
-            "period": "2001; 2007; 2014",
-            "scale": "1:250.000",
-            "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
-            "cartographic_projection": "Universal Transverse Mercator",
-            "cod_caracter": "Latin 1",
-            "fonte": "Agrosatélite Applied Geotechnology, Gordon and Betty Moore Foundation (funders)"
-        }
-    },
-    "descriptor_labels": {
+    "agricultura_agrosatelite": {
+      "title": "Agricultura - Agrosatélite",
+      "description": "Dynamics of expanding the area planted with annual crops in the Cerrado Biome.",
+      "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
+      "region": "Cerrado Biome, allowing to analyze the classes of land use by other regions of interest such as: states and municipalities.",
+      "period": "2001; 2007; 2014",
+      "scale": "1:250.000",
+      "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
+      "cartographic_projection": "Universal Transverse Mercator",
+      "cod_caracter": "Latin 1",
+      "fonte": "Agrosatélite Applied Geotechnology, Gordon and Betty Moore Foundation (funders)"
+    }
+  },
+  "descriptor_labels": {
     "groups": {
       "agropecuaria": {
         "labelGroup": "Agropecuária",
@@ -403,6 +393,50 @@
         "biomas": "Biomas do Brasil",
         "limites_cartas_ibge": "Cartas do IBGE"
       }
+    }
+  },
+  "right_sidebar": {
+    "title": "Statistics",
+    "cards_titles": {
+      "deforestation_timeseries": "Timeseries",
+      "lulc_pie": "Land Use and Land Cover",
+      "table_example": "Example of Table"
+    },
+    "regions_texts": {},
+    "deforestation_timeseries_card": {
+      "biome": "The Cerrado biome, ",
+      "do_bioma": "of the Cerrado biome",
+      "o_municipio_estado": "The ",
+      "de_municipio_estado": " of ",
+      "do_municipio_estado": " of ",
+      "region_fronteira": "The border region of ",
+      "da_region_fronteira": "The border region of the ",
+      "municipio_label": "municipality",
+      "estado_label": "state"
+    },
+    "lulc_pie_card": {
+      "uso_solo_terraclass": {
+        "part1": "According to the TerraClass Cerrado project (referring to the year of 2013), ",
+        "part2": " has a total area of ",
+        "part3": " hectares,",
+        "part4": " the class being ",
+        "part5": " the most predominant, with ",
+        "part6": " hectares (",
+        "part7": "% of the total area)."
+      },
+      "uso_solo_probio": {
+        "part1": "According to the PROBIO Cerrado project (referring to the year 2002), a land cover that predominates most in this region",
+        "part2": " is the ",
+        "part3": " covering about ",
+        "part4": " hectares (",
+        "part5": "% of the total area)."
+      }
+    },
+    "table_example_card": {
+      "showing": "Showing",
+      "of": "of",
+      "to": "to",
+      "entries": "entries"
     }
   }
 }
