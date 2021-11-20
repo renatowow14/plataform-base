@@ -102,7 +102,7 @@
       box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
 
       .p-sidebar-close {
-        width: 4rem;
+        width: 8rem;
 
         &:hover {
           background: transparent;
@@ -702,7 +702,7 @@
       box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
 
       .p-sidebar-close {
-        width: 4rem;
+        width: 8rem;
 
         &:hover {
           background: transparent;
@@ -713,9 +713,10 @@
         transition: all 0.5s ease;
 
         .logo {
-          max-width: 50%;
+          max-width: 70%;
           width: 100%;
           padding: 10px;
+          margin-top: 5px;
         }
       }
     }

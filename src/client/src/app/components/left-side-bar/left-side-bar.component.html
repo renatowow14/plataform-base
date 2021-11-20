@@ -2,7 +2,8 @@
   <div class="sidebar">
     <div [class]="open ? 'open ' : '' ">
       <div class="logo-details">
-        <i class='bx bxl-c-plus-plus icon' (click)='toggleMenu()'></i>
+        <img src="../../../assets/logos/icone.png" (click)='toggleMenu()'>
+<!--        <i class='bx bxl-c-plus-plus icon' (click)='toggleMenu()'></i>-->
       </div>
       <ul #leftSidebar class="nav-list">
         <drag-scroll class="nav-list-drag" [scrollbar-hidden]="true" [drag-scroll-x-disabled]="true">
