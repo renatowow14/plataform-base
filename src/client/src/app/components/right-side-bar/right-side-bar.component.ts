@@ -16,6 +16,7 @@ import { CustomerService } from '../services/customer.service';
 import { Customer } from 'src/app/@core/interfaces/customer';
 import { Descriptor, Layer, Legend, Menu } from "../../@core/interfaces";
 import Map from 'ol/Map';
+import { reduce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-right-side-bar',
@@ -51,6 +52,7 @@ export class RightSideBarComponent implements OnInit {
   public changeTabSelected = ""
   public data: any;
   public DeforestationChart: any;
+  public ob: any = {};
   public LulcChart: any;
   public LulcChart2: any;
   public userAppData2: any;
@@ -84,6 +86,7 @@ export class RightSideBarComponent implements OnInit {
   public layersSideBar: boolean;
   public layersSideBarMobile: boolean;
   public displayFullScreenCharts: boolean;
+  public displayDashboard: boolean;
   public chartObject: any;
 
 
@@ -98,10 +101,26 @@ export class RightSideBarComponent implements OnInit {
 
     //Charts Variables
     this.displayFullScreenCharts = false;
+    this.displayDashboard = false;
     this.chartObject = {};
     this.changeTabSelected = "";
 
     this.LulcChart = {};
+
+    this.dataSeries = {};
+
+    this.defaultRegion = {
+      type: 'biome',
+      text: 'BRASIL',
+      value: 'Brasil'
+    };
+    this.selectRegion = this.defaultRegion;
+
+    this.desmatInfo = {
+      value: 'year=2020',
+      Viewvalue: '2019/2020',
+      year: 2020
+    };
 
     this.data = [{
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -180,24 +199,6 @@ export class RightSideBarComponent implements OnInit {
       },
     };
 
-    //end chart test
-
-    //Legendas
-    this.Legendas = [
-      {
-        nome: '<= 5km²',
-        color: 'green'
-      },
-      {
-        nome: '5 - 15 km²',
-        color: 'orange'
-      },
-      {
-        nome: '15 - 25 km²',
-        color: 'yellow'
-      }
-    ];
-
     this.expendGroup = false;
     this.expendGroup2 = false;
     this.expendGroup3 = false;
@@ -213,6 +214,11 @@ export class RightSideBarComponent implements OnInit {
     this.innerHeigth = window.innerHeight;
   }
 
+
+  openDashboard() {
+    this.displayDashboard = true;
+  }
+
   openCharts(data, type, options) {
     let ob = {
       // title: title,
@@ -222,7 +228,10 @@ export class RightSideBarComponent implements OnInit {
       options: options,
     }
     this.displayFullScreenCharts = true;
-    this.chartObject = this.DeforestationChart;
+
+    this.ob = ob;
+
+    console.log(this.ob);
     // this.dialog.open(ChartsComponent, {
     //   width: 'calc(100% - 20em)',
     //   height: 'calc(100% - 10em)',
@@ -258,7 +267,7 @@ export class RightSideBarComponent implements OnInit {
     return this.customers ? this.first === 0 : true;
   }
 
-  triggerSeriesChartLulc(event: Event) {
+  triggerSeriesChartLulc() {
     this.LulcChart = {
       dataLulc: this.timeSeriesResultLulc.data,
       optionsLulc: this.optionsTimeSeriesLulc,
@@ -318,7 +327,6 @@ export class RightSideBarComponent implements OnInit {
 
   updateDeforestationTimeSeries() {
     let params: string[] = [];
-
     // params.push('lang=' + this.lang)
     // params.push('typeRegion=' + this.selectRegion.type)
     // params.push('valueRegion=' + this.selectRegion.value)
@@ -328,6 +336,7 @@ export class RightSideBarComponent implements OnInit {
     this.chartService.getDeforestation(textParam).subscribe(result => {
       tempResultDeforestation = result;
       for (let graphic of tempResultDeforestation) {
+
         graphic.data = {
           labels: graphic.indicators.map(element => element.label),
           datasets: [
@@ -337,12 +346,14 @@ export class RightSideBarComponent implements OnInit {
               fill: false,
               borderColor: '#289628',
               backgroundColor: '#289628'
+
             }
           ],
 
-        };
+        }
 
       }
+
       this.timeSeriesResultDeforestation = tempResultDeforestation[0];
     }, error => {
       console.log(error)
@@ -350,55 +361,57 @@ export class RightSideBarComponent implements OnInit {
 
 
     this.DeforestationChart = {};
+    this.ob = {};
 
     this.optionsTimeSeriesDeforestation = {
       responsive: true,
       plugins: {
-        tooltips: {
+        tooltip: {
           callbacks: {
-            label(tooltipItem, data) {
+            label: function(tooltipItem, data) {
+              console.log('data:', data);
               let percent = parseFloat(
                 data['datasets'][0]['data'][tooltipItem['index']]
               ).toLocaleString('de-DE');
               return percent + ' km²';
             }
-          }
+          },
+          usePointStyle: true
         },
+        title: {
+          align: 'bottom'
+        },
+        legend: {
+          align: 'end',
+          position: 'bottom'
+        }
+      },
         scales: {
-          x: [
+          y:
             {
               ticks: {
                 callback(value) {
                   return value.toLocaleString('de-DE') + ' km²';
-                }
+                },
+                color: 'red'
               }
             }
-          ],
+        },
 
-        },
-        title: {
-          display: false,
-          fontSize: 14
-        },
-        legend: {
-          labels: {
-            usePointStyle: true,
-            fontSize: 14
-          },
-          // onHover(event) {
-          //   event.target.style.cursor = 'pointer';
-          // },
-          // onLeave(event) {
-          //   event.target.style.cursor = 'default';
-          // },
-          position: 'bottom'
-        }
-      }
+
     };
 
   }
 
+  updateStatistics(region) {
+   this.selectRegion = region;
+   console.log("region:", region);
+   this.updateLulcTimeSeries();
+   this.triggerSeriesChartLulc();
+  }
+
   updateLulcTimeSeries() {
+
     let params: string[] = [];
 
     console.log(this.selectRegion)
@@ -412,6 +425,7 @@ export class RightSideBarComponent implements OnInit {
     this.chartService.getLulc(textParam).subscribe(result => {
       tempResultLulc = result;
       for (let graphic of tempResultLulc) {
+
         graphic.data = {
           labels: graphic.indicators.map(element => element.label),
           datasets: [
@@ -426,8 +440,8 @@ export class RightSideBarComponent implements OnInit {
 
         };
 
-
       }
+      console.log("result:", tempResultLulc);
       this.timeSeriesResultLulc = tempResultLulc[0];
       this.timeSeriesResultLulc2 = tempResultLulc[1];
     }, error => {
@@ -443,28 +457,14 @@ export class RightSideBarComponent implements OnInit {
       plugins: {
         tooltips: {
           callbacks: {
-            label(tooltipItem, data) {
+            text: function(tooltipItem, data) {
+              console.log('data:', data);
               let percent = parseFloat(
                 data['datasets'][0]['data'][tooltipItem['index']]
               ).toLocaleString('de-DE');
               return percent + ' km²';
             }
           }
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                callback(value) {
-                  return value.toLocaleString('de-DE') + ' km²';
-                }
-              }
-            }
-          ]
-        },
-        title: {
-          display: false,
-          fontSize: 14
         },
         legend: {
           labels: {
@@ -479,7 +479,23 @@ export class RightSideBarComponent implements OnInit {
           // },
           position: 'bottom'
         }
-      }
+      },
+        scales: {
+          y:
+            {
+              ticks: {
+                callback(value) {
+                  return value.toLocaleString('de-DE') + ' km²';
+                }
+              }
+            }
+        },
+        title: {
+          display: false,
+          fontSize: 14
+        },
+
+
     };
   }
 

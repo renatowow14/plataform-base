@@ -11,10 +11,10 @@ export class ChartService {
   //app.get('/service/charts/lulc', dataInjector, charts.chartslulc);
   //app.get('/service/charts/deforestation', dataInjector, charts.deforestation);
 
-  //var language = request.param('lang')
-  //var typeRegion = request.param('typeRegion');
-  //var textRegion = request.param('textRegion');
-  //var region = languageJson["charts_regions"]["biome"][language]
+ //var language = request.param('lang')
+ //var typeRegion = request.param('typeRegion');
+ //var textRegion = request.param('textRegion');
+ //var region = languageJson["charts_regions"]["biome"][language]
 
   //  return this.httpClient.post(this.apiURL + "/shp", parameters, { responseType: 'blob' })
 

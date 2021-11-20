@@ -34,16 +34,16 @@
   <div class="content">
 
 
-    <div class="layer-merge" align="center">
-      <div class="layer-card-header">
-        <div class="chart-region divReportButton">
-          <button class="reportButton" mat-icon-button>
-            <mat-icon>text_snippet</mat-icon>
-          </button>
-          <h5 class="chart-region inline"> BRASIL</h5>
-        </div>
-      </div>
-    </div>
+<div class="layer-merge" align="center">
+  <div class="layer-card-header">
+<div class="chart-region divReportButton">
+  <button  class="reportButton" (click)="openDashboard()" mat-icon-button>
+    <mat-icon>text_snippet</mat-icon>
+</button>
+<h5 class="chart-region inline"> {{defaultRegion.text}}</h5>
+</div>
+</div>
+</div>
 
     <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
       <div (click)="expendGroup = !expendGroup" class="abstract" (click)="triggerSeriesChartDeforestation($event)">
@@ -57,90 +57,71 @@
       <div class="details">
         <div class="details-inner">
 
-          <div class="margin">
-            <button class="matButton" color="primary"
-              (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+        <div class="margin">
+          <button class="matButton" color="primary" (click)="openCharts(DeforestationChart.dataDeforestation, DeforestationChart.typeDeforestation, DeforestationChart.optionsDeforestation)" mat-icon-button>
               <mat-icon>aspect_ratio</mat-icon>
-            </button>
-            <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que
-              representa 44,42 % da sua área total. </h4>
-
-          </div>
-          <br><br>
-          <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
-          <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation"
-            [responsive]="true" [data]="DeforestationChart.dataDeforestation"
-            [options]="DeforestationChart.optionsDeforestation"></p-chart>
-
+          </button>
+          <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
         </div>
+      <br><br>
+        <!--  <p-chart type="pie" [data]="userAppData2" [options]="options"></p-chart> -->
+       <p-chart *ngIf="DeforestationChart.typeDeforestation" [type]="DeforestationChart.typeDeforestation" [responsive]="true" [data]="DeforestationChart.dataDeforestation" [options]="DeforestationChart.optionsDeforestation"></p-chart>
       </div>
     </div>
+   </div>
 
-    <div [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'">
-      <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="triggerSeriesChartLulc($event)">
-        <span>
-          <i class='bx bx-trending-up'></i>
-          <div class="group-label">{{'right_sidebar.cards_titles.lulc_pie' | translate}}</div>
-        </span>
-        <i [class]="expendGroup2 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
-      </div>
-      <div class="details">
-        <div class="details-inner">
-          <p-tabView>
-            <p-tabPanel header="Gráfico 1">
-              <div class="margin">
-                <button class="matButton" color="primary"
-                  (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+  <div  [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'">
+    <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="triggerSeriesChartLulc()">
+      <span>
+        <i class='bx bx-trending-up'></i>
+        <div class="group-label">{{'right_sidebar.cards_titles.lulc_pie' | translate}}</div>
+      </span>
+      <i [class]="expendGroup2 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+    </div>
+    <div class="details">
+      <div class="details-inner">
+        <p-tabView >
+          <p-tabPanel header="Gráfico 1">
+         <div class="margin">
+              <button class="matButton"color="primary" (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
                   <mat-icon>aspect_ratio</mat-icon>
-                </button>
-                <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o
-                  que representa 44,42 % da sua área total. </h4>
-              </div>
-
-              <br><br>
-              <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true"
-                [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
-            </p-tabPanel>
-            <p-tabPanel header="Gráfico 2">
-              <div class="margin">
-                <button class="matButton" color="primary"
-                  (click)="openCharts(LulcChart.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
+              </button>
+              <h4 class="graphicTitle"> O Município de Correntina - BA possui uma Área Antrópica de 5.105,05 km², o que representa 44,42 % da sua área total. </h4>
+         </div>
+            <br><br>
+            <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
+          </p-tabPanel>
+          <p-tabPanel header="Gráfico 2">
+            <div class="margin">
+              <button class="matButton" color="primary" (click)="openCharts(LulcChart2.dataLulc, LulcChart.typeLulc, LulcChart.optionsLulc)" mat-icon-button>
                   <mat-icon>aspect_ratio</mat-icon>
-                </button>
-                <h4 class="graphicTitle"> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o
-                  que representa 39,40 % da sua área total </h4>
-
-              </div>
-
-
-              <br><br>
-              <p-chart *ngIf="LulcChart.typeLulc" [type]="LulcChart.typeLulc" [responsive]="true"
-                [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
-
-            </p-tabPanel>
-
-          </p-tabView>
-        </div>
+              </button>
+              <h4 class="graphicTitle"> O Município de Campos Belos - GO possui uma Área Antrópica de 285,28 km², o que representa 39,40 % da sua área total </h4>
+            </div>
+            <br><br>
+            <p-chart *ngIf="LulcChart2.dataLulc" [type]="LulcChart.typeLulc" [responsive]="true" [data]="LulcChart2.dataLulc" [options]="LulcChart.optionsLulc"></p-chart>
+          </p-tabPanel>
+      </p-tabView>
       </div>
     </div>
+   </div>
 
-
-    <div [class]="expendGroup3 ? 'group-card group-card-active' :'group-card'">
-      <div (click)="expendGroup3 = !expendGroup3" class="abstract" (click)="triggerSeriesChartLulc($event)">
-        <span>
-          <i class='bx bx-trending-up'></i>
-          <div class="group-label">{{'right_sidebar.cards_titles.table_example' | translate}}</div>
-        </span>
-        <i [class]="expendGroup3 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
-      </div>
-      <div class="details">
-        <div class="details-inner">
-          <div class="card">
-            <!--   <h5>Implicit Pagination</h5> -->
-            <p-table styleClass="p-datatable-sm" [value]="customers" [paginator]="true" [rows]="10"
-              [showCurrentPageReport]="true" responsiveLayout="scroll"
-              currentPageReportTemplate="{{'right_sidebar.table_example_card.showing' | translate}} {first} {{'right_sidebar.table_example_card.to' | translate}} {last} {{'right_sidebar.table_example_card.of' | translate}} {totalRecords} {{'right_sidebar.table_example_card.entries' | translate}}"
-              [rowsPerPageOptions]="[10,25,50]">
+   <div  [class]="expendGroup3 ? 'group-card group-card-active' :'group-card'">
+    <div (click)="expendGroup3 = !expendGroup3" class="abstract" (click)="triggerSeriesChartLulc()">
+      <span>
+        <i class='bx bx-trending-up'></i>
+        <div class="group-label">{{'right_sidebar.cards_titles.table_example' | translate}}</div>
+      </span>
+      <i [class]="expendGroup3 ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'" ></i>
+    </div>
+    <div class="details">
+      <div class="details-inner">
+        <div class="card">
+       <!--   <h5>Implicit Pagination</h5> -->
+          <p-table styleClass="p-datatable-sm" [value]="customers" [paginator]="true" [rows]="10"
+                   [showCurrentPageReport]="true" responsiveLayout="scroll"
+                   currentPageReportTemplate="{{'right_sidebar.table_example_card.showing' | translate}} {first} {{'right_sidebar.table_example_card.to' | translate}} {last} {{'right_sidebar.table_example_card.of' | translate}} {totalRecords} {{'right_sidebar.table_example_card.entries' | translate}}"
+                   [rowsPerPageOptions]="[10,25,50]">
               <ng-template pTemplate="header">
                 <tr>
                   <th>Name</th>
@@ -174,8 +155,182 @@
   </div>
 </p-sidebar>
 
-<p-dialog [maximizable]="true" [baseZIndex]="10000" [draggable]="false" [resizable]="false" [appendTo]="'body'"
-  [modal]="true" [header]="'sdfsfjkhbsdfbsjhkdf'" [(visible)]="displayFullScreenCharts" [style]="{width: '50vw'}">
-  <p-chart [type]="chartObject.typeDeforestation" [responsive]="true" [data]="chartObject.dataDeforestation"
-    [options]="chartObject.optionsDeforestation"></p-chart>
+
+<p-dialog
+  [maximizable]="true"
+  [baseZIndex]="10000"
+  [draggable]="false"
+  [resizable]="false"
+  [modal]="true"
+  [header]="'Relatório'"
+  [(visible)]="displayDashboard"
+  [style]="{width: '50vw'}"
+>
+
+<section id="regionReport" class="container-fluid">
+  <div class="row">
+      <div class="col-12">
+          <p-scrollPanel [style]="{width: '100%', height: '100%'}">
+              <div class="row">
+                  <div class="col-9">
+                      <h5 class="title-report">teste </h5>
+                  </div>
+                  <div class="col-3">
+                      <a href="" target="_blank">
+                          <img class="logo-report" /></a>
+                  </div>
+              </div>
+              <div class="row">
+                  <p-accordion class="dados" [multiple]="true">
+                      <p-accordionTab class="tabs" header="" [selected]="true">
+                          <div class="p-grid p-justify-even">
+                              <div class="p-col">
+                                  <p class="title-info">teste</p>
+                              </div>
+                              <div class="p-col">
+                                  <h5 class="subtitles-report">
+                                      <strong>teste</strong>
+                                  </h5>
+                                  <table class="tb-metadata" style="width:100%">
+                                      <tr>
+                                          <th class="table-label">teste</th>
+                                          <th class="table-value">teste</th>
+                                      </tr>
+                                      <tr>
+                                          <th class="table-label">teste</th>
+                                          <th class="table-value">
+                                              teste km²</th>
+                                      </tr>
+                                      <tr>
+                                          <th class="table-label">teste</th>
+                                          <th class="table-value">
+                                             <!-- {{dados.region.metadata[0]?.area_antropica | number:'1.2-2'}} --> teste km²</th>
+                                      </tr>
+                                  </table>
+                                  <br><br>
+                                  <h5 class="subtitles-report">
+                                      <strong>teste</strong>
+                                  </h5>
+                                  <div class="legend">
+                                      <!--                                            <img *ngIf="dados.region.legendas.legendDesmatamento" [src]="dados.region.legendas.legendDesmatamento">-->
+                                      <img *ngIf="" [src]="">
+                                      <img *ngIf="" [src]="">
+                                  </div>
+                              </div>
+                          </div>
+                      </p-accordionTab>
+                      <p-accordionTab class="tabs" header="">
+                          <div id="reportChart" class="p-grid " *ngIf="">
+                              <div class="p-col" style="width: 98%;">
+                                  <p class="resume">teste</p><br>
+                                  <p-chart >
+                                  </p-chart>
+                              </div>
+                          </div>
+                      </p-accordionTab>
+                      <p-accordionTab class="tabs" header="">
+                          <div class="p-grid p-justify-even" *ngIf="">
+                              <div class="p-col" style="min-width: 300px; max-width: 390px; width: 100%;" >
+                                  <mat-card class="card-amostral">
+                                      <mat-card-header>
+                                          <mat-card-title>teste: teste</mat-card-title>
+                                      </mat-card-header>
+
+                                      <img >
+                                      <mat-card-content>
+                                          <table class="tb-imgs" style="width:100%">
+
+                                              <tr>
+                                                  <th class="table-label">teste</th>
+                                                  <th class="table-value">teste km²
+                                                  </th>
+                                              </tr>
+                                              <tr>
+                                                  <th class="table-label">teste</th>
+                                                  <th class="table-value">teste km²
+                                                  </th>
+                                              </tr>
+                                              <tr >
+                                                  <th class="table-label">teste</th>
+                                                  <th class="table-value">teste km²</th>
+                                              </tr>
+                                              <tr >
+                                                  <th class="table-label">teste</th>
+                                                  <th class="table-value">teste km²</th>
+                                              </tr>
+                                          </table>
+                                      </mat-card-content>
+                                  </mat-card>
+                              </div>
+                          </div>
+                      </p-accordionTab>
+                      <p-accordionTab class="tabs" *ngIf="" header="">
+                          <div class="p-grid p-justify-even">
+                              <div class="p-col">
+                                  <h6>
+                                      <b>teste
+                                          teste</b>
+                                  </h6>
+                                  <p-table [autoLayout]="true"  selectionMode="single">
+                                      <ng-template pTemplate="header">
+                                          <tr align="center">
+                                              <th >
+                                                  teste
+                                              </th>
+                                          </tr>
+                                      </ng-template>
+                                      <ng-template pTemplate="body" let-city>
+                                          <tr [pSelectableRow]="city" tooltipPosition="bottom" life="2000">
+                                              <td align="center">teste</td>
+                                              <td align="center">teste</td>
+                                              <td align="center">teste</td>
+                                              <td align="center">teste km²</td>
+                                          </tr>
+                                      </ng-template>
+                                  </p-table>
+                              </div>
+                          </div>
+                      </p-accordionTab>
+                  </p-accordion>
+              </div>
+              <div class="row">
+                  <div class="p-grid p-dir-rev mt-5">
+                      <div class="p-col-12">
+                          <img class="report-partners" src="" />
+                      </div>
+                  </div>
+              </div>
+          </p-scrollPanel>
+      </div>
+      <div class="container-buttons">
+          <button color="primary" classs="btn-info " mat-icon-button >
+              <mat-icon>print</mat-icon>
+              <mat-spinner class="spinner" [strokeWidth]="2" [diameter]="18"  color="primary"
+                  mode="indeterminate"></mat-spinner>
+          </button>
+          <button  color="primary" classs="btn-info " mat-icon-button>
+              <mat-icon>highlight_off</mat-icon>
+          </button>
+      </div>
+  </div>
+</section>
+
 </p-dialog>
+
+<p-dialog
+  [maximizable]="true"
+  [baseZIndex]="10000"
+  [draggable]="false"
+  [resizable]="false"
+  [modal]="true"
+  [header]="'Gráficos'"
+  [(visible)]="displayFullScreenCharts"
+  [style]="{width: '50vw'}"
+>
+
+<p-chart *ngIf="ob.type" [type]="ob.type" [responsive]="true" [data]="ob.data" [options]="ob.options"></p-chart>
+
+</p-dialog>
+
+
+

@@ -64,6 +64,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   @Input() openMenu = true as boolean;
   @Output() onHide = new EventEmitter<any>();
   @Output() onMapReadyLeftSideBar = new EventEmitter<any>();
+  @Output() onChangeRegion = new EventEmitter<any>();
   @Output() onMapReadyRightSideBar = new EventEmitter<any>();
   @Output() onBasemapsReady = new EventEmitter<any>();
   @Output() onLimitsReady = new EventEmitter<any>();
@@ -1076,6 +1077,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     } else
       this.msFilterRegion = ""
 
+    this.onChangeRegion.emit(this.selectRegion);
     this.zoomExtent();
     this.updateSourceAllLayers()
   }
@@ -1114,7 +1116,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   onSelectSuggestion(event) {
-
     if (this.selectedSearchOption.toLowerCase() == 'region') {
       this.updateRegion(event)
     } else if (this.selectedSearchOption.toLowerCase() == 'car' || this.selectedSearchOption.toLowerCase() == 'uc') {
