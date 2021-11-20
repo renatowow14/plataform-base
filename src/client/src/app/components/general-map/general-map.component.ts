@@ -14,7 +14,7 @@ import * as OlExtent from 'ol/extent.js';
 import * as Proj from 'ol/proj';
 import { LocalizationService } from "../../@core/internationalization/localization.service";
 import TileGrid from "ol/tilegrid/TileGrid";
-import {Descriptor, Control, Ruler, TextFilter, DescriptorType, DescriptorLayer} from "../../@core/interfaces";
+import { Descriptor, Control, Ruler, TextFilter, DescriptorType, DescriptorLayer } from "../../@core/interfaces";
 import { DownloadService, MapService } from "../services";
 import { saveAs } from 'file-saver';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -24,7 +24,7 @@ import { Overlay } from "ol";
 import { BingMaps, XYZ } from "ol/source";
 import { Fill, Stroke, Style } from "ol/style";
 import { Geometry, LinearRing, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
-import {Feature} from "ol";
+import { Feature } from "ol";
 import { Draw, Interaction, Modify, Snap } from "ol/interaction";
 import VectorSource from "ol/source/Vector";
 import { GeoJSON } from "ol/format";
@@ -156,7 +156,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.layersNames = [];
     this.limitsNames = [];
     this.swipeLayers = [];
-    this.swipeLayer = {idLayer:'', labelLayer:'', selectedType:'', visible: false, types: []};
+    this.swipeLayer = { idLayer: '', labelLayer: '', selectedType: '', visible: false, types: [] };
     this.layersTMS = {};
     this.limitsTMS = {};
     this.map = {};
@@ -331,19 +331,19 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         text: new Text({
           font: 'bold 10px Montserrat',
           offsetY: 20,
-          fill: new Fill({color: 'rgb(0,0,0)'}),
-          stroke: new Stroke({color: 'rgb(255,255,255)', width: 1})
+          fill: new Fill({ color: 'rgb(0,0,0)' }),
+          stroke: new Stroke({ color: 'rgb(255,255,255)', width: 1 })
         })
       }),
       projection: 'EPSG:4326',
-      formatCoord:function(c){
-        return c.toFixed(1)+"°"
+      formatCoord: function (c) {
+        return c.toFixed(1) + "°"
       }
     });
     this.compass = new Compass({
       className: "top",
       rotateWithView: true,
-      style: new Stroke ({ color: this.readStyleProperty('primary'), width: 0 })
+      style: new Stroke({ color: this.readStyleProperty('primary'), width: 0 })
     });
 
     this.mousePositionOptions = {
@@ -476,7 +476,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   onClearSwipe($event) {
     this.valueSwipe = "";
-    this.swipeLayer = {idLayer:'', labelLayer:'', selectedType:'', visible: false, types: []};
+    this.swipeLayer = { idLayer: '', labelLayer: '', selectedType: '', visible: false, types: [] };
     this.removeSwipe()
   }
 
@@ -610,7 +610,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         this.year = layerType!.filterSelected
       }
 
-      if (layerType!.filterHandler == 'layername'){
+      if (layerType!.filterHandler == 'layername') {
         if (layerType!.filterSelected != null) {
           layername = layerType!.filterSelected
         }
@@ -689,13 +689,13 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
         this.addLayersLegend(layerType);
 
-        if(this.swiperControl.layers.length > 0){
+        if (this.swiperControl.layers.length > 0) {
 
           const existInSwipe = this.swiperControl.layers.find(l => {
             return l.layer.get('key') === layerType.valueType
           });
 
-          if(layer.visible && !existInSwipe ){
+          if (layer.visible && !existInSwipe) {
             this.swiperControl.addLayer(layerType, false);
           }
         }
@@ -729,7 +729,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       this.selectedLayers.forEach((item, index) => {
         if (item.get('key') === layerType.valueType) layerExist = true;
       });
-      if(!layerExist){
+      if (!layerExist) {
         this.selectedLayers.push(this.layersTMS[layerType.valueType]);
       }
 
@@ -1058,6 +1058,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
     this.selectRegion = region;
 
+    console.log(this.selectRegion)
+
     if (region == this.defaultRegion) {
       this.selectedAutoCompleteText = region
       this.selectedAutoCompleteText.text = '';
@@ -1228,7 +1230,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   addSwipe(layer) {
-    this.changeLayerVisibility({layer: layer.get('descriptorLayer'), updateSource: false });
+    this.changeLayerVisibility({ layer: layer.get('descriptorLayer'), updateSource: false });
     this.addLayersToLeftSideSwipe(layer);
     this.swiperControl.addLayer(layer, true);
     this.map.addControl(this.swiperControl);
@@ -1241,10 +1243,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.map.removeControl(this.swiperControl);
   }
 
-  addLayersToLeftSideSwipe(lay){
+  addLayersToLeftSideSwipe(lay) {
     this.map.getLayers().getArray().forEach(layer => {
       console.log('addLayersToLeftSideSwipe', layer)
-      if(layer.get('type') === 'layer' && layer.get('key') !== lay.get('key') && layer.getVisible()) {
+      if (layer.get('type') === 'layer' && layer.get('key') !== lay.get('key') && layer.getVisible()) {
         this.swiperControl.addLayer(layer, false);
       }
     });

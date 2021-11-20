@@ -8,13 +8,13 @@ import {
   HostListener,
   Input, SimpleChanges,
 } from '@angular/core';
-import {LocalizationService} from "../../@core/internationalization/localization.service";
-import {MenuItem} from 'primeng/api';
-import {ChartService} from '../services/charts.service';
-import {MatDialog} from '@angular/material/dialog';
-import {CustomerService} from '../services/customer.service';
-import {Customer} from 'src/app/@core/interfaces/customer';
-import {Descriptor, Layer, Legend, Menu} from "../../@core/interfaces";
+import { LocalizationService } from "../../@core/internationalization/localization.service";
+import { MenuItem } from 'primeng/api';
+import { ChartService } from '../services/charts.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CustomerService } from '../services/customer.service';
+import { Customer } from 'src/app/@core/interfaces/customer';
+import { Descriptor, Layer, Legend, Menu } from "../../@core/interfaces";
 import Map from 'ol/Map';
 
 @Component({
@@ -34,10 +34,8 @@ export class RightSideBarComponent implements OnInit {
   }
 
   public Legendas: Legend[];
-  public mapaBase: Layer[];
-  public Limites: Layer[];
   public map: Map;
-  public _displayOptions : boolean;
+  public _displayOptions: boolean;
   public basemap: any;
   public limit: any;
   public innerHeigth: number;
@@ -46,12 +44,10 @@ export class RightSideBarComponent implements OnInit {
   public timeSeriesResultLulc2: any = {};
   //Charts Variables
   public selectRegion: any;
-  public dataSeries: any;
   public optionsTimeSeriesDeforestation: any = {};
   public optionsTimeSeriesLulc: any = {};
   public layersNames = [];
   public desmatInfo: any;
-  public defaultRegion: any;
   public changeTabSelected = ""
   public data: any;
   public DeforestationChart: any;
@@ -106,23 +102,6 @@ export class RightSideBarComponent implements OnInit {
     this.changeTabSelected = "";
 
     this.LulcChart = {};
-
-    this.dataSeries = {};
-
-    this.defaultRegion = {
-      type: 'biome',
-      text: 'Cerrado',
-      value: 'Cerrado',
-      area_region: 2040047.67930316,
-      regionTypeBr: 'Bioma'
-    };
-    this.selectRegion = this.defaultRegion;
-
-    this.desmatInfo = {
-      value: 'year=2020',
-      Viewvalue: '2019/2020',
-      year: 2020
-    };
 
     this.data = [{
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -202,36 +181,6 @@ export class RightSideBarComponent implements OnInit {
     };
 
     //end chart test
-    //Limites
-    this.Limites = [];
-
-    //Map-Base
-    this.mapaBase = [
-      {
-        nome: 'Geopolitico (MapBox)',
-        key: 'mapbox',
-        type: 'bmap',
-        checked: true
-      },
-      {
-        nome: 'Google Maps',
-        key: 'google',
-        type: 'bmap',
-        checked: false
-      },
-      {
-        nome: 'Mosaico Planet',
-        key: 'planet',
-        type: 'bmap',
-        checked: false
-      },
-      {
-        nome: 'Stadia Dark',
-        key: 'stadia',
-        type: 'bmap',
-        checked: false
-      }
-    ];
 
     //Legendas
     this.Legendas = [
@@ -249,12 +198,6 @@ export class RightSideBarComponent implements OnInit {
       }
     ];
 
-    //titulos do menu
-    this.items = [
-      {label: 'Legenda', icon: 'pi pi-fw pi-home'},
-      {label: 'Mapa-Base', icon: 'pi pi-fw pi-calendar'},
-      {label: 'Limites', icon: 'pi pi-fw pi-pencil'},
-    ];
     this.expendGroup = false;
     this.expendGroup2 = false;
     this.expendGroup3 = false;
@@ -272,8 +215,8 @@ export class RightSideBarComponent implements OnInit {
 
   openCharts(data, type, options) {
     let ob = {
-       // title: title,
-       // description: description,
+      // title: title,
+      // description: description,
       type: type,
       data: data,
       options: options,
@@ -291,7 +234,7 @@ export class RightSideBarComponent implements OnInit {
     this.first = this.first + this.rows;
   }
 
-  setMap(map){
+  setMap(map) {
     this.map = map;
   }
 
@@ -307,7 +250,7 @@ export class RightSideBarComponent implements OnInit {
     return this.customers ? this.first === (this.customers.length - this.rows) : true;
   }
 
-  hideSideBar(){
+  hideSideBar() {
     this.onSideBarToggle.emit(false);
   }
 
@@ -361,7 +304,7 @@ export class RightSideBarComponent implements OnInit {
 
     } else {
       this.layersSideBar = true;
-      this.onMenuSelected.emit({show: this.layersSideBar, key: menu.key})
+      this.onMenuSelected.emit({ show: this.layersSideBar, key: menu.key })
     }
 
   }
@@ -371,28 +314,18 @@ export class RightSideBarComponent implements OnInit {
     this.lang = lng;
   }
 
-  onChangeBaseMap(bmap) {
-    this.mapaBase = this.mapaBase.map((b) => {
-      if (bmap !== b.key) {
-        b.checked = false;
-      }
-      return b;
-    })
-    this.basemap = this.mapaBase.find(b => bmap === b.key);
-    this.onChangeMap.emit(this.basemap);
-  }
 
 
   updateDeforestationTimeSeries() {
     let params: string[] = [];
 
     // params.push('lang=' + this.lang)
-    // params.push('typeRegion=' + this.defaultRegion)
-    // params.push('textRegion=')
+    // params.push('typeRegion=' + this.selectRegion.type)
+    // params.push('valueRegion=' + this.selectRegion.value)
     let textParam = params.join('&');
     let tempResultDeforestation: any[] = [];
 
-    this.chartService.deforestation(textParam).subscribe(result => {
+    this.chartService.getDeforestation(textParam).subscribe(result => {
       tempResultDeforestation = result;
       for (let graphic of tempResultDeforestation) {
         graphic.data = {
@@ -416,25 +349,6 @@ export class RightSideBarComponent implements OnInit {
     });
 
 
-    /* this.dataSeries = {
-      title: timeseriesResult['title'],
-      labels: timeseriesResult['series'].map(element => element.year),
-      datasets: [
-        {
-          label: timeseriesResult['name'],
-          data: timeseriesResult['series'].map(element => element.value),
-          fill: false,
-          borderColor: '#289628',
-          backgroundColor: '#289628'
-        }
-      ],
-      area_antropica: timeseriesResult['indicator'].anthropic,
-      description: timeseriesResult['getText'],
-      label: timeseriesResult['label'],
-      type: timeseriesResult['type'],
-      pointStyle: 'rect'
-
-    };*/
     this.DeforestationChart = {};
 
     this.optionsTimeSeriesDeforestation = {
@@ -487,13 +401,15 @@ export class RightSideBarComponent implements OnInit {
   updateLulcTimeSeries() {
     let params: string[] = [];
 
-    // params.push('lang=' + this.lang)
-    // params.push('typeRegion=' + this.defaultRegion)
-    // params.push('textRegion=')
+    console.log(this.selectRegion)
+
+    params.push('lang=' + this.lang)
+    params.push('typeRegion=' + this.selectRegion.type)
+    params.push('valueRegion=' + this.selectRegion.value)
     let textParam = params.join('&');
     let tempResultLulc: any[] = [];
 
-    this.chartService.lulc(textParam).subscribe(result => {
+    this.chartService.getLulc(textParam).subscribe(result => {
       tempResultLulc = result;
       for (let graphic of tempResultLulc) {
         graphic.data = {
@@ -519,25 +435,6 @@ export class RightSideBarComponent implements OnInit {
     });
 
 
-    /* this.dataSeries = {
-      title: timeseriesResult['title'],
-      labels: timeseriesResult['series'].map(element => element.year),
-      datasets: [
-        {
-          label: timeseriesResult['name'],
-          data: timeseriesResult['series'].map(element => element.value),
-          fill: false,
-          borderColor: '#289628',
-          backgroundColor: '#289628'
-        }
-      ],
-      area_antropica: timeseriesResult['indicator'].anthropic,
-      description: timeseriesResult['getText'],
-      label: timeseriesResult['label'],
-      type: timeseriesResult['type'],
-      pointStyle: 'rect'
-
-    };*/
     this.LulcChart = {};
     this.LulcChart2 = {};
 
@@ -585,18 +482,6 @@ export class RightSideBarComponent implements OnInit {
       }
     };
   }
-
-
-  // onChangeLimit(limit){
-  //   this.mapaBase = this.mapaBase.map((b) => {
-  //     if(bmap !== b.key){
-  //       b.checked = false;
-  //     }
-  //     return b;
-  //   })
-  //   this.basemap = this.mapaBase.find(b => bmap === b.key);
-  //   this.onChangeLimit.emit(this.basemap);
-  // }
 
 }
 

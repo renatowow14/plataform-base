@@ -50,10 +50,6 @@
     "coordinates": "Coordenadas",
     "find_point": "Localizar ponto"
   },
-  "dataSeries": {
-    "title": "Estatísticas",
-    "graphictitle": "Séries Temporais"
-  },
   "menu": {
     "layers": "Camadas",
     "layers_tooltip": "Camadas do Mapa",
@@ -193,12 +189,6 @@
     "passwordPrompt": "Enter a password",
     "emptyMessage": "No results found",
     "emptyFilterMessage": "No results found"
-  },
-  "table": {
-    "showing": "Mostrando",
-    "of": "de",
-    "to": "até",
-    "entries": "registros"
   },
   "descriptor_labels": {
     "groups": {
@@ -404,5 +394,48 @@
     "city": "Município",
     "state": "Estado",
     "biome": "Bioma"
+  },
+  "right_sidebar": {
+    "title": "Estatísticas",
+    "cards_titles": {
+      "deforestation_timeseries": "Séries Temporais",
+      "lulc_pie": "Uso do Solo",
+      "table_example": "Examplo de Tabela"
+    },
+    "deforestation_timeseries_card": {
+      "biome": "O bioma Cerrado, ",
+      "do_bioma": "do bioma Cerrado",
+      "o_municipio_estado": "O ",
+      "de_municipio_estado": " de ",
+      "do_municipio_estado": " do ",
+      "region_fronteira": "A região de fronteira do ",
+      "da_region_fronteira": "da região de fronteira do ",
+      "municipio_label": "município",
+      "estado_label": "estado"
+    },
+    "lulc_pie_card": {
+      "uso_solo_terraclass": {
+        "part1": "De acordo com o projeto Terra Class Cerrado (referente ao ano de 2013), ",
+        "part2": " possui uma área total de ",
+        "part3": " hectares,",
+        "part4": " sendo a classe ",
+        "part5": " a de maior predominância, com ",
+        "part6": " hectares (",
+        "part7": "% da área total). "
+      },
+      "uso_solo_probio": {
+        "part1": "De acordo com o projeto PROBIO Cerrado (referente ao ano de 2002), uma cobertura do solo que mais predomina nesta região",
+        "part2": " é a ",
+        "part3": " cobrindo cerca de ",
+        "part4": " hectares (",
+        "part5": "% da área total). "
+      }
+    },
+    "table_example_card": {
+      "showing": "Mostrando",
+      "of": "de",
+      "to": "até",
+      "entries": "registros"
+    }
   }
 }
