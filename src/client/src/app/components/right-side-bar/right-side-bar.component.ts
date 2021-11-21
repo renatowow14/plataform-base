@@ -107,14 +107,11 @@ export class RightSideBarComponent implements OnInit {
 
     this.LulcChart = {};
 
-    this.dataSeries = {};
-
-    this.defaultRegion = {
-      type: 'biome',
+    this.selectRegion = {
+      type: 'country',
       text: 'BRASIL',
       value: 'Brasil'
     };
-    this.selectRegion = this.defaultRegion;
 
     this.desmatInfo = {
       value: 'year=2020',
