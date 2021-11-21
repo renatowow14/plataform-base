@@ -54,7 +54,7 @@ module.exports = function (app) {
         return [{
             source: 'lapig',
             id: 'prodes',
-            sql: " SELECT year as label, 'prodes_cerrado' source, CAST(SUM(pol_ha) as double precision) as value " +
+            sql: " SELECT year as label, 'prodes_cerrado' source, CAST(SUM(pol_ha) / 1000 as double precision) as value, (SELECT CAST(SUM(pol_ha) / 1000 as double precision) FROM regions " + regionFilter + ") as area_mun " +
                 " FROM desmatamento_prodes " +
                 regionFilter +
                 // " AND " + yearFilter +

@@ -53,90 +53,98 @@ module.exports = function (app) {
         return arrayValues
     }
 
+    Internal.replacementStrings = function (template, replacements) {
+        return template.replace(/#([^#]+)#/g, (match, key) => {
+            // If there's a replacement for the key, return that replacement with a `<br />`. Otherwise, return a empty string.
+            return replacements[key] !== undefined
+                ? replacements[key]
+                : "";
+        });
+    }
+
     Controller.deforestation = function (request, response) {
-        const { lang, typeRegion, valueRegion } = request.query;
+        const { lang, typeRegion, valueRegion, textRegion } = request.query;
         const language = lang;
 
         Internal.languageOb = UtilsLang().getLang(language).right_sidebar;
 
-        var region = Internal.languageOb.deforestation_timeseries_card.biome;
+        let replacements = {
+            typeRegionTranslate: Internal.languageOb.region_types[typeRegion],
+            textRegionTranslate: textRegion,
+        };
 
-        if (typeRegion == 'city' || typeRegion == 'state') {
-            if (typeRegion == 'city')
-                typeRegionTranslate = Internal.languageOb["deforestation_timeseries_card"]["municipio_label"];
-            else if (typeRegion == 'state')
-                typeRegionTranslate = Internal.languageOb["deforestation_timeseries_card"]["estado_label"];
+        const chartResult = [
+            {
+                "id": "prodes",
+                "title": "PRODES-Cerrado",
+                "getText": function (chart) {
+                    replacements['areaMun'] = Number(chart['indicators'][0]["area_mun"])
+                    replacements['anthropicArea'] = chart['indicators'].reduce((a, { value }) => a + value, 0);
+                    replacements['percentArea'] = (replacements['anthropicArea'] / replacements['areaMun']) * 100.0;
 
-            region = Internal.languageOb["deforestation_timeseries_card"]["o_municipio_estado"] + typeRegionTranslate + Internal.languageOb["deforestation_timeseries_card"]["de_municipio_estado"] + valueRegion
-        } else if (typeRegion == 'região de fronteira') {
-            region = Internal.languageOb["deforestation_timeseries_card"]["region_fronteira"] + valueRegion
-        }
+                    const text = Internal.replacementStrings(Internal.languageOb["deforestation_timeseries_card"]["prodes"].text, replacements)
+                    return text
+                },
+                "type": 'line',
+                "options": {
+                    legend: {
+                        display: false
+                    }
+                }
+            }]
 
-        const chartResult = [{
-            "id": "prodes",
-            "title": "PRODES - Cerrado",
-            "getText": function (chart) {
+        let chartFinal = []
+        for (let chart of chartResult) {
+            try {
+                let queryInd = request.queryResult[chart.id]
 
-                return "Qualquer texto"
-            },
-            "type": 'line',
-            "options": {
-                legend: {
-                    display: false
+                chart['indicators'] = queryInd.filter(val => {
+                    return parseFloat(val.value) > 10
+                })
+                chart['show'] = false
+
+                if (chart['indicators'].length > 0) {
+
+                    // chart['indicators'] = chart['indicators'].map(o => ({ ...o, label: Internal.languageOb["deforestation_timeseries_card"][chart.id][o.label] }));
+                    chart['show'] = true
+                    chart['text'] = chart.getText(chart)
+                    chartFinal.push(chart);
                 }
             }
-        }]
+            catch (e) {
+                chart['indicators'] = [];
+                chart['show'] = false;
+                chart['text'] = "erro."
 
-        for (let chart of chartResult) {
-            chart['indicators'] = request.queryResult[chart.id]
-            chart['text'] = chart.getText(chart)
+                chartFinal.push(chart);
+
+            }
+
         }
 
-        response.send(chartResult)
+        response.send(chartFinal)
         response.end();
 
 
     };
 
     Controller.chartslulc = function (request, response) {
-        const { lang, typeRegion, valueRegion } = request.query;
+        const { lang, typeRegion, valueRegion, textRegion } = request.query;
         const language = lang;
 
         Internal.languageOb = UtilsLang().getLang(language).right_sidebar;
 
-        // this.languageOb.descriptor_labels.groups[this.idGroup].labelGroup
-
-        var region = Internal.languageOb.deforestation_timeseries_card.biome;
-
-        // let region = languageJson["charts_regions"]["biome"][language]
-
-        if (typeRegion == 'municipio' || typeRegion == 'estado') {
-            if (typeRegion == 'municipio')
-                typeRegionTranslate = Internal.languageOb["deforestation_timeseries_card"]["municipio_label"];
-            else if (typeRegion == 'estado')
-                typeRegionTranslate = Internal.languageOb["deforestation_timeseries_card"]["estado_label"];
-
-            region = Internal.languageOb["deforestation_timeseries_card"]["o_municipio_estado"] + typeRegionTranslate + Internal.languageOb["deforestation_timeseries_card"]["de_municipio_estado"] + valueRegion
-        } else if (typeRegion == 'região de fronteira') {
-            region = Internal.languageOb["deforestation_timeseries_card"]["region_fronteira"] + valueRegion
-        }
+        let replacements = {
+            typeRegionTranslate: Internal.languageOb.region_types[typeRegion],
+            textRegionTranslate: textRegion,
+        };
 
         const chartResult = [{
             "id": "uso_solo_terraclass",
             "title": "Terraclass 2013",
             "getText": function (chart) {
-
-                const label = chart['indicators'][0]["label"]
-                const value = chart['indicators'][0]["value"]
-                const areaMun = chart['indicators'][0]["area_mun"]
-
-                const percentual_area_ha = ((value * 100) / areaMun);
-                const parttext = Internal.languageOb["lulc_pie_card"]["uso_solo_terraclass"];
-                const text = parttext["part1"] + region +
-                    parttext["part2"] + Internal.numberFormat(parseFloat(areaMun)) + parttext["part3"] +
-                    parttext["part4"] + label + parttext["part5"] + Internal.numberFormat(parseFloat(value)) +
-                    parttext["part6"] + Math.round(percentual_area_ha) + parttext["part7"]
-
+                replacements['areaMun'] = chart['indicators'][0]["area_mun"]
+                const text = Internal.replacementStrings(Internal.languageOb["lulc_pie_card"]["uso_solo_terraclass"].text, replacements)
                 return text
             },
             "type": 'pie',
@@ -150,17 +158,8 @@ module.exports = function (app) {
             "id": "uso_solo_probio",
             "title": "PROBIO",
             "getText": function (chart) {
-                const label = chart['indicators'][0]["label"]
-                const value = chart['indicators'][0]["value"]
-                const areaMun = chart['indicators'][0]["area_mun"]
-                const parttext = Internal.languageOb["lulc_pie_card"]["uso_solo_probio"];
-                const percentual_area_ha = ((value * 100) / areaMun);
-
-                const text = parttext["part1"] +
-                    parttext["part2"] + label + parttext["part3"] +
-                    Internal.numberFormat(parseFloat(value)) + parttext["part4"] +
-                    Math.round(percentual_area_ha) + parttext["part5"]
-
+                replacements['areaMun'] = chart['indicators'][0]["area_mun"]
+                const text = Internal.replacementStrings(Internal.languageOb["lulc_pie_card"]["uso_solo_probio"].text, replacements)
                 return text
             },
             "type": 'pie',
@@ -169,18 +168,38 @@ module.exports = function (app) {
                     display: false
                 }
             }
-        }
+        }]
 
-        ]
-
+        let chartFinal = []
         for (let chart of chartResult) {
+            try {
+                let queryInd = request.queryResult[chart.id]
 
-            chart['indicators'] = request.queryResult[chart.id]
-            chart['text'] = chart.getText(chart)
+                chart['indicators'] = queryInd.filter(val => {
+                    return parseFloat(val.value) > 10
+                })
+                chart['show'] = false
+
+                if (chart['indicators'].length > 0) {
+
+                    chart['indicators'] = chart['indicators'].map(o => ({ ...o, label: Internal.languageOb["lulc_pie_card"][chart.id][o.label] }));
+
+                    chart['show'] = true
+                    chart['text'] = chart.getText(chart)
+                    chartFinal.push(chart);
+                }
+            } catch (e) {
+                chart['indicators'] = [];
+                chart['show'] = false;
+                chart['text'] = "erro."
+
+                chartFinal.push(chart);
+
+            }
 
         }
 
-        response.send(chartResult)
+        response.send(chartFinal)
         response.end();
 
     }

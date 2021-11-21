@@ -36,13 +36,6 @@ export class AreaService {
       .pipe(catchError(this.errorHandler));
   }
 
-  lulc(parameters): Observable<any> {
-    return this.httpClient.get(this.apiURL + "/lulc")
-      .pipe(
-        catchError(this.errorHandler),
-      );
-  }
-
   saveDrawedGeometry(term: any): Observable<any> {
     console.log("UUUU - ", JSON.stringify(term))
     return this.httpClient.post<any>(

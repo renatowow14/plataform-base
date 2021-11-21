@@ -1,13 +1,4 @@
 {
-  "basemans": {
-    "mapbox": "Geopolitical",
-    "bing": "Bing Maps",
-    "google": "Google",
-    "roads": "Roads",
-    "relief": "Relief",
-    "planet": "Planet",
-    "mapbox-dark": "Dark Geopolitical"
-  },
   "controls": {
     "swipe": "Swipe",
     "search": "Filters of Map",
@@ -71,13 +62,6 @@
     "options": "Options",
     "options_tooltip": "Options"
   },
-  "legend": {
-    "title": "Legends",
-    "move": "Move Layer"
-  },
-  "minimize": "Minimize",
-  "maximize": "Maximize",
-  "planet": "Planet Mosaics",
   "area": {
     "upload_submit": "Submit",
     "upload_msg": "<p> Click the button below to upload your compressed file (.zip or .kmz).</p> <p>Supported formats: geojson, kml and shp.</p>",
@@ -99,6 +83,13 @@
     "search_tooltip": "Search area using a token.",
     "drawed_tooltip": "Analyze drawed area on Map."
   },
+  "legend": {
+    "title": "Legends",
+    "move": "Move Layer"
+  },
+  "minimize": "Minimize",
+  "maximize": "Maximize",
+  "planet": "Planet Mosaics",
   "options": {
     "basemaps": "Basemaps",
     "legend": "Legend",
@@ -198,6 +189,168 @@
     "emptyMessage": "No results found",
     "emptyFilterMessage": "No results found"
   },
+  "descriptor_labels": {
+    "groups": {
+      "agropecuaria": {
+        "labelGroup": "Agriculture and Livestock",
+        "layers": {
+          "agricultura": {
+            "labelLayer": "Agriculture",
+            "types": {
+              "agricultura_agrosatelite": {
+                "viewValueType": "Agrosatellite",
+                "filters": {
+                  "year=2001": 2001
+                },
+                "metadata": {
+                  "title": "Agriculture - Agrosatélite",
+                  "description": "Dynamics of expanding the area planted with annual crops in the Cerrado Biome.",
+                  "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
+                  "region": "Cerrado Biome, allowing to analyze the classes of land use by other regions of interest such as: states and municipalities.",
+                  "period": "2001; 2007; 2014",
+                  "scale": "1:250.000",
+                  "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
+                  "cartographic_projection": "Universal Transverse Mercator",
+                  "cod_caracter": "Latin 1",
+                  "fonte": "Agrosatélite Applied Geotechnology, Gordon and Betty Moore Foundation (funders)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "imagens": {
+        "labelGroup": "Image Mosaics",
+        "layers": {
+          "satelite": {
+            "labelLayer": "Satellite",
+            "types": {
+              "planet": {
+                "viewValueType": "Planet",
+                "filters": {
+                  "global_quarterly_2016q1_mosaic": "2016/1ºTri"
+                },
+                "metadata": {
+                  "title": "Satellite images: Planet",
+                  "description": "With hundreds of satellites in orbit, Planet is able to obtain images with a resolution of 3 meters of any location on Earth daily.",
+                  "format": "Service provided by Norway’s International Climate & Forests Initiative",
+                  "region": "Global - World.",
+                  "period": "2016 ~ until today",
+                  "scale": "1:250.000",
+                  "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
+                  "cartographic_projection": "Universal Transverse Mercator.",
+                  "cod_caracter": "Latin 1",
+                  "fonte": "Planet Scope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "areas_especiais": {
+        "labelGroup": "Special Areas",
+        "layers": {
+          "terras_indigenas_layer": {
+            "labelLayer": "Indigenous Land",
+            "types": {
+              "limites_terras_indigenas": {
+                "viewValueType": "INCRA"
+              },
+              "metadata": {
+                "title": "Indigenous Lands (TI)",
+                "description": "Indigenous lands boundaries.",
+                "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
+                "region": "Brasil",
+                "period": "2017",
+                "scale": "ND",
+                "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
+                "cartographic_projection": "Universal Transverse Mercator.",
+                "cod_caracter": "UTF-8",
+                "fonte": "National Indian Foundation (FUNAI)"
+              }
+            }
+          },
+          "assentamentos_layer": {
+            "labelLayer": "Settlements",
+            "types": {
+              "assentamentos": {
+                "viewValueType": "INCRA",
+                "metadata": {
+                  "title": "Assentamentos",
+                  "description": "Conjunto de unidades agrícolas, instaladas pelo Incra em um imóvel rural.",
+                  "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
+                  "region": "Cerrado",
+                  "period": "",
+                  "scale": "",
+                  "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
+                  "cartographic_projection": "Universal Transverse Mercator (UTM).",
+                  "cod_caracter": "Latin 1",
+                  "fonte": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "areas_declaradas": {
+        "labelGroup": "Declared Areas",
+        "layers": {
+          "propriedades_rurais": {
+            "labelLayer": "Rural Environmental Register (CAR)",
+            "types": {
+              "geo_car_imovel": {
+                "viewValueType": "SICAR"
+              }
+            }
+          },
+          "planejamento_hidrico": {
+            "labelLayer": "Water Planning",
+            "types": {
+              "unidades_planejamento_hidrico": {
+                "viewValueType": "Units"
+              }
+            }
+          }
+        }
+      }
+    },
+    "basemaps": {
+      "label": "Basemaps",
+      "types": {
+        "mapbox": "Geopolitical",
+        "bing": "Bing Maps",
+        "google": "Google",
+        "roads": "Roads",
+        "relief": "Relief",
+        "planet": "Planet",
+        "mapbox-dark": "Geopolitical Dark"
+      }
+    },
+    "limits": {
+      "label": "Limits",
+      "types": {
+        "estados": "States of Brasil",
+        "municipios": "Municipalities of Brasil",
+        "biomas": "Biomes of Brasil",
+        "limites_cartas_ibge": "IBGE Maps"
+      }
+    }
+  },
+  "labels": {
+    "layertype": {
+      "typeLabel": {
+        "type": "Type",
+        "quantity": "Amount",
+        "area_planted": "Planted Area",
+        "production": "Production",
+        "source": "Source"
+      },
+      "filterLabel": {
+        "year": "Year",
+        "period": "Period"
+      }
+    }
+  },
   "metadata": {
     "titles": {
       "title": "Metadata",
@@ -216,183 +369,6 @@
       "fonte": "Source",
       "update": "Update",
       "contato": "Contact"
-    },
-    "agricultura_agrosatelite": {
-      "title": "Agricultura - Agrosatélite",
-      "description": "Dynamics of expanding the area planted with annual crops in the Cerrado Biome.",
-      "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
-      "region": "Cerrado Biome, allowing to analyze the classes of land use by other regions of interest such as: states and municipalities.",
-      "period": "2001; 2007; 2014",
-      "scale": "1:250.000",
-      "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
-      "cartographic_projection": "Universal Transverse Mercator",
-      "cod_caracter": "Latin 1",
-      "fonte": "Agrosatélite Applied Geotechnology, Gordon and Betty Moore Foundation (funders)"
-    }
-  },
-  "descriptor_labels": {
-    "groups": {
-      "agropecuaria": {
-        "labelGroup": "Agropecuária",
-        "layers": {
-          "agricultura": {
-            "labelLayer": "Agricultura",
-            "types": {
-              "agricultura_agrosatelite": {
-                "viewValueType": "Agrosatélite",
-                "filters": {
-                  "year=2001": 2001
-                },
-                "metadata": {
-                  "title": "Agricultura - Agrosatélite",
-                  "description": "Dinâmica da expansão da área plantada com culturas anuais no Bioma Cerrado.",
-                  "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
-                  "region": "Bioma Cerrado, permitindo analisar as classes de uso do solo por outras regiões de interesse como: estados e municípios.",
-                  "period": "2001; 2007; 2014",
-                  "scale": "1:250.000",
-                  "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
-                  "cartographic_projection": "Universal Transversa de Mercator.",
-                  "cod_caracter": "Latin 1",
-                  "fonte": "Agrosatélite Geotecnologia Aplicada, Fundação Gordon and Betty Moore (Financiadores)"
-                }
-              },
-              "agricultura_agrosatelite_teste": {
-                "viewValueType": "Agrosatélite Teste",
-                "filters": {
-                  "year=2001": 2001
-                },
-                "metadata": {
-                  "title": "Agricultura - Agrosatélite",
-                  "description": "Dinâmica da expansão da área plantada com culturas anuais no Bioma Cerrado.",
-                  "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
-                  "region": "Bioma Cerrado, permitindo analisar as classes de uso do solo por outras regiões de interesse como: estados e municípios.",
-                  "period": "2001; 2007; 2014",
-                  "scale": "1:250.000",
-                  "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
-                  "cartographic_projection": "Universal Transversa de Mercator.",
-                  "cod_caracter": "Latin 1",
-                  "fonte": "Agrosatélite Geotecnologia Aplicada, Fundação Gordon and Betty Moore (Financiadores)"
-                }
-              }
-            }
-          }
-        }
-      },
-      "imagens": {
-        "labelGroup": "Mosaico de Imagens",
-        "layers": {
-          "satelite": {
-            "labelLayer": "Satélite",
-            "types": {
-              "planet": {
-                "viewValueType": "Planet",
-                "filters": {
-                  "global_quarterly_2016q1_mosaic": "2016/1ºTri"
-                },
-                "metadata": {
-                  "title": "Imagens de Satélite: PLANET",
-                  "description": "Com centenas de satélites em órbita a Planet é capaz de obter imagens com resolução de 3 metros de qualquer local da Terra diariamente.",
-                  "format": "Serviço Consumido do Norway’s International Climate & Forests Initiative",
-                  "region": "Global - O Mundo todo.",
-                  "period": "2016 ~ até hoje",
-                  "scale": "1:250.000",
-                  "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
-                  "cartographic_projection": "Universal Transversa de Mercator.",
-                  "cod_caracter": "Latin 1",
-                  "fonte": "Planet Scope"
-                }
-              }
-            }
-          }
-        }
-      },
-      "areas_especiais": {
-        "labelGroup": "Áreas especiais",
-        "layers": {
-          "terras_indigenas_layer": {
-            "labelLayer": "Terras Indígenas",
-            "types": {
-              "limites_terras_indigenas": {
-                "viewValueType": "INCRA"
-              },
-              "metadata": {
-                "title": "Terras Indígenas (TI)",
-                "description": "Limite das terras indígenas brasileiras.",
-                "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
-                "region": "Brasil",
-                "period": "2017",
-                "scale": "ND",
-                "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
-                "cartographic_projection": "Universal Transversa de Mercator.",
-                "cod_caracter": "UTF-8",
-                "fonte": "Fundação Nacional do Índio (FUNAI)"
-              }
-            }
-          },
-          "assentamentos_layer": {
-            "labelLayer": "Assentamentos",
-            "types": {
-              "assentamentos": {
-                "viewValueType": "INCRA",
-                "metadata": {
-                  "title": "Assentamentos",
-                  "description": "Conjunto de unidades agrícolas, instaladas pelo Incra em um imóvel rural.",
-                  "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
-                  "region": "Bioma Cerrado.",
-                  "period": "",
-                  "scale": "",
-                  "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
-                  "cartographic_projection": "Universal Transversa de Mercator.",
-                  "cod_caracter": "Latin 1",
-                  "fonte": ""
-                }
-              }
-            }
-          }
-        }
-      },
-      "areas_declaradas": {
-        "labelGroup": "Áreas Declaradas",
-        "layers": {
-          "propriedades_rurais": {
-            "labelLayer": "CAR - Prop. Rurais",
-            "types": {
-              "geo_car_imovel": {
-                "viewValueType": "SICAR"
-              }
-            }
-          },
-          "planejamento_hidrico": {
-            "labelLayer": "Planejamento Hídrico",
-            "types": {
-              "unidades_planejamento_hidrico": {
-                "viewValueType": "Plan. Hídrico"
-              }
-            }
-          }
-        }
-      }
-    },
-    "basemaps": {
-      "label": "Basemaps",
-      "types": {
-        "mapbox": "Geopolítico",
-        "bing": "Bing Maps",
-        "google": "Google",
-        "roads": "Estradas",
-        "relief": "Relevo",
-        "planet": "Planet",
-        "mapbox-dark": "Geopolítico Dark"
-      }
-    },
-    "limits": {
-      "label": "Limites",
-      "types": {
-        "estados": "Estados do Brasil",
-        "municipios": "Municípios do Brasil",
-        "biomas": "Biomas do Brasil",
-        "limites_cartas_ibge": "Cartas do IBGE"
-      }
     }
   },
   "right_sidebar": {
@@ -402,34 +378,50 @@
       "lulc_pie": "Land Use and Land Cover",
       "table_example": "Example of Table"
     },
-    "regions_texts": {},
+    "region_types": {
+      "city": "City",
+      "state": "State",
+      "biome": "Biome",
+      "country": "Country",
+      "fronteira": "Border Region"
+    },
     "deforestation_timeseries_card": {
-      "biome": "The Cerrado biome, ",
-      "do_bioma": "of the Cerrado biome",
-      "o_municipio_estado": "The ",
-      "de_municipio_estado": " of ",
-      "do_municipio_estado": " of ",
-      "region_fronteira": "The border region of ",
-      "da_region_fronteira": "The border region of the ",
-      "municipio_label": "municipality",
-      "estado_label": "state"
+      "prodes": {
+        "text": "The #typeRegionTranslate# #textRegionTranslate# presents an Anthropic area of #value# ha, which represents #percent_area# % of its total area."
+      }
     },
     "lulc_pie_card": {
       "uso_solo_terraclass": {
-        "part1": "According to the TerraClass Cerrado project (referring to the year of 2013), ",
-        "part2": " has a total area of ",
-        "part3": " hectares,",
-        "part4": " the class being ",
-        "part5": " the most predominant, with ",
-        "part6": " hectares (",
-        "part7": "% of the total area)."
+        "text": "According to the Terraclass Cerrado project, the #textRegionTranslate# #typeRegionTranslate# has a total area of #areaMun# ha, distribuited between the followind land uses:",
+        "Mosaíco de Ocupações": "Occupations Mosaic",
+        "Agricultura Perene": "Perennial Agriculture",
+        "Natural Não Vegetado": "Non-Vegetated Natural",
+        "Água": "Water",
+        "Silvicultura": "Silviculture",
+        "Solo Exposto": "Exposed Soil",
+        "Não Observado": "Not Observed",
+        "Pastagem": "Pasture",
+        "Agricultura Anual": "Annual Agriculture",
+        "Outros": "Others",
+        "Urbano": "Urban",
+        "Mineração": "Mining",
+        "Natural": "Natural"
       },
       "uso_solo_probio": {
-        "part1": "According to the PROBIO Cerrado project (referring to the year 2002), a land cover that predominates most in this region",
-        "part2": " is the ",
-        "part3": " covering about ",
-        "part4": " hectares (",
-        "part5": "% of the total area)."
+        "text": "According to the PROBIO Cerrado project, the #textRegionTranslate# #typeRegionTranslate# has a total area of #areaMun# ha, distribuited between the followind land uses:",
+        "Reflorestamento": "Reforestation",
+        "Savana": "Savanna",
+        "Água": "Water",
+        "Savana Estépica": "Steppe Savanna",
+        "Floresta Estacional Semi-decidual": "Seasonal Semideciduous Forest",
+        "Floresta Ombrófila Densa": "Dense Ombrophilous Forest",
+        "Floresta Estacional Decidual": "Deciduous Seasonal Forest",
+        "Floresta Ombrófila Aberta": "Open Ombrophilous Forest",
+        "Influência Urbana": "Urban Influence",
+        "Pecuária": "Livestock",
+        "Vegetação Secundária": "Secondary Vegetation",
+        "Formações Pioneiras": "Pioneer Formations",
+        "Agricultura": "Agriculture"
       }
     },
     "table_example_card": {

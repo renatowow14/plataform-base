@@ -6,7 +6,7 @@ import {
   ElementRef,
   Output,
   HostListener,
-  Input, SimpleChanges,
+  Input, SimpleChanges, ViewChild, ViewChildren, ChangeDetectorRef, QueryList
 } from '@angular/core';
 import { LocalizationService } from "../../@core/internationalization/localization.service";
 import { MenuItem } from 'primeng/api';
@@ -17,6 +17,8 @@ import { Customer } from 'src/app/@core/interfaces/customer';
 import { Descriptor, Layer, Legend, Menu } from "../../@core/interfaces";
 import Map from 'ol/Map';
 import { reduce } from 'rxjs/operators';
+
+import { UIChart } from 'primeng/chart';
 
 @Component({
   selector: 'app-right-side-bar',
@@ -29,10 +31,13 @@ export class RightSideBarComponent implements OnInit {
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onSideBarToggle = new EventEmitter<boolean>()
   @Input() descriptor: Descriptor;
+
   @Input() set displayOptions(value: boolean) {
     this.onSideBarToggle.emit(value);
     this._displayOptions = value;
   }
+
+  @ViewChildren('chartU') chartU: QueryList<UIChart>;;
 
   public Legendas: Legend[];
   public map: Map;
@@ -41,21 +46,21 @@ export class RightSideBarComponent implements OnInit {
   public limit: any;
   public innerHeigth: number;
   public timeSeriesResultDeforestation: any = {};
-  public timeSeriesResultLulc: any = {};
-  public timeSeriesResultLulc2: any = {};
+
+  public tempLulc = [] as any;
+  public tempDeforestation = [] as any;
+
+  public lulcCharts = [] as any;
+  public deforestationCharts = [] as any;
+
   //Charts Variables
   public selectRegion: any;
   public optionsTimeSeriesDeforestation: any = {};
   public optionsTimeSeriesLulc: any = {};
-  public layersNames = [];
-  public desmatInfo: any;
   public changeTabSelected = ""
   public data: any;
-  public DeforestationChart: any;
   public ob: any = {};
-  public LulcChart: any;
-  public LulcChart2: any;
-  public userAppData2: any;
+
   public options: any;
   public expendGroup: boolean;
   public expendGroup2: boolean;
@@ -68,10 +73,6 @@ export class RightSideBarComponent implements OnInit {
   public first = 0;
   public rows = 10;
   //end customer variables
-
-  items: MenuItem[];
-  activeItem: MenuItem;
-
 
   @Output() onChangeMap = new EventEmitter<any>();
   @Output() onChangeLimits = new EventEmitter<any>();
@@ -96,7 +97,8 @@ export class RightSideBarComponent implements OnInit {
     private localizationService: LocalizationService,
     private chartService: ChartService,
     private renderer: Renderer2,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private cd: ChangeDetectorRef
   ) {
 
     //Charts Variables
@@ -105,18 +107,10 @@ export class RightSideBarComponent implements OnInit {
     this.chartObject = {};
     this.changeTabSelected = "";
 
-    this.LulcChart = {};
-
     this.selectRegion = {
       type: 'country',
       text: 'BRASIL',
       value: 'Brasil'
-    };
-
-    this.desmatInfo = {
-      value: 'year=2020',
-      Viewvalue: '2019/2020',
-      year: 2020
     };
 
     this.data = [{
@@ -134,16 +128,10 @@ export class RightSideBarComponent implements OnInit {
       ]
     }];
 
-    this.options = {
-      title: {
-        display: true,
-        text: 'My Title',
-        fontSize: 16
-      },
-      legend: {
-        position: 'bottom'
-      }
-    };
+
+    this.lang = this.localizationService.currentLang();
+
+    this.updateStatistics(this.selectRegion)
 
 
     this.expendGroup = false;
@@ -151,7 +139,8 @@ export class RightSideBarComponent implements OnInit {
     //End charts
 
 
-    this.basemap = 'mapbox';
+
+
     this.layersSideBar = false;
     this.layersSideBarMobile = false;
     this.currentMenu = {
@@ -165,7 +154,7 @@ export class RightSideBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.lang = this.localizationService.currentLang();
+
     this.innerHeigth = window.innerHeight;
 
     this._displayOptions = false;
@@ -200,10 +189,8 @@ export class RightSideBarComponent implements OnInit {
     this.expendGroup2 = false;
     this.expendGroup3 = false;
 
-    this.activeItem = this.items[0];
-
-    this.updateDeforestationTimeSeries();
-    this.updateLulcTimeSeries();
+    // this.updateDeforestationTimeSeries();
+    // this.updateLulcTimeSeries();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -228,7 +215,6 @@ export class RightSideBarComponent implements OnInit {
 
     this.ob = ob;
 
-    console.log(this.ob);
     // this.dialog.open(ChartsComponent, {
     //   width: 'calc(100% - 20em)',
     //   height: 'calc(100% - 10em)',
@@ -265,29 +251,11 @@ export class RightSideBarComponent implements OnInit {
   }
 
   triggerSeriesChartLulc() {
-    this.LulcChart = {
-      dataLulc: this.timeSeriesResultLulc.data,
-      optionsLulc: this.optionsTimeSeriesLulc,
-      typeLulc: this.timeSeriesResultLulc.type
-    }
-
-    this.LulcChart2 = {
-      dataLulc: this.timeSeriesResultLulc2.data,
-      optionsLulc: this.optionsTimeSeriesLulc,
-      typeLulc: this.timeSeriesResultLulc.type
-    }
-
-    console.log(this.LulcChart);
+    this.lulcCharts = this.tempLulc;
   }
 
-  triggerSeriesChartDeforestation(event: Event) {
-    this.DeforestationChart = {
-      dataDeforestation: this.timeSeriesResultDeforestation.data,
-      optionsDeforestation: this.optionsTimeSeriesDeforestation,
-      typeDeforestation: this.timeSeriesResultDeforestation.type
-    }
-
-    console.log(this.DeforestationChart);
+  triggerSeriesChartDeforestation() {
+    this.deforestationCharts = this.tempDeforestation
   }
 
 
@@ -324,15 +292,15 @@ export class RightSideBarComponent implements OnInit {
 
   updateDeforestationTimeSeries() {
     let params: string[] = [];
-    // params.push('lang=' + this.lang)
-    // params.push('typeRegion=' + this.selectRegion.type)
-    // params.push('valueRegion=' + this.selectRegion.value)
+    params.push('lang=' + this.lang)
+    params.push('typeRegion=' + this.selectRegion.type)
+    params.push('valueRegion=' + this.selectRegion.value)
+    params.push('textRegion=' + this.selectRegion.text)
     let textParam = params.join('&');
-    let tempResultDeforestation: any[] = [];
 
     this.chartService.getDeforestation(textParam).subscribe(result => {
-      tempResultDeforestation = result;
-      for (let graphic of tempResultDeforestation) {
+      this.tempDeforestation = result;
+      for (let graphic of this.tempDeforestation) {
 
         graphic.data = {
           labels: graphic.indicators.map(element => element.label),
@@ -350,78 +318,38 @@ export class RightSideBarComponent implements OnInit {
         }
 
       }
-
-      this.timeSeriesResultDeforestation = tempResultDeforestation[0];
     }, error => {
       console.log(error)
     });
 
 
-    this.DeforestationChart = {};
     this.ob = {};
 
-    this.optionsTimeSeriesDeforestation = {
-      responsive: true,
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: function(tooltipItem, data) {
-              console.log('data:', data);
-              let percent = parseFloat(
-                data['datasets'][0]['data'][tooltipItem['index']]
-              ).toLocaleString('de-DE');
-              return percent + ' km²';
-            }
-          },
-          usePointStyle: true
-        },
-        title: {
-          align: 'bottom'
-        },
-        legend: {
-          align: 'end',
-          position: 'bottom'
-        }
-      },
-        scales: {
-          y:
-            {
-              ticks: {
-                callback(value) {
-                  return value.toLocaleString('de-DE') + ' km²';
-                },
-                color: 'red'
-              }
-            }
-        },
-
-
-    };
 
   }
 
   updateStatistics(region) {
-   this.selectRegion = region;
-   console.log("region:", region);
-   this.updateLulcTimeSeries();
-   this.triggerSeriesChartLulc();
+    this.selectRegion = region;
+
+    this.updateDeforestationTimeSeries();
+    this.updateLulcTimeSeries();
+    this.triggerSeriesChartDeforestation();
+    this.triggerSeriesChartLulc();
   }
 
   updateLulcTimeSeries() {
 
     let params: string[] = [];
 
-    console.log(this.selectRegion)
-
     params.push('lang=' + this.lang)
     params.push('typeRegion=' + this.selectRegion.type)
     params.push('valueRegion=' + this.selectRegion.value)
+    params.push('textRegion=' + this.selectRegion.text)
     let textParam = params.join('&');
-    let tempResultLulc: any[] = [];
 
     this.chartService.getLulc(textParam).subscribe(result => {
-      tempResultLulc = result;
-      for (let graphic of tempResultLulc) {
+      this.tempLulc = result;
+      for (let graphic of this.tempLulc) {
 
         graphic.data = {
           labels: graphic.indicators.map(element => element.label),
@@ -437,63 +365,28 @@ export class RightSideBarComponent implements OnInit {
 
         };
 
+        graphic.options = {
+          plugins: {
+            legend: {
+              labels: {
+                usePointStyle: true,
+                fontSize: 10
+              },
+              position: 'bottom'
+            }
+          },
+          title: {
+            display: false,
+            fontSize: 14
+          }
+        }
+
       }
-      console.log("result:", tempResultLulc);
-      this.timeSeriesResultLulc = tempResultLulc[0];
-      this.timeSeriesResultLulc2 = tempResultLulc[1];
+
     }, error => {
       console.log(error)
-    });
+    })
 
-
-    this.LulcChart = {};
-    this.LulcChart2 = {};
-
-    this.optionsTimeSeriesLulc = {
-      responsive: true,
-      plugins: {
-        tooltips: {
-          callbacks: {
-            text: function(tooltipItem, data) {
-              console.log('data:', data);
-              let percent = parseFloat(
-                data['datasets'][0]['data'][tooltipItem['index']]
-              ).toLocaleString('de-DE');
-              return percent + ' km²';
-            }
-          }
-        },
-        legend: {
-          labels: {
-            usePointStyle: true,
-            fontSize: 14
-          },
-          // onHover(event) {
-          //   event.target.style.cursor = 'pointer';
-          // },
-          // onLeave(event) {
-          //   event.target.style.cursor = 'default';
-          // },
-          position: 'bottom'
-        }
-      },
-        scales: {
-          y:
-            {
-              ticks: {
-                callback(value) {
-                  return value.toLocaleString('de-DE') + ' km²';
-                }
-              }
-            }
-        },
-        title: {
-          display: false,
-          fontSize: 14
-        },
-
-
-    };
   }
 
 }

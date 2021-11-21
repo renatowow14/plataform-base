@@ -215,24 +215,6 @@
                   "cod_caracter": "Latin 1",
                   "fonte": "Agrosatélite Geotecnologia Aplicada, Fundação Gordon and Betty Moore (Financiadores)"
                 }
-              },
-              "agricultura_agrosatelite_teste": {
-                "viewValueType": "Agrosatélite Teste",
-                "filters": {
-                  "year=2001": 2001
-                },
-                "metadata": {
-                  "title": "Agricultura - Agrosatélite",
-                  "description": "Dinâmica da expansão da área plantada com culturas anuais no Bioma Cerrado.",
-                  "format": "Shapefile (*.SHP), com arquivos complementares (*.PRJ, *DBF, *.SHX, *.SBX, *MAP). Comma-separated values (*.CSV).",
-                  "region": "Bioma Cerrado, permitindo analisar as classes de uso do solo por outras regiões de interesse como: estados e municípios.",
-                  "period": "2001; 2007; 2014",
-                  "scale": "1:250.000",
-                  "system_coordinator": "Superfície de referência SIRGAS 2000, Sistema de Coordenada Geográfica (em graus).",
-                  "cartographic_projection": "Universal Transversa de Mercator.",
-                  "cod_caracter": "Latin 1",
-                  "fonte": "Agrosatélite Geotecnologia Aplicada, Fundação Gordon and Betty Moore (Financiadores)"
-                }
               }
             }
           }
@@ -390,11 +372,6 @@
       "contato": "Contato"
     }
   },
-  "region_types": {
-    "city": "Município",
-    "state": "Estado",
-    "biome": "Bioma"
-  },
   "right_sidebar": {
     "title": "Estatísticas",
     "cards_titles": {
@@ -402,33 +379,50 @@
       "lulc_pie": "Uso do Solo",
       "table_example": "Examplo de Tabela"
     },
+    "region_types": {
+      "city": "Município",
+      "state": "Estado",
+      "biome": "Bioma",
+      "country": "País",
+      "fronteira": "Região de Fronteira"
+    },
     "deforestation_timeseries_card": {
-      "biome": "O bioma Cerrado, ",
-      "do_bioma": "do bioma Cerrado",
-      "o_municipio_estado": "O ",
-      "de_municipio_estado": " de ",
-      "do_municipio_estado": " do ",
-      "region_fronteira": "A região de fronteira do ",
-      "da_region_fronteira": "da região de fronteira do ",
-      "municipio_label": "município",
-      "estado_label": "estado"
+      "prodes": {
+        "text": "O #typeRegionTranslate# #textRegionTranslate# possui uma Área Antrópica de #anthropicArea# ha, o que representa #percentArea# % da sua área total."
+      }
     },
     "lulc_pie_card": {
       "uso_solo_terraclass": {
-        "part1": "De acordo com o projeto Terra Class Cerrado (referente ao ano de 2013), ",
-        "part2": " possui uma área total de ",
-        "part3": " hectares,",
-        "part4": " sendo a classe ",
-        "part5": " a de maior predominância, com ",
-        "part6": " hectares (",
-        "part7": "% da área total). "
+        "text": "De acordo com o projeto Terraclass Cerrado, o #typeRegionTranslate# #textRegionTranslate# possui uma área total de #areaMun# ha, distribuída entre os seguintes usos do solo:",
+        "Mosaíco de Ocupações": "Mosaico de Ocupações",
+        "Agricultura Perene": "Agricultura Perene",
+        "Natural Não Vegetado": "Natural Não-Vegetado",
+        "Água": "Água",
+        "Silvicultura": "Silvicultura",
+        "Solo Exposto": "Solo Exposto",
+        "Não Observado": "Não Observado",
+        "Pastagem": "Pastagem",
+        "Agricultura Anual": "Agricultura Anual",
+        "Outros": "Outros",
+        "Urbano": "Urbano",
+        "Mineração": "Mineração",
+        "Natural": "Natural"
       },
       "uso_solo_probio": {
-        "part1": "De acordo com o projeto PROBIO Cerrado (referente ao ano de 2002), uma cobertura do solo que mais predomina nesta região",
-        "part2": " é a ",
-        "part3": " cobrindo cerca de ",
-        "part4": " hectares (",
-        "part5": "% da área total). "
+        "text": "De acordo com o projeto PROBIO Cerrado, o #typeRegionTranslate# #textRegionTranslate# possui uma área total de #areaMun# ha, distribuída entre os seguintes usos do solo:",
+        "Reflorestamento": "Reflorestamento",
+        "Savana": "Savana",
+        "Água": "Água",
+        "Savana Estépica": "Savana Estépica",
+        "Floresta Estacional Semi-decidual": "Floresta Estacional Semi-decidual",
+        "Floresta Ombrófila Densa": "Floresta Ombrófila Densa",
+        "Floresta Estacional Decidual": "Floresta Estacional Decidual",
+        "Floresta Ombrófila Aberta": "Floresta Ombrófila Aberta",
+        "Influência Urbana": "Influência Urbana",
+        "Pecuária": "Pecuária",
+        "Vegetação Secundária": "Vegetação Secundária",
+        "Formações Pioneiras": "Formações Pioneiras",
+        "Agricultura": "Agricultura"
       }
     },
     "table_example_card": {

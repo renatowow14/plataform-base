@@ -1054,7 +1054,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   updateRegion(region) {
 
     this.map.removeLayer(this.otherLayerFromFilters.layer)
-
     this.map.removeLayer(this.regionsLimits)
 
     this.selectRegion = region;
