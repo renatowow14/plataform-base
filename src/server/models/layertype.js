@@ -32,6 +32,7 @@ module.exports = class LayerType {
                 columnsCSV: params.hasOwnProperty('columnsCSV') ? params.columnsCSV : null,
                 downloadSHP: params.hasOwnProperty('downloadSHP') ? params.downloadSHP : this.type.toUpperCase() === 'layer'.toUpperCase() ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
                 downloadCSV: params.hasOwnProperty('downloadCSV') ? params.downloadCSV : params.hasOwnProperty('columnsCSV') ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
+                downloadGPKG: params.hasOwnProperty('downloadGPKG') ? params.downloadGPKG : params.hasOwnProperty('layer') ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
                 downloadRaster:  params.hasOwnProperty('downloadRaster') ? params.downloadRaster : this.type.toUpperCase() === 'raster'.toUpperCase() ? true : this.type.toUpperCase() === 'limit'.toUpperCase() || this.type.toUpperCase() === 'basemap'.toUpperCase() ? null : false,
 
                 layerLimits: this.type.toUpperCase() === 'limit'.toUpperCase() ? true : null,

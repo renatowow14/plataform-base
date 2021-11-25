@@ -97,7 +97,7 @@
             <div class="controls-details-card-body">
               <span>
                 <p-autoComplete
-                  (onClear)="onClearSwipe($event)"
+                  (onClear)="onClearSwipe()"
                   [appendTo]="'body'"
                   [placeholder]="'controls.details.swipe_placeholder' | translate"
                   [(ngModel)]="valueSwipe"
@@ -111,7 +111,7 @@
                   </ng-template>
                 </p-autoComplete>
                 <div class="controls-details-card-body-actions">
-                  <i *ngIf="valueSwipe" [pTooltip]="'controls.details.clear' | translate" class='bx bx-trash' (click)="onClearSwipe($event)"></i>
+                  <i *ngIf="valueSwipe" [pTooltip]="'controls.details.clear' | translate" class='bx bx-trash' (click)="onClearSwipe()"></i>
                 </div>
               </span>
               <div class="layer-card-body" *ngIf="swipeLayer.visible">

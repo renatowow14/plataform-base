@@ -113,7 +113,7 @@
         transition: all 0.5s ease;
 
         .logo {
-          max-width: 50%;
+          //max-width: 50%;
           width: 100%;
           padding: 10px;
         }
@@ -205,6 +205,9 @@
       .logo_name {
         opacity: 1;
       }
+      img{
+        max-width: 50%;
+      }
     }
 
     .logo-details {
@@ -212,6 +215,9 @@
         text-align: right;
         right: 0;
         top: 10%;
+      }
+      img{
+        max-width: 50%;
       }
     }
 
@@ -401,6 +407,9 @@
           text-align: center;
           cursor: pointer;
           transition: all 0.5s ease;
+        }
+        img{
+          max-width: 50%;
         }
       }
 
@@ -702,7 +711,7 @@
       box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
 
       .p-sidebar-close {
-        width: 8rem;
+        width: 14rem;
 
         &:hover {
           background: transparent;
@@ -713,7 +722,7 @@
         transition: all 0.5s ease;
 
         .logo {
-          max-width: 70%;
+          //max-width: 70%;
           width: 100%;
           padding: 10px;
           margin-top: 5px;

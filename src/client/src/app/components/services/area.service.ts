@@ -37,7 +37,6 @@ export class AreaService {
   }
 
   saveDrawedGeometry(term: any): Observable<any> {
-    console.log("UUUU - ", JSON.stringify(term))
     return this.httpClient.post<any>(
       this.apiURL + '/savegeom',
       JSON.stringify(term),

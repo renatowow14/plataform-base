@@ -14,6 +14,7 @@ import Stroke from 'ol/style/Stroke';
 
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { AreaService } from '../../services/area.service';
+import {Descriptor} from "../../../@core/interfaces";
 
 
 @Component({
@@ -24,6 +25,12 @@ import { AreaService } from '../../services/area.service';
 export class AreaComponent implements OnInit {
   @Input() map: Map;
   @Input() lang: string;
+  @Input() set token(value: number) {
+    if (value) {
+      this.layerFromConsulta.token = value;
+    }
+  }
+
 
   httpOptions: any;
 

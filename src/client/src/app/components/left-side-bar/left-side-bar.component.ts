@@ -48,7 +48,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   @Output() onChangeLimits = new EventEmitter<any>();
   @Output() displayFilter = new EventEmitter<any>();
 
-  public Legendas: Legend[];
+  public token: number;
   public basemap: any;
   public basesmaps: any[];
   public limits: any[];
@@ -320,7 +320,7 @@ export class LeftSideBarComponent implements AfterViewInit {
     const img = this.renderer.createElement('img');
     this.renderer.addClass(div, 'header');
     this.renderer.addClass(img, 'logo');
-    this.renderer.setProperty(img, 'src', '../../../assets/logos/logo_2.png')
+    this.renderer.setProperty(img, 'src', '../../../assets/logos/base_logo.png')
     this.renderer.setProperty(img, 'alt', 'Logo')
     this.renderer.appendChild(div, img);
     this.renderer.insertBefore(this.el.nativeElement.querySelector(".p-sidebar-header"), div, this.el.nativeElement.querySelector(".p-sidebar-close"))
@@ -468,6 +468,27 @@ export class LeftSideBarComponent implements AfterViewInit {
     });
   }
 
+  setLayerVisible(typeLayerValue: string){
+    this.descriptor.groups.forEach(group => {
+      group.layers.forEach(layer => {
+        layer.types.forEach(typeLayer => {
+          if(typeLayer.valueType === typeLayerValue){
+            group.groupExpanded = true;
+            layer.visible = true;
+          }
+        })
+      });
+    })
+  }
+  setTokenGeometryToSearch(token: number){
+    this.token = token;
+    this.handleMenu({
+      index: 2,
+      key: 'area',
+      icon: 'fg-polygon-hole-pt',
+      show: true
+    })
+  }
   setLimits(limits: any[]) {
     limits.forEach(limit => {
       limit['checked'] = limit.getVisible();

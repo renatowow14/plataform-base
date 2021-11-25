@@ -17,6 +17,7 @@ export interface DescriptorType {
   regionFilter?: boolean;
   downloadSHP?: boolean;
   downloadCSV?: boolean;
+  downloadGPKG?: boolean;
   downloadRaster?: boolean;
   filterHandler?: string;
   filterSelected?: string;

@@ -32,8 +32,9 @@
                                 "viewValueFilter": 2014
                             }
                         ],
-                        "downloadSHP": true,
+                        "downloadSHP": false,
                         "downloadCSV": true,
+                        "downloadGPKG": true,
                         "downloadRaster": true
                     }
                 ]

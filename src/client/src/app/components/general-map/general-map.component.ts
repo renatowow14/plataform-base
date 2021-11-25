@@ -41,6 +41,10 @@ import Swipe from 'ol-ext/control/Swipe';
 import Graticule from 'ol-ext/control/Graticule';
 import Compass from 'ol-ext/control/Compass';
 
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 @Component({
   selector: 'app-general-map',
   templateUrl: './general-map.component.html',
@@ -64,10 +68,12 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   @Input() openMenu = true as boolean;
   @Output() onHide = new EventEmitter<any>();
   @Output() onMapReadyLeftSideBar = new EventEmitter<any>();
+  @Output() onSelectLayerSwipe = new EventEmitter<string>();
   @Output() onChangeRegion = new EventEmitter<any>();
   @Output() onMapReadyRightSideBar = new EventEmitter<any>();
   @Output() onBasemapsReady = new EventEmitter<any>();
   @Output() onLimitsReady = new EventEmitter<any>();
+  @Output() onSearchDrawnGeometry = new EventEmitter<number>();
 
   public innerHeigth: number;
   public options: any = {}
@@ -475,15 +481,14 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     });
   }
 
-  onClearSwipe($event) {
+  onClearSwipe() {
     this.valueSwipe = "";
     this.swipeLayer = { idLayer: '', labelLayer: '', selectedType: '', visible: false, types: [] };
     this.removeSwipe()
   }
 
   onSwipeSelectedLayer(ev) {
-    this.swipeLayer = ev.layer.get('descriptorLayer');
-    console.log('onSwipeSelectedLayer', this.swipeLayer)
+    this.swipeLayer.type = ev.layer.get('descriptorLayer');
     this.swipeLayer.visible = true;
     this.addSwipe(ev.layer);
   }
@@ -681,7 +686,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     let { layer, updateSource } = ev;
 
     const layerType: DescriptorType = layer;
-
     if (updateSource) {
       this.updateSourceLayer(layerType);
     } else {
@@ -1204,8 +1208,85 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     let drawData = { geometry: this.getGeoJsonFromFeature(), app_origin: 'app-base' }
     this.areaService.saveDrawedGeometry(drawData)
       .subscribe(data => {
-        console.log("DATA: ", data)
+        this.onSearchDrawnGeometry.emit(data.token);
+        this.printRegionsIdentification(data.token);
+        this.onCancel();
       })
+  }
+
+  printRegionsIdentification(token) {
+    let dd = {
+      pageSize: { width: 400, height: 400 },
+
+      // by default we use portrait, you can change it to landscape if you wish
+      pageOrientation: 'portrait',
+
+      content: [],
+      styles: {
+        titleReport: {
+          fontSize: 16,
+          bold: true
+        },
+        textFooter: {
+          fontSize: 9
+        },
+        textImglegend: {
+          fontSize: 9
+        },
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10]
+        },
+        data: {
+          bold: true,
+        },
+        subheader: {
+          fontSize: 16,
+          bold: true,
+          margin: [0, 10, 0, 5]
+        },
+        codCar: {
+          fontSize: 11,
+          bold: true,
+        },
+        textObs: {
+          fontSize: 11,
+        },
+        tableDpat: {
+          margin: [0, 5, 0, 15],
+          fontSize: 11,
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 13,
+          color: 'black'
+        },
+        token: {
+          bold: true,
+          fontSize: 16,
+        },
+        metadata: {
+          background: '#0b4e26',
+          color: '#fff'
+        }
+      }
+    }
+
+    // @ts-ignore
+    dd.content.push({ image: this.localizationService.translate('area.token.logo'), width: 200, alignment: 'center' });
+    // @ts-ignore
+    dd.content.push({ text: this.localizationService.translate('area.token.description'), alignment: 'center', margin: [10, 10, 20, 0] });
+    // @ts-ignore
+    dd.content.push({ text: token, alignment: 'center', style: 'token', margin: [20, 20, 20, 10] });
+
+    // @ts-ignore
+    dd.content.push({ qr: token.toString(), fit: '200', alignment: 'center' });
+
+    const filename =  this.localizationService.translate('area.token.title') + ' - ' + token + '.pdf'
+    const win = window.open('', '_blank');
+    pdfMake.createPdf(dd).open({}, win);
+    // pdfMake.createPdf(dd).download(filename);
   }
 
   onCancel() {
@@ -1230,7 +1311,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   addSwipe(layer) {
-    this.changeLayerVisibility({ layer: layer.get('descriptorLayer'), updateSource: false });
+    let layerType: DescriptorType = layer.get('descriptorLayer');
+    layerType.visible = true;
+    this.changeLayerVisibility({ layer: layerType, updateSource: false });
+    this.onSelectLayerSwipe.emit(layerType.valueType);
     this.addLayersToLeftSideSwipe(layer);
     this.swiperControl.addLayer(layer, true);
     this.map.addControl(this.swiperControl);
@@ -1245,7 +1329,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   addLayersToLeftSideSwipe(lay) {
     this.map.getLayers().getArray().forEach(layer => {
-      console.log('addLayersToLeftSideSwipe', layer)
       if (layer.get('type') === 'layer' && layer.get('key') !== lay.get('key') && layer.getVisible()) {
         this.swiperControl.addLayer(layer, false);
       }

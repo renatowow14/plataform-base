@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div [class]="open ? 'open ' : '' ">
       <div class="logo-details">
-        <img src="../../../assets/logos/icone.png" (click)='toggleMenu()'>
+        <img src="../../../assets/logos/base_icon.png" (click)='toggleMenu()'>
 <!--        <i class='bx bxl-c-plus-plus icon' (click)='toggleMenu()'></i>-->
       </div>
       <ul #leftSidebar class="nav-list">
@@ -95,17 +95,20 @@
                           max="100" value="0">
                         <br> <span>{{'left_sidebar.opacity' | translate}}</span>
                       </div>
-                      <div class="layer-exports" *ngIf="layer.type!.downloadSHP || layer.type!.downloadCSV || layer.type!.downloadRaster">
+                      <div class="layer-exports" *ngIf="layer.type!.downloadSHP || layer.type!.downloadCSV || layer.type!.downloadRaster || layer.type!.downloadGPKG">
                         <div *ngIf="loadingDownload" class="loader"></div>
                         <button pTooltip="{{'left_sidebar.layer.down_shp' | translate}}" pButton pRipple type="button"
                                 label="SHP" (click)="download('shp', layer.type, $event)"
-                                *ngIf="layer.type!.downloadSHP && !loadingDownload" class="p-button-raised p-button-text"></button>
+                                *ngIf="layer.type!.downloadSHP && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
+                        <button pTooltip="{{'left_sidebar.layer.down_gpkg' | translate}}" pButton pRipple type="button"
+                                label="GPKG" (click)="download('gpkg', layer.type, $event)"
+                                *ngIf="layer.type!.downloadGPKG && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                         <button pTooltip="{{'left_sidebar.layer.down_csv' | translate}}" pButton pRipple type="button"
                                 label="CSV" (click)="download('csv', layer.type, $event)"
-                                *ngIf="layer.type!.downloadCSV && !loadingDownload" class="p-button-raised p-button-text"></button>
+                                *ngIf="layer.type!.downloadCSV && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                         <button pTooltip="{{'left_sidebar.layer.down_raster' | translate}}" pButton pRipple type="button"
                                 label="TIFF" (click)="download('tiff', layer.type, $event)"
-                                *ngIf="layer.type!.downloadRaster && !loadingDownload" class="p-button-raised p-button-text"></button>
+                                *ngIf="layer.type!.downloadRaster && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                       </div>
                     </div>
                   </div>
@@ -132,7 +135,7 @@
         </div>
       </div>
       <div class="menu-item" *ngIf="currentMenu?.key == 'area'">
-        <app-leftsidebar-area [map]="map" [lang]="lang"></app-leftsidebar-area>
+        <app-leftsidebar-area [map]="map" [lang]="lang" [token]="token"></app-leftsidebar-area>
       </div>
       <div class="menu-item options" *ngIf="currentMenu?.key == 'options'">
         <div *ngIf="limits.length > 0" [class]="optionsGroups.limits ? 'group-card group-card-active' :'group-card'">

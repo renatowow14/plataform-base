@@ -26,6 +26,8 @@
     (onBasemapsReady)="leftSideBar.setBasemaps($event)"
     (onMapReadyLeftSideBar)="leftSideBar.setMap($event)"
     (onMapReadyRightSideBar)="rightSideBar.setMap($event)"
+    (onSelectLayerSwipe)="leftSideBar.setLayerVisible($event)"
+    (onSearchDrawnGeometry)="leftSideBar.setTokenGeometryToSearch($event)"
   ></app-general-map>
 
   <app-right-side-bar
