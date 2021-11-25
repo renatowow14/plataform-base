@@ -1,10 +1,47 @@
 const languageJson = require('../assets/lang/language.json');
-const Metadado = require('../models/metadados');
+const got = require('got');
 const DescriptorBuilder = require('../utils/descriptorBuilder');
 
 module.exports = function (app) {
     const Controller = {}
+
     const config = app.config;
+
+    Controller.callServiceToObtainLayerTypes = async function (language, type = 'layers') {
+        let res = {}
+        let url = String(process.env.LAPIG_API_ADDRESS + "/service/map/" + type + "?lang=" + language)
+        try {
+            const response = await got(url);
+            res = JSON.parse(response.body)
+
+            return res;
+
+        } catch (error) {
+            console.log(error.response.body);
+            //=> 'Internal server error ...'
+        }
+    }
+
+    Controller.descriptor = async function (request, response) {
+        const { lang } = request.query;
+        try {
+            let layertypes = await Controller.callServiceToObtainLayerTypes(lang, 'layers')
+            let basemapsTypes = await Controller.callServiceToObtainLayerTypes(lang, 'basemaps')
+            let limitsTypes = await Controller.callServiceToObtainLayerTypes(lang, 'limits')
+
+            const result = {
+                // regionFilterDefault: "bioma='CERRADO'", // Non-obrigatory property to define a filter to Region applied to EVERY layer.
+                groups: DescriptorBuilder().getGroupLayers(lang, layertypes),
+                basemaps: DescriptorBuilder().getBasemapsOrLimitsLayers(lang, 'basemaps', basemapsTypes),
+                limits: DescriptorBuilder().getBasemapsOrLimitsLayers(lang, 'limits', limitsTypes),
+            }
+
+            response.send(result);
+            response.end();
+        } catch (e) {
+            console.log(e)
+        }
+    };
 
     Controller.extent = function (request, response) {
         const queryResult = request.queryResult['extent']
@@ -42,19 +79,6 @@ module.exports = function (app) {
         response.end()
     }
 
-
-    Controller.descriptor = function (request, response) {
-        const { lang } = request.query;
-        const result = {
-            // regionFilterDefault: "bioma='CERRADO'", // Non-obrigatory property to define a filter to Region applied to EVERY layer.
-            groups: DescriptorBuilder().getGroupLayers(lang),
-            basemaps: DescriptorBuilder().getBasemapsOrLimitsLayers(lang, 'basemaps'),
-            limits: DescriptorBuilder().getBasemapsOrLimitsLayers(lang, 'limits'),
-        }
-
-        response.send(result);
-        response.end();
-    };
 
     Controller.host = function (request, response) {
 

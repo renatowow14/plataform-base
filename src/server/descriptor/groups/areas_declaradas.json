@@ -10,15 +10,7 @@
                 "visible": false,
                 "selectedType": "geo_car_imovel",
                 "types": [
-                    {
-                        "valueType": "geo_car_imovel",
-                        "type": "layer",
-                        "typeLayer": "vectorial",
-                        "viewValueType": "translate",
-                        "typeLabel": "source",
-                        "downloadSHP": false,
-                        "downloadCSV": false
-                    }
+                    "geo_car_imovel"
                 ]
             },
             {
@@ -27,15 +19,7 @@
                 "visible": false,
                 "selectedType": "unidades_planejamento_hidrico",
                 "types": [
-                    {
-                        "valueType": "unidades_planejamento_hidrico",
-                        "type": "layer",
-                        "typeLayer": "vectorial",
-                        "viewValueType": "translate",
-                        "typeLabel": "source",
-                        "downloadSHP": true,
-                        "downloadCSV": false
-                    }
+                    "unidades_planejamento_hidrico"
                 ]
             }
         ]

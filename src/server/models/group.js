@@ -1,6 +1,5 @@
 const lang = require('../utils/language');
 const Layer = require('./layer')
-
 const Auxiliar = require('../utils/auxiliar')
 
 module.exports = class Group {
@@ -11,27 +10,37 @@ module.exports = class Group {
     groupExpanded;
     layers;
 
-    constructor(language, params) {
+    constructor(language, params, layertypes) {
         this.languageOb = lang().getLang(language);
-        this.idGroup = params.idGroup
+        this.idGroup = params.idGroup ? params.idGroup : null
 
         this.labelGroup = params.labelGroup == "translate" ? this.languageOb.descriptor_labels.groups[this.idGroup].labelGroup : params.labelGroup;
 
         this.groupExpanded = params.hasOwnProperty('groupExpanded') ? params.groupExpanded : false;
 
         if (params.hasOwnProperty('layers')) {
-            this.layers = this.getLayersArray(language, params.layers);
+            this.layers = this.getLayersArray(language, params.layers, layertypes);
         }
+
 
     }
 
-    getLayersArray(language, layers) {
+    getLayersArray(language, layers, layertypes) {
         var arr = [];
         var temp_id = this.idGroup
-        layers.forEach(function (item, index) {
-            let layer = new Layer(language, item, temp_id).getLayerInstance();
-            arr.push(layer);
-        });
+
+        try {
+
+            for (const [key, layer] of Object.entries(layers)) {
+                let layerInstance = new Layer(language, layer, temp_id, layertypes);
+                arr.push(layerInstance.getLayerInstance());
+            }
+
+
+        } catch (error) {
+            // console.log(error.response.body);
+            //=> 'Internal server error ...'
+        }
 
         return arr;
     }

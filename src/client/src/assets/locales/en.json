@@ -195,27 +195,7 @@
         "labelGroup": "Agriculture and Livestock",
         "layers": {
           "agricultura": {
-            "labelLayer": "Agriculture",
-            "types": {
-              "agricultura_agrosatelite": {
-                "viewValueType": "Agrosatellite",
-                "filters": {
-                  "year=2001": 2001
-                },
-                "metadata": {
-                  "title": "Agriculture - Agrosatélite",
-                  "description": "Dynamics of expanding the area planted with annual crops in the Cerrado Biome.",
-                  "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
-                  "region": "Cerrado Biome, allowing to analyze the classes of land use by other regions of interest such as: states and municipalities.",
-                  "period": "2001; 2007; 2014",
-                  "scale": "1:250.000",
-                  "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
-                  "cartographic_projection": "Universal Transverse Mercator",
-                  "cod_caracter": "Latin 1",
-                  "fonte": "Agrosatélite Applied Geotechnology, Gordon and Betty Moore Foundation (funders)"
-                }
-              }
-            }
+            "labelLayer": "Agriculture"
           }
         }
       },
@@ -223,27 +203,7 @@
         "labelGroup": "Image Mosaics",
         "layers": {
           "satelite": {
-            "labelLayer": "Satellite",
-            "types": {
-              "planet": {
-                "viewValueType": "Planet",
-                "filters": {
-                  "global_quarterly_2016q1_mosaic": "2016/1ºTri"
-                },
-                "metadata": {
-                  "title": "Satellite images: Planet",
-                  "description": "With hundreds of satellites in orbit, Planet is able to obtain images with a resolution of 3 meters of any location on Earth daily.",
-                  "format": "Service provided by Norway’s International Climate & Forests Initiative",
-                  "region": "Global - World.",
-                  "period": "2016 ~ until today",
-                  "scale": "1:250.000",
-                  "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
-                  "cartographic_projection": "Universal Transverse Mercator.",
-                  "cod_caracter": "Latin 1",
-                  "fonte": "Planet Scope"
-                }
-              }
-            }
+            "labelLayer": "Satellite"
           }
         }
       },
@@ -251,126 +211,33 @@
         "labelGroup": "Special Areas",
         "layers": {
           "terras_indigenas_layer": {
-            "labelLayer": "Indigenous Land",
-            "types": {
-              "limites_terras_indigenas": {
-                "viewValueType": "INCRA"
-              },
-              "metadata": {
-                "title": "Indigenous Lands (TI)",
-                "description": "Indigenous lands boundaries.",
-                "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
-                "region": "Brasil",
-                "period": "2017",
-                "scale": "ND",
-                "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
-                "cartographic_projection": "Universal Transverse Mercator.",
-                "cod_caracter": "UTF-8",
-                "fonte": "National Indian Foundation (FUNAI)"
-              }
-            }
+            "labelLayer": "Indigenous Land"
           },
           "assentamentos_layer": {
-            "labelLayer": "Settlements",
-            "types": {
-              "assentamentos": {
-                "viewValueType": "INCRA",
-                "metadata": {
-                  "title": "Assentamentos",
-                  "description": "Conjunto de unidades agrícolas, instaladas pelo Incra em um imóvel rural.",
-                  "format": "Shapefile (* .SHP), with complementary files (* .PRJ, * DBF, * .SHX, * .SBX, * MAP). Comma-separated values (* .CSV).",
-                  "region": "Cerrado",
-                  "period": "",
-                  "scale": "",
-                  "system_coordinator": "SIRGAS 2000 reference surface, Geographic Coordinate System (in degrees).",
-                  "cartographic_projection": "Universal Transverse Mercator (UTM).",
-                  "cod_caracter": "Latin 1",
-                  "fonte": ""
-                }
-              }
-            }
+            "labelLayer": "Settlements"
           }
-        }
-      },
-      "areas_declaradas": {
-        "labelGroup": "Declared Areas",
-        "layers": {
-          "propriedades_rurais": {
-            "labelLayer": "Rural Environmental Register (CAR)",
-            "types": {
-              "geo_car_imovel": {
-                "viewValueType": "SICAR"
-              }
-            }
-          },
-          "planejamento_hidrico": {
-            "labelLayer": "Water Planning",
-            "types": {
-              "unidades_planejamento_hidrico": {
-                "viewValueType": "Units"
-              }
+        },
+        "areas_declaradas": {
+          "labelGroup": "Declared Areas",
+          "layers": {
+            "propriedades_rurais": {
+              "labelLayer": "Rural Environmental Register (CAR)"
+            },
+            "planejamento_hidrico": {
+              "labelLayer": "Water Planning"
             }
           }
         }
       }
     },
     "basemaps": {
-      "label": "Basemaps",
-      "types": {
-        "mapbox": "Geopolitical",
-        "bing": "Bing Maps",
-        "google": "Google",
-        "roads": "Roads",
-        "relief": "Relief",
-        "planet": "Planet",
-        "mapbox-dark": "Geopolitical Dark"
-      }
+      "labelLayer": "Basemaps"
     },
     "limits": {
-      "label": "Limits",
-      "types": {
-        "estados": "States of Brasil",
-        "municipios": "Municipalities of Brasil",
-        "biomas": "Biomes of Brasil",
-        "limites_cartas_ibge": "IBGE Maps"
-      }
+      "labelLayer": "Limits"
     }
   },
-  "labels": {
-    "layertype": {
-      "typeLabel": {
-        "type": "Type",
-        "quantity": "Amount",
-        "area_planted": "Planted Area",
-        "production": "Production",
-        "source": "Source"
-      },
-      "filterLabel": {
-        "year": "Year",
-        "period": "Period"
-      }
-    }
-  },
-  "metadata": {
-    "titles": {
-      "title": "Metadata",
-      "description": "Description",
-      "format": "Format",
-      "region": "Region",
-      "period": "Period",
-      "data": "Date",
-      "scale": "Scale",
-      "system_coordinator": "System Coordinator",
-      "cartographic_projection": "Cartographic projection",
-      "cod_caracter": "Character encoding",
-      "coordinates": "Reference and Coordinate Systems",
-      "projection": "Cartographic projection",
-      "caracter": "Character encoding",
-      "fonte": "Source",
-      "update": "Update",
-      "contato": "Contact"
-    }
-  },
+  "labels": {},
   "right_sidebar": {
     "title": "Statistics",
     "cards_titles": {

@@ -1,34 +1,14 @@
 [
     {
         "idLayer": "limits",
-        "labelLayer": "",
+        "labelLayer": "translate",
         "visible": true,
         "selectedType": "estados",
         "types": [
-            {
-                "valueType": "estados",
-                "type": "limit",
-                "typeLayer": "vectorial",
-                "viewValueType": "translate"
-            },
-            {
-                "valueType": "municipios",
-                "type": "limit",
-                "typeLayer": "vectorial",
-                "viewValueType": "translate"
-            },
-            {
-                "valueType": "biomas",
-                "type": "limit",
-                "typeLayer": "vectorial",
-                "viewValueType": "translate"
-            },
-            {
-                "valueType": "limites_cartas_ibge",
-                "type": "limit",
-                "typeLayer": "vectorial",
-                "viewValueType": "translate"
-            }
+            "estados",
+            "municipios",
+            "biomas",
+            "limites_cartas_ibge"
         ]
     }
 ]
