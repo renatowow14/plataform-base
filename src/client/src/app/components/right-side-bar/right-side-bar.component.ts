@@ -42,8 +42,6 @@ export class RightSideBarComponent implements OnInit {
   public Legendas: Legend[];
   public map: Map;
   public _displayOptions: boolean;
-  public basemap: any;
-  public limit: any;
   public innerHeigth: number;
   public timeSeriesResultDeforestation: any = {};
 

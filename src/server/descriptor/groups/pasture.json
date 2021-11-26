@@ -1,16 +1,17 @@
 [
     {
-        "idGroup": "agropecuaria",
+        "idGroup": "pasture_general",
         "labelGroup": "translate",
         "groupExpanded": true,
         "layers": [
             {
-                "idLayer": "agricultura",
+                "idLayer": "pasture",
                 "labelLayer": "translate",
                 "visible": true,
-                "selectedType": "agricultura_agrosatelite",
+                "selectedType": "pasture",
                 "types": [
-                    "agricultura_agrosatelite"
+                    "pasture",
+                    "pasture_quality"
                 ]
             }
         ]

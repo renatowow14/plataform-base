@@ -3,15 +3,15 @@ const path = require('path')
 const lang = require('./language');
 const Group = require('../models/group')
 const Layer = require('../models/layer')
+const got = require('got');
 
 module.exports = function (app) {
     var Controller = {}
     var Internal = {}
 
-    Controller.getGroupLayers = function (language) {
+    Controller.getGroupLayers = function (language, layertypes) {
         var folder_path = './descriptor/groups'
         const jsonsInDir = fs.readdirSync(folder_path).filter(file => path.extname(file) === '.json');
-
         var groups = [];
         var order = Internal.getGroupsOrder();
 
@@ -28,7 +28,7 @@ module.exports = function (app) {
                         json.forEach(function (item, index) {
 
                             // console.log(element, item)
-                            var group = new Group(language, item).getGroupInstance();
+                            var group = new Group(language, item, layertypes).getGroupInstance();
                             groups.push(group)
 
                         });
@@ -39,11 +39,10 @@ module.exports = function (app) {
                 }
             });
         });
-
         return groups;
     };
 
-    Controller.getBasemapsOrLimitsLayers = function (language, type = 'basemaps') {
+    Controller.getBasemapsOrLimitsLayers = function (language, type = 'basemaps', layertypes) {
         var folder_path = './descriptor/' + type
         const jsonsInDir = fs.readdirSync(folder_path).filter(file => path.extname(file) === '.json');
 
@@ -56,6 +55,7 @@ module.exports = function (app) {
         else if (type.toLowerCase() == 'limits'.toLocaleLowerCase()) {
             order = Internal.getLimitsOrder();
         }
+
         order.forEach(element => {
             jsonsInDir.forEach(file => {
 
@@ -67,10 +67,8 @@ module.exports = function (app) {
 
                         // console.log(json)
                         json.forEach(function (item, index) {
-
-                            var layer = new Layer(language, item).getLayerInstance();
-
-                            layers.push(layer)
+                            const layer = new Layer(language, item, null, layertypes);
+                            layers.push(layer.getLayerInstance())
                         });
 
                     } catch (e) {
@@ -90,7 +88,6 @@ module.exports = function (app) {
             'areas_declaradas',
             'imagens'
         ]
-
     }
 
     Internal.getLimitsOrder = function () {

@@ -1,6 +1,4 @@
 const lang = require('../utils/language');
-const LayerType = require('./layertype');
-
 const Auxiliar = require('../utils/auxiliar')
 
 module.exports = class Layer {
@@ -12,57 +10,66 @@ module.exports = class Layer {
     visible;
     selectedType;
     layerTypes;
+    language;
 
-    constructor(language, params, idGroup) {
+    constructor(language, params, idGroup, allLayersT) {
+        this.language = language
         this.languageOb = lang().getLang(language);
 
         this.idGroup = idGroup ? idGroup : null;
         this.idLayer = params.idLayer;
+
+
+        if (params.hasOwnProperty('types')) {
+            this.layerTypes = this.getLayerTypesArray(params.types, allLayersT)
+        }
 
         if (this.idLayer == 'limits' || this.idLayer == 'basemaps') {
             this.labelLayer = this.languageOb.descriptor_labels[this.idLayer].labelLayer;
         }
         else {
             if (params.labelLayer.toLowerCase() == "translate".toLowerCase()) {
-
                 this.labelLayer = this.languageOb.descriptor_labels.groups[this.idGroup].layers[this.idLayer].labelLayer;
             }
             else {
                 this.labelLayer = params.labelLayer
             }
         }
-
         this.visible = params.hasOwnProperty('visible') ? params.visible : false;
-        this.selectedType = params.hasOwnProperty('selectedType') ? params.selectedType : null;
 
-        if (params.hasOwnProperty('types')) {
-            this.layerTypes = this.getLayerTypesArray(language, params.types);
-        }
+        this.selectedType = params.hasOwnProperty('selectedType') ? params.selectedType : this.layerTypes[0].valueType;
     }
 
-    getLayerTypesArray(language, types) {
-        var arr = [];
+    getLayerTypesArray(layertypes, alllayertypes) {
 
-        var temp_idGroup = this.idGroup;
-        var temp_idLayer = this.idLayer
+        let layertypesV = []
+        layertypes.forEach(function (userSelectedLayerTypeValue, index) {
+            for (var k in alllayertypes) {
 
-        types.forEach(function (item, index) {
-            var type = new LayerType(language, item, { idGroup: temp_idGroup, idLayer: temp_idLayer });
-            var typeObj = new Object(type.getLayerTypeInstance());
-            arr.push(typeObj);
+                let ob = alllayertypes[k].find(obj => {
+                    return obj.valueType.toUpperCase() === userSelectedLayerTypeValue.toUpperCase()
+                })
+
+                if (ob) {
+                    layertypesV.push(Object.assign({}, ob))
+                }
+
+            }
         });
 
-        return arr;
+        return layertypesV;
     }
 
     getLayerInstance() {
-        var ob = {
+        let ob = {
             "idLayer": this.idLayer,
             "labelLayer": this.labelLayer,
             "visible": this.visible,
             "selectedType": this.selectedType,
             "types": this.layerTypes
         }
+
+        console.log("OB - ", ob)
 
         return ob;
     }
