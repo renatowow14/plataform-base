@@ -82,6 +82,8 @@
           <i pRipple [pTooltip]="'controls.measureArea' | translate"
             [class]="mapControls.measureArea ? 'fg-measure-area control-active' : 'fg-measure-area'"
             (click)="onRulerArea()"></i>
+          <i pRipple [pTooltip]="'controls.clear' | translate" class="bx bxs-trash"
+             (click)="onClearGeometries()"></i>
 <!--          <i pRipple [pTooltip]="'controls.print' | translate"-->
 <!--            [class]="mapControls.print ? 'bx bxs-file-pdf control-active' : 'bx bxs-file-pdf'"></i>-->
         </div>

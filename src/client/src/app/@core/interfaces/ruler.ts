@@ -11,8 +11,9 @@ export interface Ruler {
 
   addOverlay(overlay: Overlay): void;
 
-  // @ts-ignore
-  getSource(): VectorSource;
+  getOverlay(overlay: Overlay): Overlay;
+
+  getSource(): VectorSource<any>;
 
   getMap(): Map;
 

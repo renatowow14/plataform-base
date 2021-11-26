@@ -27,23 +27,22 @@ abstract class RulerControl {
             source: this.component.getSource(),
             type: this.type,
             style: new Style({
-                fill: new Fill({
-                    color: 'rgba(255, 255, 255, 0.2)',
-                }),
+              fill: new Fill({
+                color: 'rgba(255, 255, 255, 0.2)',
+              }),
+              stroke: new Stroke({
+                color: '#ffcc33',
+                width: 2,
+              }),
+              image: new CircleStyle({
+                radius: 7,
                 stroke: new Stroke({
-                    color: 'rgba(0, 0, 0, 0.5)',
-                    lineDash: [10, 10],
-                    width: 2,
+                  color: '#ffcc33',
                 }),
-                image: new CircleStyle({
-                    radius: 5,
-                    stroke: new Stroke({
-                        color: 'rgba(0, 0, 0, 0.7)',
-                    }),
-                    fill: new Fill({
-                        color: 'rgba(255, 255, 255, 0.2)',
-                    }),
+                fill: new Fill({
+                  color: '#ffcc33',
                 }),
+              })
             }),
         });
 
@@ -182,7 +181,6 @@ export class RulerAreaCtrl extends RulerControl {
         const area = getArea(geometry, {
             projection: this.component.getMap().getView().getProjection()
         });
-
         return calculaArea(area);
     }
 }

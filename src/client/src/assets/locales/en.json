@@ -2,6 +2,7 @@
   "controls": {
     "swipe": "Swipe",
     "search": "Filters of Map",
+    "clear": "Clear Geometries",
     "draw": "Draw Area",
     "measure": "Measure Distance",
     "measureArea": "Measure Area",
