@@ -65,7 +65,7 @@
                     <p-inputSwitch (onChange)="changeLayerVisibility(layer)" [id]=layer.idLayer
                       (ngModelChange)="layer.visible = !layer.visible" [(ngModel)]="layer.visible"></p-inputSwitch>
                     <h5>{{layer.labelLayer}}</h5>
-                    <i *ngIf="layer.type!.metadata && layer.type!.visible" pTooltip="{{'left_sidebar.layer.metadata' | translate}}"
+                    <i *ngIf="layer.selectedTypeObject!.metadata && layer.selectedTypeObject!.visible" pTooltip="{{'left_sidebar.layer.metadata' | translate}}"
                       class='bx bxs-info-circle' (click)="showMetadata(layer)"></i>
                   </div>
                   <div class="layer-card-body" *ngIf="layer.visible">
@@ -81,34 +81,34 @@
                               optionLabel="viewValueType"
                               optionValue="valueType"
                             ></p-dropdown>
-                            <label for="types-{{layer.selectedType}}">{{layer.type!.typeLabel}}</label>
+                            <label for="types-{{layer.selectedType}}">{{layer.selectedTypeObject!.typeLabel}}</label>
                         </span>
                       </div>
-                      <span *ngIf="layer.type!.filters" class="p-float-label">
-                        <p-dropdown id="type-filters-{{layer.type!.filterSelected}}" *ngIf="layer.type!.filters" [options]="layer.type!.filters"
-                                    [(ngModel)]="layer.type!.filterSelected" (onChange)="changeLayerVisibility(layer, true)"
+                      <span *ngIf="layer.selectedTypeObject!.filters" class="p-float-label">
+                        <p-dropdown id="type-filters-{{layer.selectedTypeObject!.filterSelected}}" *ngIf="layer.selectedTypeObject!.filters" [options]="layer.selectedTypeObject!.filters"
+                                    [(ngModel)]="layer.selectedTypeObject!.filterSelected" (onChange)="changeLayerVisibility(layer, true)"
                                     optionLabel="viewValueFilter" optionValue="valueFilter"></p-dropdown>
-                        <label for="type-filters-{{layer.type!.filterSelected}}">{{layer.type!.filterLabel}}</label>
+                        <label for="type-filters-{{layer.selectedTypeObject!.filterSelected}}">{{layer.selectedTypeObject!.filterLabel}}</label>
                       </span>
                       <div class="layer-transparency">
                         <input (mousemove)="onChangeTransparency(layer, $event)" class="range" type="range" min="0"
                           max="100" value="0">
                         <br> <span>{{'left_sidebar.opacity' | translate}}</span>
                       </div>
-                      <div class="layer-exports" *ngIf="layer.type!.downloadSHP || layer.type!.downloadCSV || layer.type!.downloadRaster || layer.type!.downloadGPKG">
+                      <div class="layer-exports" *ngIf="layer.selectedTypeObject!.downloadSHP || layer.selectedTypeObject!.downloadCSV || layer.selectedTypeObject!.downloadRaster || layer.selectedTypeObject!.downloadGPKG">
                         <div *ngIf="loadingDownload" class="loader"></div>
                         <button pTooltip="{{'left_sidebar.layer.down_shp' | translate}}" pButton pRipple type="button"
-                                label="SHP" (click)="download('shp', layer.type, $event)"
-                                *ngIf="layer.type!.downloadSHP && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
+                                label="SHP" (click)="download('shp', layer.selectedTypeObject, $event)"
+                                *ngIf="layer.selectedTypeObject!.downloadSHP && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                         <button pTooltip="{{'left_sidebar.layer.down_gpkg' | translate}}" pButton pRipple type="button"
-                                label="GPKG" (click)="download('gpkg', layer.type, $event)"
-                                *ngIf="layer.type!.downloadGPKG && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
+                                label="GPKG" (click)="download('gpkg', layer.selectedTypeObject, $event)"
+                                *ngIf="layer.selectedTypeObject!.downloadGPKG && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                         <button pTooltip="{{'left_sidebar.layer.down_csv' | translate}}" pButton pRipple type="button"
-                                label="CSV" (click)="download('csv', layer.type, $event)"
-                                *ngIf="layer.type!.downloadCSV && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
+                                label="CSV" (click)="download('csv', layer.selectedTypeObject, $event)"
+                                *ngIf="layer.selectedTypeObject!.downloadCSV && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                         <button pTooltip="{{'left_sidebar.layer.down_raster' | translate}}" pButton pRipple type="button"
-                                label="TIFF" (click)="download('tiff', layer.type, $event)"
-                                *ngIf="layer.type!.downloadRaster && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
+                                label="TIFF" (click)="download('tiff', layer.selectedTypeObject, $event)"
+                                *ngIf="layer.selectedTypeObject!.downloadRaster && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                       </div>
                     </div>
                   </div>

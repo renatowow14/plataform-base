@@ -8,6 +8,13 @@ export interface DescriptorMetadata {
   description: string;
 }
 
+export interface DescriptorTypeOrigin {
+  sourceService: string;
+  typeOfTMS: string;
+  url?: string;
+  epsg?: string;
+}
+
 export interface DescriptorType {
   valueType: string;
   type: string;
@@ -22,6 +29,8 @@ export interface DescriptorType {
   filterHandler?: string;
   filterSelected?: string;
   layerLimits?: boolean;
+  columnsCSV?: string[];
+  origin: DescriptorTypeOrigin;
   opacity: number;
   visible?: boolean;
   filters?: DescriptorFilter[];
@@ -33,7 +42,7 @@ export interface DescriptorBaseMap {
   visible: boolean;
   selectedType: string;
   types: DescriptorType[];
-  type?: DescriptorType;
+  selectedTypeObject?: DescriptorType;
 }
 
 export interface DescriptorLimit {
@@ -41,7 +50,7 @@ export interface DescriptorLimit {
   visible: boolean;
   selectedType: string;
   types: DescriptorType[];
-  type?: DescriptorType;
+  selectedTypeObject?: DescriptorType;
 }
 
 export interface DescriptorGroup {
@@ -57,7 +66,7 @@ export interface DescriptorLayer {
   visible: boolean;
   selectedType: string;
   types: DescriptorType[];
-  type?: DescriptorType;
+  selectedTypeObject?: DescriptorType;
 }
 
 export interface Descriptor {

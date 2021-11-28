@@ -40,10 +40,13 @@ import { AreaService } from '../services/area.service';
 import Swipe from 'ol-ext/control/Swipe';
 import Graticule from 'ol-ext/control/Graticule';
 import Compass from 'ol-ext/control/Compass';
-
+import geojsonExtent from '@mapbox/geojson-extent';
+import { transformExtent } from 'ol/proj';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import {Pixel} from "ol/pixel";
+import {WmtsService} from "../services/wmts.service";
+import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -100,13 +103,14 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   public swiperControl: Swipe = new Swipe();
   public swipeLayer: DescriptorLayer;
   public mapControls: Control;
-
+  public wmtsCapabilities: any[];
+  public loadingMap: boolean;
 
   public layersTypes: any[];
   public layersNames: any[];
   public basemapsAvaliable: any[];
   public limitsNames: any[];
-  public layersTMS: any;
+  public OlLayers: any;
   public limitsTMS: any;
   public tileGrid: TileGrid;
   public projection: any;
@@ -151,6 +155,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     private downloadService: DownloadService,
     private cdRef: ChangeDetectorRef,
     private primeNGConfig: PrimeNGConfig,
+    private wmtsService: WmtsService,
     private mapService: MapService,
     private areaService: AreaService,
     private messageService: MessageService,
@@ -160,12 +165,14 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.loadingDown = false;
     this.legendExpanded = true;
     this.controlOptions = false;
+    this.loadingMap = false;
     this.layersTypes = [];
     this.layersNames = [];
     this.limitsNames = [];
     this.swipeLayers = [];
+    this.wmtsCapabilities = [];
     this.swipeLayer = { idLayer: '', labelLayer: '', selectedType: '', visible: false, types: [] };
-    this.layersTMS = {};
+    this.OlLayers = {};
     this.limitsTMS = {};
     this.map = {};
 
@@ -489,7 +496,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   onSwipeSelectedLayer(ev) {
-    this.swipeLayer.type = ev.layer.get('descriptorLayer');
+    this.swipeLayer.selectedTypeObject = ev.layer.get('descriptorLayer');
     this.swipeLayer.visible = true;
     this.addSwipe(ev.layer);
   }
@@ -503,8 +510,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
     for (let groups of this._descriptor.groups) {
       for (let layer of groups.layers) {
-        layer.type = layer.types.find(type => type.valueType === layer.selectedType);
-        layer.type!.visible = layer.visible;
+        layer.selectedTypeObject = layer.types.find(type => type.valueType === layer.selectedType);
+        layer.selectedTypeObject!.visible = layer.visible;
         for (let types of layer.types) {
           this.layersTypes.push(types)
         }
@@ -513,8 +520,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     }
 
     for (let basemap of this._descriptor.basemaps) {
-      basemap.type = basemap.types.find(type => type.valueType === basemap.selectedType);
-      basemap.type!.visible = basemap.visible;
+      basemap.selectedTypeObject = basemap.types.find(type => type.valueType === basemap.selectedType);
+      basemap.selectedTypeObject!.visible = basemap.visible;
 
       for (let types of basemap.types) {
 
@@ -531,8 +538,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     }
 
     for (let limit of this._descriptor.limits) {
-      limit.type = limit.types.find(type => type.valueType === limit.selectedType);
-      limit.type!.visible = limit.visible;
+      limit.selectedTypeObject = limit.types.find(type => type.valueType === limit.selectedType);
+      limit.selectedTypeObject!.visible = limit.visible;
 
       for (let types of limit.types) {
         this.limitsNames.push(types)
@@ -577,7 +584,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   setMap(map) {
     this.map = map;
-    this.map.on('singleclick', (evt: MapEvent) => this.onDisplayFeatureInfo(evt));
+    this.map.on('singleclick', (evt) => this.onDisplayFeatureInfo(evt));
     this.onMapReadyLeftSideBar.emit(map);
     this.onMapReadyRightSideBar.emit(map);
   }
@@ -597,9 +604,12 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
     let filters: any[] = []
 
-    if (layerType!.valueType == "planet") {
-      result.push(`https://tiles.planet.com/basemaps/v1/planet-tiles/${layerType!.filterSelected}/gmap/{z}/{x}/{y}.png?api_key=d6f957677fbf40579a90fb3a9c74be1a`);
+    if (layerType.origin.sourceService === 'external' && layerType.origin.typeOfTMS === 'xyz') {
+      const filter: string = layerType.filterSelected!;
+      let layer = layerType.origin.url!.replace('{{filters.valueFilter}}', filter);
+      result.push(layer);
     } else {
+
       if (layerType!.filterHandler == 'msfilter' && layerType!.filters) {
         filters.push(layerType!.filterSelected)
       }
@@ -632,20 +642,73 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     return result;
   }
 
-  private createTMSLayer(layerType: DescriptorType, type = 'layer') {
-    return new TileLayer({
-      properties: {
-        key: layerType!.valueType,
-        label: layerType!.viewValueType,
-        descriptorLayer: layerType,
-        type: type,
-        visible: layerType.visible
-      },
-      source: new XYZ({
-        urls: this.parseUrls(layerType)
-      }),
-      visible: layerType.visible
-    });
+  private createOlLayer(layerType: DescriptorType, type = 'layertype'): Promise<TileLayer<any>> {
+    let promise;
+
+    if(layerType.origin.sourceService === 'internal' && layerType.origin.typeOfTMS === 'xyz'){
+      promise = new Promise<TileLayer<any>>(resolve => {
+        resolve(new TileLayer({
+          properties: {
+            key: layerType!.valueType,
+            label: layerType!.viewValueType,
+            descriptorLayer: layerType,
+            type: type,
+            visible: layerType.visible
+          },
+          source: new XYZ({
+            urls: this.parseUrls(layerType)
+          }),
+          visible: layerType.visible
+        }));
+      });
+    }
+
+    if(layerType.origin.sourceService === 'external' && layerType.origin.typeOfTMS === 'wmts') {
+      promise = new Promise<TileLayer<any>>((resolve, reject) => {
+        this.wmtsService.getCapabilities(layerType.origin.url).subscribe((capabilities: any) => {
+          const options = optionsFromCapabilities(capabilities, {
+            layer: layerType.filterSelected,
+            matrixSet: layerType.origin.epsg,
+          });
+          this.wmtsCapabilities[layerType.valueType] = options;
+          resolve(new TileLayer({
+            properties: {
+              key: layerType!.valueType,
+              label: layerType!.viewValueType,
+              descriptorLayer: layerType,
+              type: type,
+              visible: layerType.visible
+            },
+            source: new WMTS(options),
+            visible: layerType.visible
+          }));
+
+        }, error => {
+          reject(error)
+        });
+      });
+    }
+
+    if(layerType.origin.sourceService === 'external' && layerType.origin.typeOfTMS === 'xyz') {
+      promise = new Promise<TileLayer<any>>(resolve => {
+        resolve(new TileLayer({
+          properties: {
+            key: layerType!.valueType,
+            label: layerType!.viewValueType,
+            descriptorLayer: layerType,
+            type: type,
+            visible: layerType.visible
+          },
+          source: new XYZ({
+            urls: this.parseUrls(layerType)
+          }),
+          visible: layerType.visible
+        }));
+      });
+    }
+
+    return promise;
+
   }
 
   private getResolutions(projection) {
@@ -659,40 +722,54 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   createLayers() {
+    this.loadingMap = true;
+    let layersPromises: any[] = [];
 
     for (let layer of this.layersTypes) {
-      this.layersTMS[layer.valueType] = this.createTMSLayer(layer);
-      this.layers.push(this.layersTMS[layer.valueType]);
-      this.addLayersLegend(layer);
+      layersPromises.push(this.createOlLayer(layer))
     }
     for (let bmap of this.basemapsAvaliable) {
       this.layers.push(bmap.layer)
     }
 
-    let limitsLayers: TileLayer<any>[] = [];
-
     for (let limits of this.limitsNames) {
-      let layer = this.createTMSLayer(limits, 'limit');
-      this.limitsTMS[limits.valueType] = layer;
-      this.layers.push(this.limitsTMS[limits.valueType]);
-      limitsLayers.push(layer);
+      layersPromises.push(this.createOlLayer(limits, 'limit'));
     }
 
-    this.onLimitsReady.emit(limitsLayers);
+    Promise.all(layersPromises).then(layers => {
+      let limitsLayers: any[] = [];
 
-    this.getSwipeLayers();
-    this.updateZIndex();
+      layers.forEach(layer => {
+        if(layer.get('type') === 'layertype'){
+          this.OlLayers[layer.get('descriptorLayer').valueType] = layer;
+          this.layers.push(layer);
+          this.addLayersLegend(layer);
+        } else if(layer.get('type') === 'limit') {
+          this.limitsTMS[layer.get('descriptorLayer').valueType] = layer;
+          this.layers.push(layer);
+          limitsLayers.push(layer);
+        }
+      })
+
+      this.onLimitsReady.emit(limitsLayers);
+
+      this.getSwipeLayers();
+      this.updateZIndex();
+      this.loadingMap = false;
+    })
   }
 
   changeLayerVisibility(ev) {
+
     let { layer, updateSource } = ev;
 
     const layerType: DescriptorType = layer;
+
     if (updateSource) {
       this.updateSourceLayer(layerType);
     } else {
-      if (layerType.type === 'layer') {
-        this.layersTMS[layerType.valueType].setVisible(layerType.visible);
+      if (layerType.type === 'layertype') {
+        this.OlLayers[layerType.valueType].setVisible(layerType.visible);
 
         this.addLayersLegend(layerType);
 
@@ -737,7 +814,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         if (item.get('key') === layerType.valueType) layerExist = true;
       });
       if (!layerExist) {
-        this.selectedLayers.push(this.layersTMS[layerType.valueType]);
+        this.selectedLayers.push(this.OlLayers[layerType.valueType]);
       }
 
     } else {
@@ -760,11 +837,11 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   onChangeTransparency(ev) {
     let { layer, opacity } = ev;
     const op = ((100 - opacity) / 100);
-    let layerTMS = this.layersTMS[layer.value];
+    let layerTMS = this.OlLayers[layer.value];
     if (layerTMS) {
       layerTMS.setOpacity(op);
     } else {
-      layerTMS = this.layersTMS[layer.selectedType];
+      layerTMS = this.OlLayers[layer.selectedType];
       layerTMS.setOpacity(op);
     }
   }
@@ -958,6 +1035,15 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.snap = null;
     this.initVectorLayerInteraction();
     this.map.getOverlays().getArray().slice(0).forEach(over => this.map.removeOverlay(over));
+    this.map.getLayers().getArray().forEach(layer => {
+      if(layer.get('key') === 'points'){
+        this.map.removeLayer(layer);
+      }
+    });
+
+    this.lat = 0;
+    this.lon = 0;
+
     this.mapControls.point = false;
     this.mapControls.drawArea = false;
   }
@@ -1075,9 +1161,16 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   private updateSourceLayer(layer) {
-    let sourceLayers = this.layersTMS[layer.valueType].getSource();
-    sourceLayers.setUrls(this.parseUrls(layer))
-    sourceLayers.refresh();
+    let sourceLayers = this.OlLayers[layer.valueType].getSource();
+    if(layer.origin.sourceService === 'external' && layer.origin.typeOfTMS === 'wmts'){
+      let olLayer = this.OlLayers[layer.valueType];
+      let options = this.wmtsCapabilities[layer.valueType];
+      options.layer = layer.filterSelected;
+      olLayer.setSource(new WMTS(options))
+    }else{
+      sourceLayers.setUrls(this.parseUrls(layer));
+      sourceLayers.refresh();
+    }
   }
 
   private updateSourceAllLayers() {
@@ -1368,259 +1461,14 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   onDisplayFeatureInfo(evt): void {
-    const self = this;
+    //https://ows.lapig.iesa.ufg.br/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=uso_solo_terraclass_fip&outputFormat=application/json&bbox=-54.07165760169617,%20-15.25397335016693,%20-54.07165760169617,%20-15.25397335016693,EPSG:4326
+    const bbox = transformExtent(geojsonExtent({ type: 'Point', coordinates: evt.coordinate }), 'EPSG:3857', 'EPSG:4326');
     const pixel: Pixel = this.map.getEventPixel(evt.originalEvent);
-    console.log(pixel)
-    this.map.forEachFeatureAtPixel(pixel, function(feature) {
-      console.log(feature)
-      // if(layer.get('type') === 'layer'){
-      //   const url = layer.getSource().getFeatureInfoUrl(
-      //     evt.coordinate,
-      //     self.map.getView().getResolution(),
-      //     'EPSG:4326',
-      //     {INFO_FORMAT: 'application/json'}
-      //   );
 
-      // }
+    this.map.forEachLayerAtPixel(pixel, function(layer) {
+      if(layer.get('type') === 'layer' && layer.getVisible()){
+      }
     });
-
-      // if (this.lastSelected != null && this.lastSelected !== this.selecao.nativeElement) {
-    //   // Não apresenta as informações se houver uma ferramenta ativa que não seja a específica de seleção.
-    //   return;
-    // }
-    //
-    // if (this.lastInfo != null) {
-    //   this.map.removeOverlay(this.lastInfo);
-    //   this.lastInfo = null;
-    // }
-    //
-    // const tipoCoordenada = this.tipoCoordenadas.value;
-    // const features = new Array<Feature>();
-    // const text: Element[] = new Array<Element>();
-    //
-    // const sources: TileWMS[] = this.map.getLayers().getArray().filter(layer => layer.getSource() instanceof TileWMS);
-    // for (const layer of sources) {
-    //   if (!layer.getVisible()) {
-    //     continue;
-    //   }
-    //
-    //   const div = document.createElement('div');
-    //   div.innerHTML = 'Carregando...';
-    //   text.push(div);
-    //
-    //   const url = layer.getSource().getFeatureInfoUrl(
-    //     evt.coordinate,
-    //     this.map.getView().getResolution(),
-    //     'EPSG:4674',
-    //     {INFO_FORMAT: 'application/json'}
-    //   );
-    //
-    //   this.httpClient.get<Camada[]>(`${environment.URL_GEOPORTAL_BASE_REFERENCIA}/api/camadas/featureInfo`, {
-    //     responseType: 'json',
-    //     params: {
-    //       url: url
-    //     }
-    //   }).subscribe((ret: any) => {
-    //     div.innerHTML = '';
-    //     ret.forEach(item => {
-    //       const properties = item.properties;
-    //       Object.keys(properties).forEach((property: string) => {
-    //         if (property !== 'geometry') {
-    //           let valor = properties[property];
-    //           if (valor instanceof Date) {
-    //             valor = [valor.getDate(), valor.getMonth() + 1, valor.getFullYear()].map(n => n < 10 ? `0${n}` : `${n}`).join('/');
-    //           }
-    //           div.innerHTML += `<p><strong>${property.replace(/_/g, ' ')}:</strong> ${valor || ''}</p>`;
-    //         }
-    //       });
-    //     });
-    //   }, error => {
-    //     if (error.status === 0) {
-    //       alert('Sistema de informações de ponto indisponível');
-    //     } else {
-    //       console.log(error);
-    //       alert(error.error || error.message);
-    //       div.innerHTML = '';
-    //     }
-    //   });
-    // }
-    //
-    // const geometrias: GeometriaMapa[] = this.getGeometriaCamadas();
-    // this.map.forEachFeatureAtPixel(pixel, feature => features.push(feature));
-    // features.forEach(feature => {
-    //   // Não apresentar as informações se for a régua.
-    //   if (!feature.regua) {
-    //     const geometria = geometrias.find(g => g.feature === feature);
-    //     const properties = {...(geometria && geometria.propriedades), ...feature.getProperties() || feature.properties};
-    //
-    //     if (properties) {
-    //       if (feature.id_) {
-    //         properties.id = feature.id_;
-    //       }
-    //
-    //       Object.keys(properties).forEach((property: string) => {
-    //         if (property !== 'geometry') {
-    //           let valor = properties[property];
-    //           if (valor) {
-    //             if (valor instanceof Date) {
-    //               valor = [valor.getDate(), valor.getMonth() + 1, valor.getFullYear()].map(n => n < 10 ? `0${n}` : `${n}`).join('/');
-    //             }
-    //             const div = document.createElement('div');
-    //             div.innerHTML = `<p><strong>${property.replace(/_/g, ' ')}:</strong> ${valor || ''}</p>`;
-    //             text.push(div);
-    //           }
-    //         }
-    //       });
-    //     }
-    //
-    //     let coordinate: Coordinate;
-    //     const geometry: Polygon = feature.getGeometry() || feature.geometry;
-    //     if (geometry instanceof Polygon || geometry instanceof MultiPolygon) {
-    //       if (text.length !== 0) {
-    //         text.push(document.createElement('hr'));
-    //       }
-    //
-    //       const div = document.createElement('div');
-    //       div.innerHTML = `<p><strong>Área:</strong> ${calculaArea(getArea(geometry, {
-    //         projection: this.map.getView().getProjection()
-    //       }))}</p>`;
-    //       text.push(div);
-    //
-    //       coordinate = geometry.getInteriorPoint().getCoordinates();
-    //     } else if (geometry instanceof Point) {
-    //       coordinate = toLonLat(geometry.getCoordinates(), this.map.getView().getProjection());
-    //     } else {
-    //       coordinate = toLonLat(evt.coordinate, this.map.getView().getProjection());
-    //     }
-    //
-    //     if (coordinate != null) {
-    //       let valor: string;
-    //       if (tipoCoordenada === '1') {
-    //         const formatado: string[] = this.formataCoordenada(coordinate).split(', ');
-    //
-    //         if (text.length > 0) {
-    //           text.push(document.createElement('hr'));
-    //         }
-    //         valor = `<p><strong>Latitude:</strong> ${formatado[1]}</p>
-    //                             <p class="latitude"><strong>Longitude:</strong> ${formatado[0]}</p>`;
-    //       } else {
-    //         valor = `<p class="latitude"><strong>Coordenadas:</strong> ${toStringHDMS(coordinate)}</p>`;
-    //       }
-    //
-    //       const div = document.createElement('div');
-    //       div.innerHTML = valor;
-    //       text.push(div);
-    //     }
-    //
-    //     if (geometria && ((geometria.extraOptions && geometria.extraOptions.length) || ((geometria.permissao && geometria.permissao.editar)))) {
-    //       const div = document.createElement('div');
-    //       div.style.marginTop = '10px';
-    //       div.style.textAlign = 'right';
-    //       div.style.whiteSpace = 'nowrap';
-    //
-    //       if (geometria.extraOptions) {
-    //         geometria.extraOptions.forEach(option => {
-    //           const span = document.createElement('span');
-    //           span.className = 'mat-button-wrapper';
-    //
-    //           if (option.icon) {
-    //             const icon = document.createElement('mat-icon');
-    //             icon.className = 'mat-icon notranslate material-icons mat-icon-no-color';
-    //             icon.setAttribute('role', 'img');
-    //             icon.innerText = option.icon;
-    //             span.appendChild(icon);
-    //           }
-    //
-    //           span.appendChild(document.createTextNode(' ' + option.text));
-    //           const button = document.createElement('button');
-    //           button.style.marginLeft = '10px';
-    //           if (option.callback) {
-    //             button.addEventListener('click', (_) => {
-    //               option.callback(geometria);
-    //             });
-    //           }
-    //           button.appendChild(span);
-    //           button.className = 'mat-raised-button mat-secondary';
-    //           div.appendChild(button);
-    //
-    //           text.push(div);
-    //         });
-    //       }
-    //
-    //       if (geometria.permissao && geometria.permissao.editar) {
-    //         const button = document.createElement('button');
-    //         button.addEventListener('click', (_) => {
-    //           this.editFeature.emit(geometria);
-    //         });
-    //
-    //         const span = document.createElement('span');
-    //         span.className = 'mat-button-wrapper';
-    //
-    //         const icon = document.createElement('mat-icon');
-    //         icon.className = 'mat-icon notranslate material-icons mat-icon-no-color';
-    //         icon.setAttribute('role', 'img');
-    //         icon.innerText = 'edit';
-    //         span.appendChild(icon);
-    //
-    //         span.appendChild(document.createTextNode(' Editar atributos'));
-    //         button.style.marginLeft = '10px';
-    //         button.appendChild(span);
-    //         button.className = 'mat-raised-button mat-primary';
-    //
-    //         div.appendChild(button);
-    //         text.push(div);
-    //       }
-    //     }
-    //   }
-    // });
-    //
-    // if (features.length === 0) {
-    //   const coordinate = toLonLat(evt.coordinate, this.map.getView().getProjection());
-    //   let valor: string;
-    //   if (this.tipoCoordenadas.value === '1') {
-    //     const formatado: string[] = this.formataCoordenada(coordinate).split(', ');
-    //
-    //     if (text.length > 0) {
-    //       text.push(document.createElement('hr'));
-    //     }
-    //     valor = `<p><strong>Latitude:</strong> ${formatado[1]}</p>
-    //                      <p class="latitude"><strong>Longitude:</strong> ${formatado[0]}</p>`;
-    //   } else {
-    //     valor = `<p class="latitude"><strong>Coordenadas:</strong> ${toStringHDMS(coordinate)}</p>`;
-    //   }
-    //   const div = document.createElement('div');
-    //   div.innerHTML = valor;
-    //
-    //   text.push(div);
-    // }
-    //
-    // if (text.length !== 0) {
-    //   const closer = document.createElement('span');
-    //   closer.className = 'ol-popup-closer';
-    //
-    //   const toolTip = document.createElement('div');
-    //   toolTip.className = 'ol-popup ol-popup-info';
-    //   toolTip.appendChild(closer);
-    //   text.forEach(e => toolTip.appendChild(e));
-    //
-    //   // Não adiciona o offset da popup se não houver uma feature.
-    //   const offset = features.length === 0 ? 0 : -15;
-    //   this.lastInfo = new Overlay({
-    //     element: toolTip,
-    //     offset: [0, offset],
-    //     positioning: 'bottom-center',
-    //   });
-    //
-    //   this.lastInfo.setPosition(evt.coordinate);
-    //   this.addOverlay(this.lastInfo);
-    //
-    //   closer.addEventListener('click', () => {
-    //     if (this.lastInfo != null) {
-    //       this.map.removeOverlay(this.lastInfo);
-    //       this.lastInfo = null;
-    //     }
-    //   });
-    // }
   }
 
 }

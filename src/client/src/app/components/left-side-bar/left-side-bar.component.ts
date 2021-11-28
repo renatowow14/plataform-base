@@ -424,7 +424,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   isDetails(data) {
-    return (data == "Detalhes" || data == "Details") ? true : false;
+    return (data === 'Detalhes' || data === 'Details' || data === 'URL');
   }
 
   download(type, layer, ev) {
@@ -436,9 +436,9 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   changeLayerVisibility(layer: DescriptorLayer, updateSource = false) {
-    layer.type = this.getType(layer.types, layer.selectedType);
-    layer.type!.visible = layer.visible;
-    this.onLayerChangeVisibility.emit({ layer: layer.type, updateSource: updateSource })
+    layer.selectedTypeObject = this.getType(layer.types, layer.selectedType);
+    layer.selectedTypeObject!.visible = layer.visible;
+    this.onLayerChangeVisibility.emit({ layer: layer.selectedTypeObject, updateSource: updateSource })
   }
 
   onFilter() {

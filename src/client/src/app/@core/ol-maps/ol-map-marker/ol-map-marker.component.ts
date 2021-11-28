@@ -64,7 +64,11 @@ export class OlMapMarkerComponent implements OnInit, OnDestroy {
     });
 
     const vectorLayer = new VectorLayer({
-        source: vectorSource
+      properties: {
+        key: 'points',
+        type: 'vetorial',
+      },
+      source: vectorSource
     });
 
     vectorLayer.setZIndex(10);

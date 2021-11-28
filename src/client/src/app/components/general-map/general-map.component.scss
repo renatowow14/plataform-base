@@ -514,6 +514,49 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
+.map-loading,
+.map-loading:before,
+.map-loading:after {
+  background: $primary;
+  -webkit-animation: load1 1s infinite ease-in-out;
+  animation: load1 1s infinite ease-in-out;
+  width: 1em;
+  height: 4em;
+}
+
+.map-loading {
+  font-size: 10px !important;
+  color: $primary;
+  text-indent: -9999em;
+  margin: 18px;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1001;
+}
+
+.map-loading:before,
+.map-loading:after {
+  position: absolute;
+  top: 0;
+  content: '';
+}
+
+.map-loading:before {
+  left: -1.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.map-loading:after {
+  left: 1.5em;
+}
+
 @include media('>=phone', '<=tablet') {
 
   .map-container {

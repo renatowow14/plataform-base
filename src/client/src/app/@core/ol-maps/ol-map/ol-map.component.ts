@@ -35,6 +35,7 @@ export class OlMapComponent implements OnInit, AfterViewInit {
 
   @Input() lat: number = DEFAULT_LAT;
   @Input() lon: number = DEFAULT_LON;
+  @Input() loading: boolean = false;
   @Input() zoom: number;
   @Input() width: string | number = DEFAULT_WIDTH;
   @Input() height: string | number = DEFAULT_HEIGHT;
@@ -44,19 +45,10 @@ export class OlMapComponent implements OnInit, AfterViewInit {
   map: Map;
 
   private mapEl: HTMLElement;
-  public loading: boolean;
+  public : boolean;
 
   constructor(private elementRef: ElementRef, private cdRef: ChangeDetectorRef) {
-    this.loading = false;
 
-    // this.basemaps.forEach(b => {
-    //   if(b.name == this.basemap){
-    //     b.layer.setVisible(true);
-    //     b.layer.visible = true;
-    //   }
-    // })
-    //
-    // this.layers = this.basemaps.map(b => {return b.layer});
   }
 
   ngOnInit(): void {
@@ -64,6 +56,7 @@ export class OlMapComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    console.log(this.loading)
     const self = this;
     this.mapEl = this.elementRef.nativeElement.querySelector('#' + this.target);
     this.setSize();

@@ -9,14 +9,12 @@ import {
   Input, SimpleChanges, ViewChild, ViewChildren, ChangeDetectorRef, QueryList
 } from '@angular/core';
 import { LocalizationService } from "../../@core/internationalization/localization.service";
-import { MenuItem } from 'primeng/api';
 import { ChartService } from '../services/charts.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomerService } from '../services/customer.service';
 import { Customer } from 'src/app/@core/interfaces/customer';
 import { Descriptor, Layer, Legend, Menu } from "../../@core/interfaces";
 import Map from 'ol/Map';
-import { reduce } from 'rxjs/operators';
 
 import { UIChart } from 'primeng/chart';
 
@@ -37,7 +35,7 @@ export class RightSideBarComponent implements OnInit {
     this._displayOptions = value;
   }
 
-  @ViewChildren('chartU') chartU: QueryList<UIChart>;;
+  @ViewChildren('chartU') chartU: QueryList<UIChart>;
 
   public Legendas: Legend[];
   public map: Map;

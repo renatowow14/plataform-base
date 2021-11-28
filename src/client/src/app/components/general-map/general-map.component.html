@@ -1,6 +1,6 @@
 <section class="" [class]="openMenu ? 'open map-container' : 'map-container' ">
   <div [class]="classes">
-    <ol-map [lat]="-16.6958288" [lon]="-49.4443537" [zoom]="4.6" [width]="'100%'" [height]="'100vh'"
+    <ol-map [lat]="-16.6958288" [lon]="-49.4443537" [zoom]="4.6" [width]="'100%'" [height]="'100vh'" [loading]="loadingMap"
       (onReady)="setMap($event)">
       <ol-control control="FullScreen" [options]="{ source:'main'}">
       </ol-control>
@@ -55,7 +55,7 @@
                     <i tooltipPosition="left" [pTooltip]="layer.visible? localizationService.translate('minimize') : localizationService.translate('maximize')" [class]="layer.visible  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
                   </span>
                 </div>
-                <div class="details" *ngIf="layer.get('key') !== 'planet'">
+                <div class="details" *ngIf="layer.get('descriptorLayer').typeLayer !== 'raster'">
                   <div class="details-inner">
                     <img
                       src="https://ows.lapig.iesa.ufg.br/ows?EXCEPTIONS=application%2Fvnd.ogc.se_xml&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer={{layer.get('key')}}&format=image%2Fpng"
@@ -118,11 +118,11 @@
               </span>
               <div class="layer-card-body" *ngIf="swipeLayer.visible">
                 <div class="layer-card-content">
-                  <span *ngIf="swipeLayer.type!.filters" class="p-float-label">
-                    <p-dropdown id="type-filters-{{swipeLayer.type!.filterSelected}}" *ngIf="swipeLayer.type!.filters" [options]="swipeLayer.type!.filters"
-                                [(ngModel)]="swipeLayer.type!.filterSelected" (onChange)="changeLayerVisibility({layer: swipeLayer.type, updateSource: true})"
+                  <span *ngIf="swipeLayer.selectedTypeObject!.filters" class="p-float-label">
+                    <p-dropdown id="type-filters-{{swipeLayer.selectedTypeObject!.filterSelected}}" *ngIf="swipeLayer.selectedTypeObject!.filters" [options]="swipeLayer.selectedTypeObject!.filters"
+                                [(ngModel)]="swipeLayer.selectedTypeObject!.filterSelected" (onChange)="changeLayerVisibility({layer: swipeLayer.selectedTypeObject, updateSource: true})"
                                 optionLabel="viewValueFilter" optionValue="valueFilter"></p-dropdown>
-                    <label for="type-filters-{{swipeLayer.type!.filterSelected}}">{{swipeLayer.type!.filterLabel}}</label>
+                    <label for="type-filters-{{swipeLayer.selectedTypeObject!.filterSelected}}">{{swipeLayer.selectedTypeObject!.filterLabel}}</label>
                   </span>
                 </div>
               </div>
@@ -197,6 +197,7 @@
           </div>
         </div>
       </div>
+      <div *ngIf="loadingMap" class="map-loading"></div>
     </ol-map>
   </div>
 </section>
