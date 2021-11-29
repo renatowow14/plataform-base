@@ -335,6 +335,18 @@ export class RightSideBarComponent implements OnInit {
     this.triggerSeriesChartLulc();
   }
 
+  triggerCharts() {
+    this.triggerSeriesChartDeforestation();
+    this.triggerSeriesChartLulc();
+  }
+
+  updateAndTriggerCharts() {
+    this.updateDeforestationTimeSeries();
+    this.updateLulcTimeSeries();
+    this.triggerSeriesChartDeforestation();
+    this.triggerSeriesChartLulc();
+  }
+
   updateLulcTimeSeries() {
 
     let params: string[] = [];

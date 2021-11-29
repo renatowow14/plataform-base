@@ -17,8 +17,8 @@
       </div>
     </div>
 
-    <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'">
-      <div (click)="expendGroup = !expendGroup" class="abstract" (click)="triggerSeriesChartDeforestation()">
+    <div [class]="expendGroup ? 'group-card group-card-active' :'group-card'" (click)="triggerCharts()">
+      <div (click)="expendGroup = !expendGroup" class="abstract" >
         <span>
           <i class='bx bx-trending-up'></i>
           <div class="group-label">{{'right_sidebar.cards_titles.deforestation_timeseries' | translate}}</div>
@@ -51,8 +51,8 @@
       </div>
     </div>
 
-    <div [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'">
-      <div (click)="expendGroup2 = !expendGroup2" class="abstract" (click)="triggerSeriesChartLulc()">
+    <div [class]="expendGroup2 ? 'group-card group-card-active' :'group-card'" (click)="triggerCharts()">
+      <div (click)="expendGroup2 = !expendGroup2" class="abstract" >
         <span>
           <i class='bx bx-trending-up'></i>
           <div class="group-label">{{'right_sidebar.cards_titles.lulc_pie' | translate}}</div>
@@ -83,7 +83,7 @@
     </div>
 
     <div [class]="expendGroup3 ? 'group-card group-card-active' :'group-card'">
-      <div (click)="expendGroup3 = !expendGroup3" class="abstract" (click)="triggerSeriesChartLulc()">
+      <div (click)="expendGroup3 = !expendGroup3" class="abstract">
         <span>
           <i class='bx bx-trending-up'></i>
           <div class="group-label">{{'right_sidebar.cards_titles.table_example' | translate}}</div>
