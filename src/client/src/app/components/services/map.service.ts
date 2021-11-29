@@ -34,8 +34,19 @@ export class MapService {
   }
 
   getExtent(region): Observable<any> {
-
     return this.httpClient.get<any>(this.apiURL + '/extent', { params: MapService.PARAMS.set("key", region.value).append("type", region.type) })
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler));
+  }
+
+  getFeatures(url): Observable<any> {
+    return this.httpClient.get<any>(url)
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler));
+  }
+
+  getRegionLabels(url): Observable<any> {
+    return this.httpClient.get<any>(url)
       .pipe(map(response => response))
       .pipe(catchError(this.errorHandler));
   }

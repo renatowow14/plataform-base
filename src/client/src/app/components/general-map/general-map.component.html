@@ -198,6 +198,43 @@
         </div>
       </div>
       <div *ngIf="loadingMap" class="map-loading"></div>
+      <div [hidden]="featureCollections.length <= 0"  id="popup" class="ol-popup">
+        <div class="popup-header">
+          <h5>{{'popup-info.title' | translate | uppercase}}</h5>
+          <i id="popup-closer" [pTooltip]="localizationService.translate('popup-info.close')" (click)="closePopup()" class="bx bx-x bx-lg"></i>
+        </div>
+        <div class="popup-body" >
+          <div *ngFor="let featureCollection of featureCollections"
+               [class]="featureCollection.expanded ? 'legend-card legend-card-active' :'legend-card'">
+            <div class="legend-card-content">
+              <div (click)="featureCollection.expanded = !featureCollection.expanded; $event.stopPropagation()" class="abstract">
+                  <span>
+                    <div class="legend-label">
+                      {{ featureCollection.layerType.viewValueType }}
+                    </div>
+                    <i tooltipPosition="left" [pTooltip]="featureCollection.expanded? localizationService.translate('minimize') : localizationService.translate('maximize')" [class]="featureCollection.expanded  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+                  </span>
+              </div>
+              <div class="details">
+                <div class="details-inner">
+                  <div class="details-row" *ngFor="let attribute of featureCollection.layerType.displayMapCardAttributes">
+                    <div class="details-row-header">{{attribute.label}}: </div>
+                    <div class="details-row-content">{{getAttributeValue(attribute.columnType, featureCollection.features[0].properties[attribute.column]) }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="popupRegion.coordinate.length > 0 && popupRegion.attributes.length > 0" class="popup-footer">
+          <span *ngFor="let attribute of popupRegion.attributes">
+            {{attribute.label}}: <strong>{{getAttributeValue(attribute.columnType, popupRegion.properties[attribute.column])}}</strong>
+          </span>
+          <span>{{'popup-info.lat' | translate}}: <strong>{{popupRegion.coordinate[1] | number:'1.0-4':'en-US'}}</strong></span>
+          <span>{{'popup-info.lon' | translate}}: <strong>{{popupRegion.coordinate[0] | number:'1.0-4':'en-US'}}</strong></span>
+        </div>
+      </div>
     </ol-map>
   </div>
+  <p-toast></p-toast>
 </section>

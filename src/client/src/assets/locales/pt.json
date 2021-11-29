@@ -305,5 +305,13 @@
       "to": "até",
       "entries": "registros"
     }
+  },
+  "popup-info": {
+    "title": "Informações da Região Selecionada",
+    "close": "Fechar",
+    "lat": "Latitude",
+    "lon": "Longitude",
+    "warn_message": "Atenção",
+    "has_not_info_message": "Não foi encontrado informações para a região selecionada."
   }
 }

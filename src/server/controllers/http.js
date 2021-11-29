@@ -4,8 +4,7 @@ module.exports = function(app) {
     let Controller = {}
 
     Controller.get = function(request, response) {
-        const { url } = request.query;
-
+        const { url } = request.body;
         https.get(url, (resp) => {
             let data = '';
 

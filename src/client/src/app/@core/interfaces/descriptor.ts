@@ -14,6 +14,11 @@ export interface DescriptorTypeOrigin {
   url?: string;
   epsg?: string;
 }
+export interface DescriptorMapCardAttributes {
+  column: string;
+  label: string;
+  columnType: string;
+}
 
 export interface DescriptorType {
   valueType: string;
@@ -33,6 +38,7 @@ export interface DescriptorType {
   origin: DescriptorTypeOrigin;
   opacity: number;
   visible?: boolean;
+  displayMapCardAttributes: DescriptorMapCardAttributes;
   filters?: DescriptorFilter[];
   metadata?: DescriptorMetadata[];
 }

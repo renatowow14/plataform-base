@@ -273,66 +273,174 @@ table tr{
 
 .ol-popup {
   position: absolute;
-  background-color: white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  padding: 15px;
-  border-radius: 10px;
-  border: 1px solid #cccccc;
   bottom: 12px;
   left: -50px;
-  min-width: 400px;
+  min-width: 420px;
   color: black;
+  background: rgba(22, 38, 35, 0.6);
+  transition: all 0.5s ease;
+  border-radius: 5px;
+  box-shadow: 0 11px 15px -7px rgb(0 0 0 / 20%), 0 24px 38px 3px rgb(0 0 0 / 14%), 0 9px 46px 8px rgb(0 0 0 / 12%);
+
+  &:after, &:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &:after {
+    border-top-color: $primary;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+  }
+
+  &:before {
+    border-top-color: $primary;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+
+  .latitude {
+    margin-bottom: 0;
+  }
+
+  .ol-popup-info {
+    background-color: #fff;
+    opacity: 1;
+    color: black;
+    border: 1px solid #000;
+  }
+
+  .popup-header {
+    transition: .6s ease all;
+    padding: 8px;
+    color: white;
+    display: flex;
+    text-align: center;
+    background: $primary;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    i{
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    h5 {
+      width: 100%;
+    }
+
+    h5, div {
+      margin: unset;
+      font-size: 0.9rem !important;
+      font-family: 'Montserrat', sans-serif !important;
+    }
+
+  }
+  .popup-body{
+    height: 21rem;
+    overflow: auto;
+    .bx{
+      pointer-events: none;
+    }
+    .details-row{
+      display: flex;
+      font-size: 12px;
+      .details-row-header{
+        margin-right: 5px;
+      }
+      .details-row-content{
+        -webkit-user-select: all;  /* Chrome all / Safari all */
+        -moz-user-select: all;     /* Firefox all */
+        -ms-user-select: all;      /* IE 10+ */
+        user-select: all;
+        font-weight:bolder;
+
+      }
+    }
+  }
+  .popup-footer {
+    font-size: 10px;
+    color: white;
+    background: $primary;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    span {
+      flex: 0 0 auto;
+      padding: 2px;
+      strong{
+        -webkit-user-select: all;  /* Chrome all / Safari all */
+        -moz-user-select: all;     /* Firefox all */
+        -ms-user-select: all;      /* IE 10+ */
+        user-select: all;
+      }
+    }
+  }
 }
 
-.ol-popup:after, .ol-popup:before {
-  top: 100%;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-}
+//.ol-popup:after, .ol-popup:before {
+//  top: 100%;
+//  border: solid transparent;
+//  content: " ";
+//  height: 0;
+//  width: 0;
+//  position: absolute;
+//  pointer-events: none;
+//}
 
-.ol-popup:after {
-  border-top-color: white;
-  border-width: 10px;
-  left: 48px;
-  margin-left: -10px;
-}
+//.ol-popup:after {
+//  border-top-color: rgba(22, 38, 35, 0.6);
+//  border-width: 10px;
+//  left: 48px;
+//  margin-left: -10px;
+//}
 
-.ol-popup:before {
-  border-top-color: #cccccc;
-  border-width: 11px;
-  left: 48px;
-  margin-left: -11px;
-}
+//.ol-popup:before {
+//  border-top-color:rgba(22, 38, 35, 0.6);
+//  border-width: 11px;
+//  left: 48px;
+//  margin-left: -11px;
+//}
 
-.ol-popup h2 {
-  margin-top: 0;
-}
+//.ol-popup h2 {
+//  margin-top: 0;
+//}
+//
+//.ol-popup .latitude {
+//  margin-bottom: 0;
+//}
+//
+//.ol-popup-closer {
+//  text-decoration: none !important;
+//  position: absolute;
+//  top: 2px;
+//  right: 8px;
+//}
+//
+//.ol-popup-closer:after {
+//  content: "✖";
+//}
 
-.ol-popup .latitude {
-  margin-bottom: 0;
-}
-
-.ol-popup-closer {
-  text-decoration: none !important;
-  position: absolute;
-  top: 2px;
-  right: 8px;
-}
-
-.ol-popup-closer:after {
-  content: "✖";
-}
-
-.ol-popup .ol-popup-info {
-  background-color: #fff;
-  opacity: 1;
-  color: black;
-  border: 1px solid #000;
-}
+//.ol-popup .ol-popup-info {
+//  background-color: #fff;
+//  opacity: 1;
+//  color: black;
+//  border: 1px solid #000;
+//}
 
 .map .ol-tooltip-measure:before,
 .map .ol-tooltip-static:before {

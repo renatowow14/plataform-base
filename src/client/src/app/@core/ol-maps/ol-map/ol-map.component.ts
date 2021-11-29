@@ -56,7 +56,6 @@ export class OlMapComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.loading)
     const self = this;
     this.mapEl = this.elementRef.nativeElement.querySelector('#' + this.target);
     this.setSize();

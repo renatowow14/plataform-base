@@ -304,5 +304,13 @@
       "to": "to",
       "entries": "entries"
     }
+  },
+  "popup-info": {
+    "title": "Region Information",
+    "close": "close",
+    "lat": "Latitude",
+    "lon": "Longitude",
+    "warn_message": "Warning",
+    "has_not_info_message": "No information was found for the selected region."
   }
 }

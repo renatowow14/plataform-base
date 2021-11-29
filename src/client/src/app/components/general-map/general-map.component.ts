@@ -41,19 +41,22 @@ import Swipe from 'ol-ext/control/Swipe';
 import Graticule from 'ol-ext/control/Graticule';
 import Compass from 'ol-ext/control/Compass';
 import geojsonExtent from '@mapbox/geojson-extent';
-import { transformExtent } from 'ol/proj';
+import { transformExtent, transform } from 'ol/proj';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import {Pixel} from "ol/pixel";
 import {WmtsService} from "../services/wmts.service";
 import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS';
+import {HttpService} from "../services/http.service";
+import {DecimalPipe} from "@angular/common";
+import * as moment from 'moment';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-general-map',
   templateUrl: './general-map.component.html',
   styleUrls: ['./general-map.component.scss'],
-  providers: [MessageService]
+  providers: [ MessageService ]
 })
 
 export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
@@ -95,17 +98,20 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   public controlOptions: boolean;
   public _displayLayers: boolean;
   public showRightSideBar: boolean;
+  public drawing: boolean;
   public lat: number;
   public lon: number;
   public classes: string;
   public swipeLayers: any[];
   public swipeOptions: LayerSwipe[];
-  public swiperControl: Swipe = new Swipe();
+  public swiperControl: Swipe;
   public swipeLayer: DescriptorLayer;
   public mapControls: Control;
   public wmtsCapabilities: any[];
   public loadingMap: boolean;
-
+  public popupOverlay: Overlay;
+  public featureCollections: any[];
+  public popupRegion: any;
   public layersTypes: any[];
   public layersNames: any[];
   public basemapsAvaliable: any[];
@@ -126,12 +132,14 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   private source: VectorSource<Geometry> = new VectorSource();
   private vector: VectorLayer<any> = new VectorLayer();
+  private vectorPopup: VectorLayer<any> = new VectorLayer();
   private modify: Modify;
   private draw: any;
   private snap: any;
   public features: any[];
   public highlightStyle: Style;
   public defaultStyle: Style;
+  public geoJsonStyles: any;
 
 
   private formataCoordenada: (coordinate: Coordinate) => string = createStringXY(4);
@@ -153,9 +161,11 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   constructor(
     public localizationService: LocalizationService,
     private downloadService: DownloadService,
+    private decimalPipe: DecimalPipe,
     private cdRef: ChangeDetectorRef,
     private primeNGConfig: PrimeNGConfig,
     private wmtsService: WmtsService,
+    private httpService: HttpService,
     private mapService: MapService,
     private areaService: AreaService,
     private messageService: MessageService,
@@ -166,11 +176,18 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.legendExpanded = true;
     this.controlOptions = false;
     this.loadingMap = false;
+    this.drawing = false;
     this.layersTypes = [];
     this.layersNames = [];
     this.limitsNames = [];
     this.swipeLayers = [];
     this.wmtsCapabilities = [];
+    this.featureCollections = [];
+    this.popupRegion = {
+      coordinate: [],
+      attributes: {},
+      properties: {}
+    };
     this.swipeLayer = { idLayer: '', labelLayer: '', selectedType: '', visible: false, types: [] };
     this.OlLayers = {};
     this.limitsTMS = {};
@@ -222,6 +239,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       text: true,
       minWidth: 100,
     };
+
+    this.swiperControl = new Swipe();
 
     this.bmaps = [
       {
@@ -404,6 +423,76 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       }),
     });
 
+    this.geoJsonStyles = {
+      'Point': new Style({
+        image: new CircleStyle({
+          radius: 5,
+          stroke: new Stroke({color: this.readStyleProperty('primary'), width: 1}),
+        }),
+      }),
+      'LineString': new Style({
+        stroke: new Stroke({
+          color: this.readStyleProperty('primary'),
+          width: 1,
+        }),
+      }),
+      'MultiLineString': new Style({
+        stroke: new Stroke({
+          color: this.readStyleProperty('primary'),
+          width: 1,
+        }),
+      }),
+      'MultiPoint': new Style({
+        image: new CircleStyle({
+          radius: 5,
+          stroke: new Stroke({color: 'red', width: 1}),
+        }),
+      }),
+      'MultiPolygon': new Style({
+        stroke: new Stroke({
+          color: this.readStyleProperty('primary'),
+          width: 1,
+        }),
+        fill: new Fill({
+          color: 'rgba(255, 255, 0, 0.1)',
+        }),
+      }),
+      'Polygon': new Style({
+        stroke: new Stroke({
+          color: this.readStyleProperty('primary'),
+          lineDash: [5],
+          width: 3,
+        }),
+        fill: new Fill({
+          color: 'rgba(22, 38, 35, 0.4)',
+        }),
+      }),
+      'GeometryCollection': new Style({
+        stroke: new Stroke({
+          color: this.readStyleProperty('primary'),
+          width: 2,
+        }),
+        fill: new Fill({
+          color: 'magenta',
+        }),
+        image: new CircleStyle({
+          radius: 10,
+          stroke: new Stroke({
+            color: this.readStyleProperty('primary'),
+          }),
+        }),
+      }),
+      'Circle': new Style({
+        stroke: new Stroke({
+          color: this.readStyleProperty('primary'),
+          width: 2,
+        }),
+        fill: new Fill({
+          color: 'rgba(255,0,0,0.2)',
+        }),
+      }),
+    };
+
     this.initVectorLayerInteraction();
   }
 
@@ -412,7 +501,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.primengConfig.ripple = true;
     this.innerHeigth = window.innerHeight;
     this.basemapsAvaliable = [];
-    this.primeNGConfig.ripple = true;
     this.selectedSearchOption = 'region';
 
     this.setSearchOptions();
@@ -481,8 +569,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.swipeLayers = [];
     this.map.getLayers().forEach(layer => {
       if (layer) {
-        const properties = layer.getProperties();
-        if (properties.type === 'layer') {
+        if (layer.get('type') === 'layertype') {
           this.swipeLayers.push(layer)
         }
       }
@@ -743,7 +830,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         if(layer.get('type') === 'layertype'){
           this.OlLayers[layer.get('descriptorLayer').valueType] = layer;
           this.layers.push(layer);
-          this.addLayersLegend(layer);
+          this.handleLayersLegend(layer.get('descriptorLayer'));
         } else if(layer.get('type') === 'limit') {
           this.limitsTMS[layer.get('descriptorLayer').valueType] = layer;
           this.layers.push(layer);
@@ -769,18 +856,35 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       this.updateSourceLayer(layerType);
     } else {
       if (layerType.type === 'layertype') {
+        let layerDescriptor;
+        this._descriptor.groups.forEach(group => {
+          group.layers.forEach(layer => {
+            layer.types.forEach(type => {
+              if(type.valueType === layerType.valueType){
+                layerDescriptor = layer;
+              }
+            })
+          });
+        });
+
+        layerDescriptor.types.forEach(type => {
+          if(type.valueType !== layerType.valueType) {
+            type.visible = false
+            this.OlLayers[type.valueType].setVisible(type.visible);
+            this.handleLayersLegend(type);
+          }
+        });
         this.OlLayers[layerType.valueType].setVisible(layerType.visible);
 
-        this.addLayersLegend(layerType);
+        this.handleLayersLegend(layerType);
 
         if (this.swiperControl.layers.length > 0) {
-
           const existInSwipe = this.swiperControl.layers.find(l => {
             return l.layer.get('key') === layerType.valueType
           });
 
           if (layer.visible && !existInSwipe) {
-            this.swiperControl.addLayer(layerType, false);
+            this.swiperControl.addLayer(this.OlLayers[layerType.valueType], false);
           }
         }
 
@@ -807,7 +911,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.updateZIndex();
   }
 
-  addLayersLegend(layerType: DescriptorType) {
+  handleLayersLegend(layerType: DescriptorType) {
     if (layerType.visible) {
       let layerExist = false;
       this.selectedLayers.forEach((item, index) => {
@@ -995,7 +1099,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   onPoint(): void {
-    this.messageService.add({ severity: 'success', summary: 'Service Message', detail: 'Via MessageService' });
     this.controlOptions = true;
     this.mapControls.point = !this.mapControls.point
     if (this.mapControls.point) {
@@ -1034,7 +1137,15 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.modify = null;
     this.snap = null;
     this.initVectorLayerInteraction();
-    this.map.getOverlays().getArray().slice(0).forEach(over => this.map.removeOverlay(over));
+    this.map.getOverlays().getArray().slice(0).forEach(over => {
+      const properties = over.options;
+      console.log(properties)
+      if(properties.hasOwnProperty('id')){
+        if(properties.id === 'popup-info') over.setPosition(undefined);
+      } else {
+        this.map.removeOverlay(over)
+      }
+    });
     this.map.getLayers().getArray().forEach(layer => {
       if(layer.get('key') === 'points'){
         this.map.removeLayer(layer);
@@ -1046,6 +1157,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
     this.mapControls.point = false;
     this.mapControls.drawArea = false;
+    this.drawing = false;
   }
 
   removeInteraction(removeAll: boolean = false): void {
@@ -1066,9 +1178,11 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     if(removeAll) this.modify = null;
     if(removeAll) this.snap = null;
     this.initVectorLayerInteraction();
+    this.drawing = false;
   }
 
   addInteraction(interaction: Interaction, type: string = '', removeInteraction: boolean = false): void {
+
     if (removeInteraction) {
       this.removeInteraction(true);
     }
@@ -1076,6 +1190,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.vector.setZIndex(1000000);
     this.map.addLayer(this.vector);
     this.interaction = interaction;
+    this.drawing = true;
     if (type === 'Polygon') {
       this.modify = new Modify({ source: this.source });
       this.map.addInteraction(this.modify);
@@ -1101,6 +1216,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   addDrawInteraction(name: string): void {
+    this.drawing = true;
     if (name !== 'None') {
       this.draw = new Draw({
         source: this.source,
@@ -1134,6 +1250,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   unselect(): void {
+    this.drawing = false;
     this.mapControls.measureArea = false;
     this.mapControls.measure = false;
     this.removeInteraction();
@@ -1433,6 +1550,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   addSwipe(layer) {
+    this.swiperControl = new Swipe();
     let layerType: DescriptorType = layer.get('descriptorLayer');
     layerType.visible = true;
     this.changeLayerVisibility({ layer: layerType, updateSource: false });
@@ -1451,7 +1569,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
   addLayersToLeftSideSwipe(lay) {
     this.map.getLayers().getArray().forEach(layer => {
-      if (layer.get('type') === 'layer' && layer.get('key') !== lay.get('key') && layer.getVisible()) {
+      if (layer.get('type') === 'layertype' && layer.get('key') !== lay.get('key') && layer.getVisible()) {
         this.swiperControl.addLayer(layer, false);
       }
     });
@@ -1460,15 +1578,185 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     });
   }
 
-  onDisplayFeatureInfo(evt): void {
-    //https://ows.lapig.iesa.ufg.br/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=uso_solo_terraclass_fip&outputFormat=application/json&bbox=-54.07165760169617,%20-15.25397335016693,%20-54.07165760169617,%20-15.25397335016693,EPSG:4326
-    const bbox = transformExtent(geojsonExtent({ type: 'Point', coordinates: evt.coordinate }), 'EPSG:3857', 'EPSG:4326');
-    const pixel: Pixel = this.map.getEventPixel(evt.originalEvent);
+  getFeatures(layer, bbox): Promise<any> {
+    return new Promise<any>((resolve) => {
+      let typeName = "";
+      let msFilter = "";
+      if(typeof layer === 'string'){
+        typeName = layer
+      } else {
+        let layerType: DescriptorType = layer.get('descriptorLayer');
+        typeName = layerType.valueType
+        if(layerType.hasOwnProperty('filters')){
+          if(layerType.filters!.length > 0){
+            msFilter = '&MSFILTER=' + layerType.filterSelected;
+          }
+        }
+      }
+      const url = `https://ows.lapig.iesa.ufg.br/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=${typeName}&outputFormat=application/json&bbox=${bbox},EPSG:4326${msFilter}`.trim();
 
-    this.map.forEachLayerAtPixel(pixel, function(layer) {
-      if(layer.get('type') === 'layer' && layer.getVisible()){
+      this.mapService.getFeatures(url).subscribe(features => {
+        if(typeof layer === 'string'){
+          //do nothing
+        } else {
+          features['layerType'] = layer.get('descriptorLayer');
+        }
+        resolve(features);
+      }, error => {
+        console.log(error)
+        resolve(false)
+      })
+    })
+  }
+
+  onDisplayFeatureInfo(evt): void {
+    if(!this.drawing){
+      const self = this;
+      this.loadingMap = true;
+      this.featureCollections = [];
+      this.popupRegion = {
+        coordinate: [],
+        attributes: {},
+        properties: {}
+      };
+      this.map.getLayers().forEach(layer => {
+        if (layer) {
+          if (layer.get('key') === 'popup-vector') {
+            this.map.removeLayer(layer);
+          }
+        }
+      });
+      this.popupRegion.coordinate = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+      const bbox = transformExtent(geojsonExtent({ type: 'Point', coordinates: evt.coordinate }), 'EPSG:3857', 'EPSG:4326');
+      const pixel: Pixel = this.map.getEventPixel(evt.originalEvent);
+
+      let promises: any[] = [];
+      promises.push(this.getFeatures('municipios_info', bbox));
+      this.map.forEachLayerAtPixel(pixel, function(layer) {
+        if(layer.get('type') === 'layertype' && layer.get('descriptorLayer').typeLayer === 'vectorial' && layer.getVisible()) {
+          promises.push(self.getFeatures(layer, bbox));
+        }
+      });
+
+      Promise.all(promises).then((layersFeatures) => {
+        if(layersFeatures.length > 0){
+          layersFeatures.forEach((featureCollection, index) => {
+            if(index === 0){
+              if(featureCollection && featureCollection.features.length > 0){
+                this.popupRegion.properties = featureCollection.features[0].properties;
+                const url = `https://plataforms-api.lapig.iesa.ufg.br/service/map/layerfromname?lang=${this.localizationService.currentLang()}&layertype=municipios_info`;
+                this.httpService.getData(url).subscribe((descriptionLayer: DescriptorType) => {
+                  if(descriptionLayer){
+                    this.popupRegion.attributes = descriptionLayer.displayMapCardAttributes;
+                  }
+                })
+              }
+            }else{
+              if(featureCollection && featureCollection.features.length > 0){
+                featureCollection['expanded'] = true;
+                this.featureCollections.push(featureCollection);
+              }
+            }
+          })
+          if(this.featureCollections.length > 0) {
+            this.featureCollections.forEach(featureJson =>{
+              const vectorSource = new VectorSource({
+                features: (new GeoJSON()).readFeatures(featureJson, {
+                  dataProjection: 'EPSG:4326',
+                  featureProjection: 'EPSG:3857'
+                })
+              });
+              const vectorLayer = new VectorLayer({
+                source: vectorSource,
+                style: feature => this.geoJsonStyles[feature.getGeometry().getType()],
+                properties: {
+                  key: 'popup-vector',
+                },
+                visible: true,
+                zIndex: 100000
+              });
+              this.map.addLayer(vectorLayer);
+            })
+
+            const container = document.getElementById('popup');
+            // @ts-ignore
+            this.popupOverlay = new Overlay({id: 'popup-info', element: container, autoPan: true, autoPanAnimation: { duration: 250,} });
+            this.popupOverlay.setPosition(evt.coordinate);
+            this.map.addOverlay(this.popupOverlay);
+          } else {
+            this.messageService.add({ severity:'warn', summary: this.localizationService.translate('popup-info.warn_message'), detail: this.localizationService.translate('popup-info.has_not_info_message')});
+          }
+          this.loadingMap = false;
+        }
+      }).catch(error => {
+        console.error(error);
+        this.loadingMap = false;
+      })
+    }
+  }
+
+  closePopup(){
+    const closer = document.getElementById('popup-closer');
+    // @ts-ignore
+    this.popupOverlay.setPosition(undefined);
+    // @ts-ignore
+    closer.blur();
+    this.popupRegion = {
+      coordinate: [],
+      attributes: {},
+      properties: {}
+    };
+    this.map.getLayers().forEach(layer => {
+      if (layer) {
+        if (layer.get('key') === 'popup-vector') {
+          this.map.removeLayer(layer);
+        }
       }
     });
+  }
+
+  formatFromBrazilianDate(date) {
+    let day  = date.split("/")[0];
+    let month  = date.split("/")[1];
+    let year  = date.split("/")[2];
+    return year + '-' + ("0"+month).slice(-2) + '-' + ("0"+day).slice(-2);
+  }
+
+  getAttributeValue(type, value){
+    let formattedValue: string | number | null= "";
+    const lang = this.localizationService.currentLang();
+
+    switch (type) {
+      case 'integer':
+        if(lang === 'pt'){
+          formattedValue = this.decimalPipe.transform(value, '', 'pt-BR');
+        }else{
+          formattedValue = this.decimalPipe.transform(value);
+        }
+        break;
+      case 'double':
+        if(lang === 'pt'){
+          formattedValue = this.decimalPipe.transform(value, '1.0-2', 'pt-BR');
+        }else{
+          formattedValue = this.decimalPipe.transform(value, '1.0-2');
+        }
+        break;
+      case 'date':
+        const isBrazilianDate = value.includes('/');
+        if(isBrazilianDate){
+          formattedValue = value;
+        } else {
+          formattedValue = moment(value).format("DD/MM/YYYY")
+        }
+        break;
+      case 'string':
+        formattedValue = value;
+        break;
+      default:
+        formattedValue = value;
+        break;
+    }
+    return formattedValue;
   }
 
 }

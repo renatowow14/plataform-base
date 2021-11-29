@@ -409,6 +409,10 @@ export class LeftSideBarComponent implements AfterViewInit {
     return dt;
   }
 
+  showButtonInfo(layerType) {
+    return layerType.metadata && layerType.visible;
+  }
+
   showMetadata(layer: DescriptorLayer) {
     this.metadata = { header: {title: '', description: ''}, data:[]};
     const layerType = layer.types.find(type => {
@@ -469,17 +473,21 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   setLayerVisible(typeLayerValue: string){
+    const self = this;
     this.descriptor.groups.forEach(group => {
       group.layers.forEach(layer => {
         layer.types.forEach(typeLayer => {
           if(typeLayer.valueType === typeLayerValue){
             group.groupExpanded = true;
             layer.visible = true;
+            layer.selectedType = typeLayerValue;
+            layer.selectedTypeObject = self.getType(layer.types, layer.selectedType);
           }
         })
       });
     })
   }
+
   setTokenGeometryToSearch(token: number){
     this.token = token;
     this.handleMenu({
