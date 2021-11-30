@@ -1009,7 +1009,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   buttonDownload(ev) {
-
     let { tipo, layer, e } = ev;
     let yearDownload = '';
     let columnsCSV = '';
@@ -1450,6 +1449,9 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         this.onSearchDrawnGeometry.emit(data.token);
         this.printRegionsIdentification(data.token);
         this.onCancel();
+        this.messageService.add({ severity:'success', summary: this.localizationService.translate('area.save_message_success.title'), detail: this.localizationService.translate('area.save_message_success.msg')});
+      }, error => {
+        this.messageService.add({ severity:'error', summary: this.localizationService.translate('area.save_message_error.title'), detail: this.localizationService.translate('area.save_message_error.msg')});
       })
   }
 
@@ -1523,9 +1525,9 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     dd.content.push({ qr: token.toString(), fit: '200', alignment: 'center' });
 
     const filename =  this.localizationService.translate('area.token.title') + ' - ' + token + '.pdf'
-    const win = window.open('', '_blank');
-    pdfMake.createPdf(dd).open({}, win);
-    // pdfMake.createPdf(dd).download(filename);
+    // const win = window.open('', '_blank');
+    // pdfMake.createPdf(dd).open({}, win);
+    pdfMake.createPdf(dd).download(filename);
   }
 
   onCancel() {
@@ -1725,20 +1727,19 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   getAttributeValue(type, value){
     let formattedValue: string | number | null= "";
     const lang = this.localizationService.currentLang();
-
     switch (type) {
       case 'integer':
         if(lang === 'pt'){
           formattedValue = this.decimalPipe.transform(value, '', 'pt-BR');
         }else{
-          formattedValue = this.decimalPipe.transform(value);
+          formattedValue = this.decimalPipe.transform(value,'', 'en-US');
         }
         break;
       case 'double':
         if(lang === 'pt'){
           formattedValue = this.decimalPipe.transform(value, '1.0-2', 'pt-BR');
         }else{
-          formattedValue = this.decimalPipe.transform(value, '1.0-2');
+          formattedValue = this.decimalPipe.transform(value, '1.0-2', 'en-US');
         }
         break;
       case 'date':
