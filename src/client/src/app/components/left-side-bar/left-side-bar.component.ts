@@ -41,6 +41,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   @Output() onMenuToggle = new EventEmitter<boolean>();
   @Output() onMenuSelected = new EventEmitter<any>();
   @Output() onChangeLng = new EventEmitter<any>();
+  @Output() updateCharts = new EventEmitter<any>();
   @Output() onLayerChangeVisibility = new EventEmitter<any>();
   @Output() onLayerChangeTransparency = new EventEmitter<any>();
   @Output() onDownload = new EventEmitter<any>();
@@ -312,6 +313,7 @@ export class LeftSideBarComponent implements AfterViewInit {
     this.localizationService.useLanguage(this.lang).then(r => {
       this.layersTitle = this.localizationService.translate('menu.' + this.currentMenu.key);
       this.onChangeLng.emit()
+      this.updateCharts.emit()
     });
   }
 

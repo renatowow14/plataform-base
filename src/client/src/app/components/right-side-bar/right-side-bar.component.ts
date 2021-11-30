@@ -207,10 +207,12 @@ export class RightSideBarComponent implements OnInit {
       data: data,
       options: options,
     }
-    this.displayFullScreenCharts = true;
 
     this.ob = ob;
 
+    this.displayFullScreenCharts = true;
+
+  
     // this.dialog.open(ChartsComponent, {
     //   width: 'calc(100% - 20em)',
     //   height: 'calc(100% - 10em)',
@@ -288,7 +290,7 @@ export class RightSideBarComponent implements OnInit {
 
   updateDeforestationTimeSeries() {
     let params: string[] = [];
-    params.push('lang=' + this.lang)
+    params.push('lang=' + this.localizationService.currentLang())
     params.push('typeRegion=' + this.selectRegion.type)
     params.push('valueRegion=' + this.selectRegion.value)
     params.push('textRegion=' + this.selectRegion.text)
@@ -333,11 +335,32 @@ export class RightSideBarComponent implements OnInit {
     this.triggerSeriesChartLulc();
   }
 
+  triggerChartsDeforestation() {
+    this.updateDeforestationTimeSeries();
+    this.triggerSeriesChartDeforestation();
+  }
+
+  triggerChartsLulc() {
+    this.updateLulcTimeSeries();
+    this.triggerSeriesChartLulc();
+  }
+
+  updateAndTriggerCharts() {
+    this.updateDeforestationTimeSeries();
+    this.updateLulcTimeSeries();
+    this.triggerSeriesChartDeforestation();
+    this.triggerSeriesChartLulc();    
+
+    this.expendGroup = false;
+    this.expendGroup2 = false;
+    this.expendGroup3 = false;
+  }
+
   updateLulcTimeSeries() {
 
     let params: string[] = [];
 
-    params.push('lang=' + this.lang)
+    params.push('lang=' + this.localizationService.currentLang())
     params.push('typeRegion=' + this.selectRegion.type)
     params.push('valueRegion=' + this.selectRegion.value)
     params.push('textRegion=' + this.selectRegion.text)
