@@ -46,7 +46,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import {Pixel} from "ol/pixel";
 import {WmtsService} from "../services/wmts.service";
-import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS';
+import WMTS, {Options, optionsFromCapabilities} from 'ol/source/WMTS';
 import {HttpService} from "../services/http.service";
 import {DecimalPipe} from "@angular/common";
 import * as moment from 'moment';
@@ -753,7 +753,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     if(layerType.origin.sourceService === 'external' && layerType.origin.typeOfTMS === 'wmts') {
       promise = new Promise<TileLayer<any>>((resolve, reject) => {
         this.wmtsService.getCapabilities(layerType.origin.url).subscribe((capabilities: any) => {
-          const options = optionsFromCapabilities(capabilities, {
+          const options: Options = optionsFromCapabilities(capabilities, {
             layer: layerType.filterSelected,
             matrixSet: layerType.origin.epsg,
           });
@@ -1280,7 +1280,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     let sourceLayers = this.OlLayers[layer.valueType].getSource();
     if(layer.origin.sourceService === 'external' && layer.origin.typeOfTMS === 'wmts'){
       let olLayer = this.OlLayers[layer.valueType];
-      let options = this.wmtsCapabilities[layer.valueType];
+      let options: Options = this.wmtsCapabilities[layer.valueType];
       options.layer = layer.filterSelected;
       olLayer.setSource(new WMTS(options))
     }else{
@@ -1670,7 +1670,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
               });
               const vectorLayer = new VectorLayer({
                 source: vectorSource,
-                style: feature => this.geoJsonStyles[feature.getGeometry().getType()],
+                style: feature => this.geoJsonStyles[feature!.getGeometry().getType()],
                 properties: {
                   key: 'popup-vector',
                 },
