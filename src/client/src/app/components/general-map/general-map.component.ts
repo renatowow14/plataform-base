@@ -753,6 +753,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     if(layerType.origin.sourceService === 'external' && layerType.origin.typeOfTMS === 'wmts') {
       promise = new Promise<TileLayer<any>>((resolve, reject) => {
         this.wmtsService.getCapabilities(layerType.origin.url).subscribe((capabilities: any) => {
+          // @ts-ignore
           const options: Options = optionsFromCapabilities(capabilities, {
             layer: layerType.filterSelected,
             matrixSet: layerType.origin.epsg,
@@ -1280,6 +1281,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     let sourceLayers = this.OlLayers[layer.valueType].getSource();
     if(layer.origin.sourceService === 'external' && layer.origin.typeOfTMS === 'wmts'){
       let olLayer = this.OlLayers[layer.valueType];
+      // @ts-ignore
       let options: Options = this.wmtsCapabilities[layer.valueType];
       options.layer = layer.filterSelected;
       olLayer.setSource(new WMTS(options))
@@ -1670,6 +1672,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
               });
               const vectorLayer = new VectorLayer({
                 source: vectorSource,
+                // @ts-ignore
                 style: feature => this.geoJsonStyles[feature!.getGeometry().getType()],
                 properties: {
                   key: 'popup-vector',
