@@ -45,7 +45,6 @@ app.database.client.init(function () {
     });
 
     load('controllers')
-        // .then('models', { 'verbose': false })
         .then('routes')
         .then('utils')
         .into(app);

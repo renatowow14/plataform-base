@@ -58,7 +58,7 @@
                 <div class="details" *ngIf="layer.get('descriptorLayer').typeLayer !== 'raster'">
                   <div class="details-inner">
                     <img
-                      src="https://ows.lapig.iesa.ufg.br/ows?EXCEPTIONS=application%2Fvnd.ogc.se_xml&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer={{layer.get('key')}}&format=image%2Fpng"
+                      src="{{env.OWS}}/ows?EXCEPTIONS=application%2Fvnd.ogc.se_xml&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetLegendGraphic&layer={{layer.get('key')}}&format=image%2Fpng"
                       alt="">
                   </div>
                 </div>
@@ -198,12 +198,12 @@
         </div>
       </div>
       <div *ngIf="loadingMap" class="map-loading"></div>
-      <div [hidden]="featureCollections.length <= 0"  id="popup" class="ol-popup">
+      <div [hidden]="isEmpty(popupRegion.properties)"  id="popup" class="ol-popup">
         <div class="popup-header">
           <h5>{{'popup-info.title' | translate | uppercase}}</h5>
           <i id="popup-closer" [pTooltip]="localizationService.translate('popup-info.close')" (click)="closePopup()" class="bx bx-x bx-lg"></i>
         </div>
-        <div class="popup-body" >
+        <div class="popup-body" *ngIf="featureCollections.length > 0" >
           <div *ngFor="let featureCollection of featureCollections"
                [class]="featureCollection.expanded ? 'legend-card legend-card-active' :'legend-card'">
             <div class="legend-card-content">

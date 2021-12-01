@@ -1,130 +1,80 @@
-var fs = require("fs");
-var fsp = require("fs").promises;
-var languageJson = require('../assets/lang/language.json');
+const fs = require("fs");
 const { convertArrayToCSV } = require('convert-array-to-csv');
 const moment = require('moment');
-var Ows = require('../utils/ows');
-var path = require('path');
-var request = require('request');
-var archiver = require('archiver');
+const DownloadBuilder = require('../models/downloadBuilder');
+const request = require('request');
 
 module.exports = function(app) {
-    var Controller = {};
-    var self = {};
+    let Controller = {};
+    let self = {};
 
-    var config = app.config;
+    const config = app.config;
 
     if (!fs.existsSync(config.downloadDataDir)) {
         fs.mkdirSync(config.downloadDataDir);
     }
 
-    self.requestFileFromMapServ = async function(url, pathFile, response) {
-        if(url){
-            let file = fs.createWriteStream(pathFile + ".zip");
+    self.requestFileFromMapServer = function(url, pathFile, response) {
 
-            await new Promise((resolve, reject) => {
-                request({
+        let file = fs.createWriteStream(pathFile + ".zip");
+
+        const downloadPromise = new Promise((resolve, reject) => {
+            request({
                     uri: url,
                     gzip: true
+                }).pipe(file).on('finish', () => {
+                    resolve();
+                }).on('error', (error) => {
+                    reject(error);
                 })
-                    .pipe(file)
-                    .on('finish', () => {
-                        response.download(pathFile + '.zip');
-                        resolve();
-                    })
-                    .on('error', (error) => {
-                        response.send(error)
-                        response.end();
-                        reject(error);
-                    })
-            })
-                .catch(error => {
-                    console.log(`Something happened: ${error}`);
-                });
-        } else {
-            response.status(400)
-            console.log(`URL undefined`);
-        }
+            }
+        );
 
-    };
-
-    Controller.downloadCSV = async function(request, response) {
-        let {layer, region, time, typeShape} = request.body;
-        console.log(request.body)
-        let data = request.queryResult['csv'];
-
-        data.forEach(function(item, index) {
-            data[index].view_date = moment(item.view_date).format('DD/MM/YYYY')
+        downloadPromise.then(result => {
+            response.download(pathFile + '.zip');
+        }).catch(error => {
+            response.send(error)
+            response.end();
         });
-
-        let fileParam = "";
-
-        let diretorio = config.downloadDataDir + region.type + '/' + region.value + '/' + typeShape + '/' + layer.selectedType + '/';
-
-        if (time != undefined) {
-            fileParam = layer.selectedType + "_" + time.value;
-        } else {
-            fileParam = layer.selectedType;
-        }
-
-        let pathFile = diretorio + fileParam + ".csv";
-
-        var csv = convertArrayToCSV(data);
-
-        if (!fs.existsSync(diretorio)) {
-            fs.mkdirSync(diretorio, { recursive: true });
-        }
-
-        await fs.writeFileSync(pathFile, csv);
-        response.download(pathFile);
     };
 
-    Controller.downloadSHP = function(request, response) {
-        let {layer, region, time, typeShape } = request.body;
+    Controller.downloadGeoFile = function(request, response) {
+        let directory, fileParam, pathFile = '';
+        let { layer, region, filter, typeDownload} = request.body;
 
-        let owsRequest = new Ows(typeShape);
+        let builder = new DownloadBuilder(typeDownload);
 
-        owsRequest.setTypeName(layer.selectedType);
+        builder.setTypeName(layer.download.layertypename);
 
-        let diretorio = '';
-        let fileParam = '';
-        let pathFile = '';
-
-        let layersSkipFilters = ['terra_indigena', 'quilombola', 'ucs']
-
-        if (typeShape == 'shp') {
-            owsRequest.addFilter('1', '1');
-
-            if (region.type == 'city') {
-                owsRequest.addFilter('cd_geocmu', "'" + region.cd_geocmu + "'");
-            } else if (region.type == 'state') {
-                owsRequest.addFilter('uf', "'" + region.value + "'");
-            }
-
-            if (time != undefined) {
-                owsRequest.addFilterDirect(time.value);
-                fileParam = layer.selectedType + "_" + time.value;
-            } else {
-                fileParam = layer.selectedType;
-            }
-
-            diretorio = config.downloadDataDir + region.type + '/' + region.value + '/' + typeShape + '/' + layer.selectedType + '/';
-
-        } else {
-            diretorio = config.downloadDataDir + '/' + typeShape + '/' + layer.selectedType + '/';
-            fileParam = layer.selectedType;
+        if (region.type === 'city') {
+            builder.addFilter('cd_geocmu', "'" + region.value + "'");
+        } else if (region.type === 'state') {
+            builder.addFilter('uf', "'" + region.value + "'");
+        } else if (region.type === 'biome') {
+            builder.addFilter('biome', "'" + region.value + "'");
         }
 
-        pathFile = diretorio + fileParam;
+        if (filter !== undefined) {
+            builder.addFilterDirect(filter.valueFilter);
+            fileParam = layer.valueType + "_" + filter.valueFilter;
+        } else {
+            fileParam = layer.valueType;
+        }
 
-        if (!fs.existsSync(diretorio)) {
-            fs.mkdirSync(diretorio, { recursive: true });
+        directory = config.downloadDataDir + region.type + '/' + region.value + '/' + typeDownload + '/' + layer.valueType + '/';
+        pathFile = directory + fileParam;
+
+        console.log('URL_DOWNLOAD', builder.getMapserverURL())
+
+
+        if (!fs.existsSync(directory)) {
+            fs.mkdirSync(directory, { recursive: true });
         }
 
         if (fs.existsSync(pathFile + '.zip')) {
             response.download(pathFile + '.zip');
         } else {
-            self.requestFileFromMapServ(owsRequest.get(), pathFile, response);
+            self.requestFileFromMapServer(builder.getMapserverURL(), pathFile, response);
         }
     };
 

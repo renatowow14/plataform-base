@@ -86,7 +86,7 @@
     "search_tooltip": "Consultar área por token.",
     "drawed_tooltip": "Analisar área desenhada no Mapa.",
     "save_message_success": {
-      "title": "Sucesso",
+      "title": "Token das geometrias: {{token}}",
       "msg": "Geometrias salvas com sucesso."
     },
     "save_message_error": {

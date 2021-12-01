@@ -41,3 +41,4 @@ src/server/package-lock.json
 package-lock.json
 node_modules/*
 /src/server/uploads/*
+/src/server/download_plataform/*

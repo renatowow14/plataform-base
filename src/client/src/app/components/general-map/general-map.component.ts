@@ -34,7 +34,7 @@ import Text from "ol/style/Text";
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RulerAreaCtrl, RulerCtrl } from "../../@core/interactions/ruler";
-import { SelectItem, PrimeNGConfig, MessageService } from 'primeng/api';
+import {SelectItem, PrimeNGConfig, MessageService, Message} from 'primeng/api';
 import { LayerSwipe } from "../../@core/interfaces/swipe";
 import { AreaService } from '../services/area.service';
 import Swipe from 'ol-ext/control/Swipe';
@@ -50,6 +50,7 @@ import WMTS, {Options, optionsFromCapabilities} from 'ol/source/WMTS';
 import {HttpService} from "../services/http.service";
 import {DecimalPipe} from "@angular/common";
 import * as moment from 'moment';
+import {environment} from "../../../environments/environment";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -82,6 +83,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   @Output() onLimitsReady = new EventEmitter<any>();
   @Output() onSearchDrawnGeometry = new EventEmitter<number>();
 
+  public msgs: Message[];
+  public env: any;
   public innerHeigth: number;
   public options: any = {}
   public bmaps = [] as any[];
@@ -171,12 +174,14 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     private messageService: MessageService,
     private primengConfig: PrimeNGConfig
   ) {
+    this.env = environment;
     this.showFormPoint = false;
     this.loadingDown = false;
     this.legendExpanded = true;
     this.controlOptions = false;
     this.loadingMap = false;
     this.drawing = false;
+    this.msgs = [];
     this.layersTypes = [];
     this.layersNames = [];
     this.limitsNames = [];
@@ -186,7 +191,8 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.popupRegion = {
       coordinate: [],
       attributes: {},
-      properties: {}
+      properties: {},
+      geojson:{}
     };
     this.swipeLayer = { idLayer: '', labelLayer: '', selectedType: '', visible: false, types: [] };
     this.OlLayers = {};
@@ -219,10 +225,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.selectRegion = this.defaultRegion;
 
     this.urls = [
-      'https://o1.lapig.iesa.ufg.br/ows',
-      'https://o2.lapig.iesa.ufg.br/ows',
-      'https://o3.lapig.iesa.ufg.br/ows',
-      'https://o4.lapig.iesa.ufg.br/ows'
+      environment.OWS_o1,
+      environment.OWS_o2,
+      environment.OWS_o3,
+      environment.OWS_o4
     ];
 
     this.projection = Proj.get('EPSG:900913');
@@ -951,13 +957,15 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     }
   }
 
-  private selectedTimeFromLayerType(layerName) {
-    for (let layer of this.layersTypes) {
-      if (layer.value == layerName) {
-        if (layer.hasOwnProperty('times')) {
-          for (let time of layer.times) {
-            if (time.value == layer.timeSelected) {
-              return time;
+  private selectedFilterFromLayerType(layerName) {
+    console.log(layerName)
+    for (let layerType of this.layersTypes) {
+      if (layerType.valueType == layerName) {
+        if (layerType.hasOwnProperty('filters')) {
+          for (let filter of layerType.filters) {
+            console.log(filter)
+            if (filter.valueFilter == layerType.filterSelected) {
+              return filter;
             }
           }
         }
@@ -971,17 +979,19 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     let parameters = {
       "layer": layer,
       "region": this.selectRegion,
-      "time": this.selectedTimeFromLayerType(layer.selectedType),
-      "typeShape": format
+      "filter": this.selectedFilterFromLayerType(layer.valueType),
+      "typeDownload": format
     };
 
-    let name = ""
-    if (parameters.time != undefined) {
-      name = parameters.layer.selectedType + "_" + parameters.region.value + "_" + parameters.time.Viewvalue
+    let name = "";
+
+    if (parameters.filter != undefined) {
+      name = parameters.layer.valueType + "_" + parameters.region.value + "_" + parameters.filter.viewValueFilter
     } else {
-      name = parameters.layer.selectedType + "_" + parameters.region.value
+      name = parameters.layer.valueType + "_" + parameters.region.value
     }
-    this.downloadService.downloadSHP(parameters).toPromise()
+
+    this.downloadService.downloadRequest(parameters).toPromise()
       .then(blob => {
         saveAs(blob, name + '.zip');
         this.loadingDown = false;
@@ -990,56 +1000,99 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       });
   }
 
-  downloadCSV(layer, yearDownload, filterRegion, columnsCSV) {
+  downloadCSV(layer, format) {
     this.loadingDown = true;
     let parameters = {
-      "layer": layer.selectedType + yearDownload,
-      "filterRegion": filterRegion + columnsCSV,
-      "regionName": this.selectRegion.value
+      "layer": layer,
+      "region": this.selectRegion,
+      "filter": this.selectedFilterFromLayerType(layer.valueType),
+      "typeDownload": format
     };
 
-    let name = parameters.layer + "_" + this.selectRegion.value
+    let name = "";
 
-    this.downloadService.downloadCSV(parameters).toPromise()
+    if (parameters.filter != undefined) {
+      name = parameters.layer.valueType + "_" + parameters.region.value + "_" + parameters.filter.viewValueFilter
+    } else {
+      name = parameters.layer.valueType + "_" + parameters.region.value
+    }
+
+    this.downloadService.downloadRequest(parameters).toPromise()
       .then(blob => {
         saveAs(blob, name + '.csv');
         this.loadingDown = false;
       }).catch(error => {
+      this.loadingDown = false;
+    });
+  }
+
+  downloadGPKG(layer, format) {
+    this.loadingDown = true;
+    let parameters = {
+      "layer": layer,
+      "region": this.selectRegion,
+      "filter": this.selectedFilterFromLayerType(layer.valueType),
+      "typeDownload": format
+    };
+
+    let name = "";
+
+    if (parameters.filter != undefined) {
+      name = parameters.layer.valueType + "_" + parameters.region.value + "_" + parameters.filter.viewValueFilter
+    } else {
+      name = parameters.layer.valueType + "_" + parameters.region.value
+    }
+
+    this.downloadService.downloadRequest(parameters).toPromise()
+      .then(blob => {
+        saveAs(blob, name + '.zip');
         this.loadingDown = false;
-      });
+      }).catch(error => {
+      this.loadingDown = false;
+    });
+  }
+
+  downloadRaster(layer, format) {
+    this.loadingDown = true;
+    let parameters = {
+      "layer": layer,
+      "region": this.selectRegion,
+      "filter": this.selectedFilterFromLayerType(layer.valueType),
+      "typeDownload": format
+    };
+
+    let name = "";
+
+    if (parameters.filter != undefined) {
+      name = parameters.layer.valueType + "_" + parameters.region.value + "_" + parameters.filter.viewValueFilter
+    } else {
+      name = parameters.layer.valueType + "_" + parameters.region.value
+    }
+
+    this.downloadService.downloadRequest(parameters).toPromise()
+      .then(blob => {
+        saveAs(blob, name + '.zip');
+        this.loadingDown = false;
+      }).catch(error => {
+      this.loadingDown = false;
+    });
   }
 
   buttonDownload(ev) {
-    let { tipo, layer, e } = ev;
-    let yearDownload = '';
-    let columnsCSV = '';
-    let regionType = this.selectRegion.type;
-    let filterRegion;
-
-    if (layer.types) {
-      for (let layerSelected of layer.types) {
-        if (layerSelected.value == layer.selectedType) {
-          if (layerSelected.timeSelected)
-            yearDownload = '&' + layerSelected.timeSelected;
-          columnsCSV = '&columnsCSV=' + layerSelected.columnsCSV;
-        }
-      }
-    } else if (layer.timeSelected) {
-      yearDownload = '&' + layer.timeSelected;
-      columnsCSV = '&columnsCSV=' + layer.columnsCSV;
-    } else {
-      columnsCSV = '&columnsCSV=' + layer.columnsCSV;
-    }
-
-    filterRegion = this.msFilterRegion
-
-    if (this.selectRegion.type == 'state')
-      regionType = "uf"
-
-    if (tipo == 'shp') {
-      this.downloadSHP(layer, tipo)
-    } else if (tipo == 'csv') {
-      this.downloadCSV(layer, yearDownload, filterRegion, columnsCSV);
+    let { tipo, layer } = ev;
+    switch (tipo) {
+      case 'csv':
+        this.downloadCSV(layer, tipo);
+        break;
+      case 'gpkg':
+        this.downloadGPKG(layer, tipo);
+        break;
+      case 'raster':
+        this.downloadRaster(layer, tipo);
+        break;
+      case 'shp':
+        this.downloadSHP(layer, tipo);
+        break;
     }
   }
 
@@ -1451,7 +1504,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         this.onSearchDrawnGeometry.emit(data.token);
         this.printRegionsIdentification(data.token);
         this.onCancel();
-        this.messageService.add({ severity:'success', summary: this.localizationService.translate('area.save_message_success.title'), detail: this.localizationService.translate('area.save_message_success.msg')});
+        this.messageService.add({ life:30000000, severity:'success', summary: this.localizationService.translate('area.save_message_success.title', {token: data.token}), detail: this.localizationService.translate('area.save_message_success.msg')})
       }, error => {
         this.messageService.add({ severity:'error', summary: this.localizationService.translate('area.save_message_error.title'), detail: this.localizationService.translate('area.save_message_error.msg')});
       })
@@ -1597,8 +1650,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
           }
         }
       }
-      const url = `https://ows.lapig.iesa.ufg.br/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=${typeName}&outputFormat=application/json&bbox=${bbox},EPSG:4326${msFilter}`.trim();
-
+      const url = `${environment.OWS}/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=${typeName}&outputFormat=application/json&bbox=${bbox},EPSG:4326${msFilter}`.trim();
       this.mapService.getFeatures(url).subscribe(features => {
         if(typeof layer === 'string'){
           //do nothing
@@ -1621,13 +1673,12 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       this.popupRegion = {
         coordinate: [],
         attributes: {},
-        properties: {}
+        properties: {},
+        geojson:{}
       };
       this.map.getLayers().forEach(layer => {
-        if (layer) {
-          if (layer.get('key') === 'popup-vector') {
-            this.map.removeLayer(layer);
-          }
+        if (layer.get('key') === 'popup-vector') {
+          this.map.removeLayer(layer);
         }
       });
       this.popupRegion.coordinate = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
@@ -1647,8 +1698,9 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
           layersFeatures.forEach((featureCollection, index) => {
             if(index === 0){
               if(featureCollection && featureCollection.features.length > 0){
+                this.popupRegion.geojson = featureCollection;
                 this.popupRegion.properties = featureCollection.features[0].properties;
-                const url = `https://plataforms-api.lapig.iesa.ufg.br/service/map/layerfromname?lang=${this.localizationService.currentLang()}&layertype=municipios_info`;
+                const url = `${environment.PLATAFORMAS_API}/service/map/layerfromname?lang=${this.localizationService.currentLang()}&layertype=municipios_info`;
                 this.httpService.getData(url).subscribe((descriptionLayer: DescriptorType) => {
                   if(descriptionLayer){
                     this.popupRegion.attributes = descriptionLayer.displayMapCardAttributes;
@@ -1662,6 +1714,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
               }
             }
           })
+
           if(this.featureCollections.length > 0) {
             this.featureCollections.forEach(featureJson =>{
               const vectorSource = new VectorSource({
@@ -1682,14 +1735,38 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
               });
               this.map.addLayer(vectorLayer);
             })
+          }
+
+          if(this.popupRegion.geojson.hasOwnProperty('features') && this.featureCollections.length <= 0){
+            const vectorSource = new VectorSource({
+              features: (new GeoJSON()).readFeatures(this.popupRegion.geojson, {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+              })
+            });
+            const vectorLayer = new VectorLayer({
+              source: vectorSource,
+              // @ts-ignore
+              style: feature => this.geoJsonStyles[feature!.getGeometry().getType()],
+              properties: {
+                key: 'popup-vector',
+              },
+              visible: true,
+              zIndex: 100000
+            });
+            this.map.addLayer(vectorLayer);
+          }
+
+          if(this.isEmpty(this.popupRegion.geojson)){
+            this.messageService.add({ life: 300000, severity:'warn', summary: this.localizationService.translate('popup-info.warn_message'), detail: this.localizationService.translate('popup-info.has_not_info_message')});
+          } else {
             const container = document.getElementById('popup');
             // @ts-ignore
             this.popupOverlay = new Overlay({id: 'popup-info', element: container, autoPan: true, autoPanAnimation: { duration: 250,} });
             this.popupOverlay.setPosition(evt.coordinate);
             this.map.addOverlay(this.popupOverlay);
-          } else {
-            this.messageService.add({ severity:'warn', summary: this.localizationService.translate('popup-info.warn_message'), detail: this.localizationService.translate('popup-info.has_not_info_message')});
           }
+
           this.loadingMap = false;
         }
       }).catch(error => {
@@ -1708,13 +1785,12 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.popupRegion = {
       coordinate: [],
       attributes: {},
-      properties: {}
+      properties: {},
+      geojson:{}
     };
     this.map.getLayers().forEach(layer => {
-      if (layer) {
-        if (layer.get('key') === 'popup-vector') {
-          this.map.removeLayer(layer);
-        }
+      if (layer.get('key') === 'popup-vector') {
+        this.map.removeLayer(layer);
       }
     });
   }
@@ -1760,6 +1836,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         break;
     }
     return formattedValue;
+  }
+
+  isEmpty(ob){
+    return Object.keys(ob).length === 0;
   }
 
 }

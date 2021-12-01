@@ -14,10 +14,19 @@ export interface DescriptorTypeOrigin {
   url?: string;
   epsg?: string;
 }
+
 export interface DescriptorMapCardAttributes {
   column: string;
   label: string;
   columnType: string;
+}
+
+export interface DescriptorDownload {
+  csv: boolean;
+  gpkg: boolean;
+  layertypename: string;
+  raster: boolean
+  shp: boolean
 }
 
 export interface DescriptorType {
@@ -27,14 +36,10 @@ export interface DescriptorType {
   typeLabel?: string;
   filterLabel?: string;
   regionFilter?: boolean;
-  downloadSHP?: boolean;
-  downloadCSV?: boolean;
-  downloadGPKG?: boolean;
-  downloadRaster?: boolean;
   filterHandler?: string;
   filterSelected?: string;
   layerLimits?: boolean;
-  columnsCSV?: string[];
+  download: DescriptorDownload;
   origin: DescriptorTypeOrigin;
   opacity: number;
   visible?: boolean;

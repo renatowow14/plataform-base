@@ -21,6 +21,8 @@ import { OlMapsModule } from "../@core/ol-maps/ol-maps.module";
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ImageModule } from 'primeng/image';
 import { ToastModule } from 'primeng/toast';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 import { ChartModule } from 'primeng/chart';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
@@ -90,6 +92,8 @@ registerLocaleData(localePt);
     ImageModule,
     MenuModule,
     ToastModule,
+    MessagesModule,
+    MessageModule,
     DialogModule,
     DragDropModule,
     HttpClientModule,

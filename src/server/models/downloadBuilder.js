@@ -1,13 +1,11 @@
-const config = require('../config.js')
+'use strict';
 
-module.exports = new class Ows {
+module.exports = class DownloadBuilder {
+    constructor(typeDownload) {
 
-    constructor(
-        typeShape
-    ) {
         this._url = process.env.OWS;
 
-        if (typeShape === 'shp') {
+        if (typeDownload === 'shp') {
             this._request = "GetFeature";
             this._service = "wfs";
             this._version = "1.0.0";
@@ -16,10 +14,8 @@ module.exports = new class Ows {
             this.typeOutputFormat = "OUTPUTFORMAT"
             this._typeName = null;
             this._msFilter = [];
-            this._width = 1;
-            this._height = 1;
-            this._typeShape = typeShape;
-        } else if (typeShape === 'tif') {
+            this._typeDownload = typeDownload;
+        } else if (typeDownload === 'raster') {
             this._request = "GetCoverage";
             this._service = "wcs";
             this._version = "2.0.0";
@@ -28,11 +24,28 @@ module.exports = new class Ows {
             this.typeOutputFormat = "FORMAT"
             this._typeName = null;
             this._msFilter = [];
-            this._width = 1;
-            this._height = 1;
-            this._typeShape = typeShape;
+            this._typeDownload = typeDownload;
+        } else if (typeDownload === 'csv') {
+            this._request = "GetFeature";
+            this._service = "wfs";
+            this._version = "1.0.0";
+            this._outPutFormat = "CSV";
+            this.typeNameLabel = "TYPENAME";
+            this.typeOutputFormat = "OUTPUTFORMAT"
+            this._typeName = null;
+            this._msFilter = [];
+            this._typeDownload = typeDownload;
+        } else if (typeDownload === 'gpkg') {
+            this._request = "GetFeature";
+            this._service = "wfs";
+            this._version = "1.0.0";
+            this._outPutFormat = "GEOPACKAGE";
+            this.typeNameLabel = "TYPENAME";
+            this.typeOutputFormat = "OUTPUTFORMAT"
+            this._typeName = null;
+            this._msFilter = [];
+            this._typeDownload = typeDownload;
         }
-
     }
 
     getUrl() {
@@ -127,24 +140,23 @@ module.exports = new class Ows {
         return this;
     }
 
-    get() {
+    getMapserverURL() {
         let url = "";
 
-        if (this._typeName == undefined || this._typeName == null) {
+        if (this._typeName === undefined || this._typeName === null) {
             new Error('The type name is required');
             return
         }
 
-        url = (this._url != null || this._url != undefined) ? this._url + "?" : "";
-        url += (this._request != null || this._request != undefined) ? "REQUEST=" + this._request : "";
-        url += (this._service != null || this._service != undefined) ? "&SERVICE=" + this._service : "";
-        url += (this._version != null || this._version != undefined) ? "&VERSION=" + this._version : "";
-        url += (this._typeName != null || this._typeName != undefined) ? "&" + this.typeNameLabel + "=" + this._typeName : "";
-        url += (this._outPutFormat != null || this._outPutFormat != undefined) ? "&" + this.typeOutputFormat + "=" + this._outPutFormat : "";
+        url = (this._url != null || this._url !== undefined) ? this._url + "?" : "";
+        url += (this._request != null || this._request !== undefined) ? "REQUEST=" + this._request : "";
+        url += (this._service != null || this._service !== undefined) ? "&SERVICE=" + this._service : "";
+        url += (this._version != null || this._version !== undefined) ? "&VERSION=" + this._version : "";
+        url += (this._typeName !== null || this._typeName !== undefined) ? "&" + this.typeNameLabel + "=" + this._typeName : "";
+        url += (this._outPutFormat != null || this._outPutFormat !== undefined) ? "&" + this.typeOutputFormat + "=" + this._outPutFormat : "";
 
-        if (this._typeShape === 'shp') {
+        if (this._typeDownload === 'csv' || this._typeDownload === 'gpkg' || this._typeDownload === 'shp') {
             if (this._msFilter.length > 0) {
-
                 url += "&MSFILTER=";
 
                 let length = this._msFilter.length - 1;
@@ -165,11 +177,7 @@ module.exports = new class Ows {
                     }
                 });
             }
-            url += (this._width != null || this._width !== undefined) ? "&WIDTH=" + this._width : "";
-            url += (this._height != null || this._height !== undefined) ? "&HEIGHT=" + this._height : "";
         }
-
-        console.log("URL - ", url)
         return url;
     }
 

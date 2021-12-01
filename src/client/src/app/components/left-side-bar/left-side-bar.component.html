@@ -95,20 +95,20 @@
                           max="100" value="0">
                         <br> <span>{{'left_sidebar.opacity' | translate}}</span>
                       </div>
-                      <div class="layer-exports" *ngIf="layer.selectedTypeObject!.downloadSHP || layer.selectedTypeObject!.downloadCSV || layer.selectedTypeObject!.downloadRaster || layer.selectedTypeObject!.downloadGPKG">
+                      <div class="layer-exports" *ngIf="layer.selectedTypeObject!.download.csv || layer.selectedTypeObject!.download.gpkg || layer.selectedTypeObject!.download.raster || layer.selectedTypeObject!.download.shp">
                         <div *ngIf="loadingDownload" class="loader"></div>
                         <button pTooltip="{{'left_sidebar.layer.down_shp' | translate}}" pButton pRipple type="button"
                                 label="SHP" (click)="download('shp', layer.selectedTypeObject, $event)"
-                                *ngIf="layer.selectedTypeObject!.downloadSHP && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
+                                *ngIf="layer.selectedTypeObject!.download.shp && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                         <button pTooltip="{{'left_sidebar.layer.down_gpkg' | translate}}" pButton pRipple type="button"
                                 label="GPKG" (click)="download('gpkg', layer.selectedTypeObject, $event)"
-                                *ngIf="layer.selectedTypeObject!.downloadGPKG && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
+                                *ngIf="layer.selectedTypeObject!.download.gpkg && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                         <button pTooltip="{{'left_sidebar.layer.down_csv' | translate}}" pButton pRipple type="button"
                                 label="CSV" (click)="download('csv', layer.selectedTypeObject, $event)"
-                                *ngIf="layer.selectedTypeObject!.downloadCSV && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
+                                *ngIf="layer.selectedTypeObject!.download.csv && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                         <button pTooltip="{{'left_sidebar.layer.down_raster' | translate}}" pButton pRipple type="button"
                                 label="TIFF" (click)="download('tiff', layer.selectedTypeObject, $event)"
-                                *ngIf="layer.selectedTypeObject!.downloadRaster && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
+                                *ngIf="layer.selectedTypeObject!.download.raster && !loadingDownload" class="p-button-raised p-button-text" icon="pi pi-download"></button>
                       </div>
                     </div>
                   </div>
