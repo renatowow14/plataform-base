@@ -17,6 +17,7 @@ import { Descriptor, Layer, Legend, Menu } from "../../@core/interfaces";
 import Map from 'ol/Map';
 
 import { UIChart } from 'primeng/chart';
+import {GoogleAnalyticsService} from "../services/google-analytics.service";
 
 @Component({
   selector: 'app-right-side-bar',
@@ -92,11 +93,11 @@ export class RightSideBarComponent implements OnInit {
     private customerService: CustomerService,
     private localizationService: LocalizationService,
     private chartService: ChartService,
+    private googleAnalyticsService: GoogleAnalyticsService,
     private renderer: Renderer2,
     public dialog: MatDialog,
     private cd: ChangeDetectorRef
   ) {
-
     //Charts Variables
     this.displayFullScreenCharts = false;
     this.displayDashboard = false;
@@ -212,7 +213,7 @@ export class RightSideBarComponent implements OnInit {
 
     this.displayFullScreenCharts = true;
 
-  
+
     // this.dialog.open(ChartsComponent, {
     //   width: 'calc(100% - 20em)',
     //   height: 'calc(100% - 10em)',
@@ -349,7 +350,7 @@ export class RightSideBarComponent implements OnInit {
     this.updateDeforestationTimeSeries();
     this.updateLulcTimeSeries();
     this.triggerSeriesChartDeforestation();
-    this.triggerSeriesChartLulc();    
+    this.triggerSeriesChartLulc();
 
     this.expendGroup = false;
     this.expendGroup2 = false;

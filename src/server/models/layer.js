@@ -68,9 +68,6 @@ module.exports = class Layer {
             "selectedType": this.selectedType,
             "types": this.layerTypes
         }
-
-        console.log("OB - ", ob)
-
         return ob;
     }
 

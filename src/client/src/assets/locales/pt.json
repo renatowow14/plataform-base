@@ -45,7 +45,9 @@
       "down_shp": "Download SHP",
       "down_gpkg": "Download Geopackage",
       "down_csv": "Download CSV",
-      "down_raster": "Download TIFF"
+      "down_raster": "Download TIFF",
+      "down_error_title": "Erro",
+      "down_error_msg": "Não foi possível baixar o arquivo {{name}}, por favor tente novamente."
     }
   },
   "map": {
@@ -212,6 +214,12 @@
         "layers": {
           "agricultura": {
             "labelLayer": "Agricultura"
+          },
+          "soilgrids": {
+            "labelLayer": "Argila no Solo - SoilGrids"
+          },
+          "pa_br_et_500_2013201_lapig": {
+            "labelLayer": "Chuva"
           }
         }
       },

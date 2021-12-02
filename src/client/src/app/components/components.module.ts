@@ -47,6 +47,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RippleModule } from 'primeng/ripple';
+import { GoogleAnalyticsService } from "./services/google-analytics.service";
 
 registerLocaleData(localePt);
 
@@ -103,7 +104,8 @@ registerLocaleData(localePt);
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
     DatePipe,
-    DecimalPipe
+    DecimalPipe,
+    GoogleAnalyticsService,
   ]
 })
 export class ComponentsModule { }

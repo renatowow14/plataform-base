@@ -26,6 +26,7 @@ import {Fill, Stroke, Style} from "ol/style";
 import Text from "ol/style/Text";
 import Graticule from 'ol-ext/control/Graticule';
 import Compass from 'ol-ext/control/Compass';
+import {GoogleAnalyticsService} from "../services/google-analytics.service";
 
 @Component({
   selector: 'app-left-side-bar',
@@ -90,7 +91,8 @@ export class LeftSideBarComponent implements AfterViewInit {
     public localizationService: LocalizationService,
     private renderer: Renderer2,
     private messageService: MessageService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private googleAnalyticsService: GoogleAnalyticsService,
   ) {
     this.metadata = { header: {title: '', description: ''}, data:[]};
     this.displayMetadata = false;
@@ -291,6 +293,13 @@ export class LeftSideBarComponent implements AfterViewInit {
     if (changes.hasOwnProperty('descriptor')) {
       if (changes.descriptor.currentValue) {
         this.descriptor = changes.descriptor.currentValue;
+        this.descriptor.groups.forEach(group => {
+          group.layers.forEach(layer => {
+            layer.types.forEach(typeLayer => {
+             typeLayer.download['loading'] = false;
+            })
+          });
+        });
       }
     }
   }
@@ -393,7 +402,10 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   getType(types: DescriptorType[], selectedType: string){
-    return types.find(type => type.valueType === selectedType)
+    return types.find(type => {
+      type.download['loading'] = false;
+      return type.valueType === selectedType
+    });
   }
 
   formatMetadata(metadata: DescriptorMetadata[]) {

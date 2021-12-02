@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  GTAG: '',
   PLATAFORMAS_API: 'https://plataforms-api.lapig.iesa.ufg.br',
   OWS: 'https://ows.lapig.iesa.ufg.br',
   OWS_o1: "https://o1.lapig.iesa.ufg.br/ows",

@@ -1,6 +1,4 @@
 const fs = require("fs");
-const { convertArrayToCSV } = require('convert-array-to-csv');
-const moment = require('moment');
 const DownloadBuilder = require('../models/downloadBuilder');
 const request = require('request');
 
@@ -15,7 +13,7 @@ module.exports = function(app) {
     }
 
     self.requestFileFromMapServer = function(url, pathFile, response) {
-
+        console.log('URL:', url)
         let file = fs.createWriteStream(pathFile + ".zip");
 
         const downloadPromise = new Promise((resolve, reject) => {
@@ -23,6 +21,11 @@ module.exports = function(app) {
                     uri: url,
                     gzip: true
                 }).pipe(file).on('finish', () => {
+                    const stats = fs.statSync(pathFile + '.zip');
+                    if(stats.size < 1000) {
+                        reject('Error on mapserver');
+                        fs.unlinkSync(pathFile + '.zip');
+                    }
                     resolve();
                 }).on('error', (error) => {
                     reject(error);
@@ -33,7 +36,7 @@ module.exports = function(app) {
         downloadPromise.then(result => {
             response.download(pathFile + '.zip');
         }).catch(error => {
-            response.send(error)
+            response.status(400).json({ msg: error })
             response.end();
         });
     };
@@ -44,7 +47,15 @@ module.exports = function(app) {
 
         let builder = new DownloadBuilder(typeDownload);
 
-        builder.setTypeName(layer.download.layertypename);
+        console.log(layer.filterHandler)
+
+        if(layer.filterHandler === 'layername'){
+            builder.setTypeName(layer.filterSelected);
+        } else {
+            builder.setTypeName(layer.download.layertypename);
+        }
+
+        console.log(builder.getTypeName())
 
         if (region.type === 'city') {
             builder.addFilter('cd_geocmu', "'" + region.value + "'");
@@ -58,14 +69,12 @@ module.exports = function(app) {
             builder.addFilterDirect(filter.valueFilter);
             fileParam = layer.valueType + "_" + filter.valueFilter;
         } else {
-            fileParam = layer.valueType;
+            builder.addFilterDirect("1=1");
+            fileParam = layer.valueType + "_" + "1=1";
         }
 
         directory = config.downloadDataDir + region.type + '/' + region.value + '/' + typeDownload + '/' + layer.valueType + '/';
         pathFile = directory + fileParam;
-
-        console.log('URL_DOWNLOAD', builder.getMapserverURL())
-
 
         if (!fs.existsSync(directory)) {
             fs.mkdirSync(directory, { recursive: true });

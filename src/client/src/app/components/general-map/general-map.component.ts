@@ -51,6 +51,7 @@ import {HttpService} from "../services/http.service";
 import {DecimalPipe} from "@angular/common";
 import * as moment from 'moment';
 import {environment} from "../../../environments/environment";
+import {GoogleAnalyticsService} from "../services/google-analytics.service";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -172,8 +173,17 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     private mapService: MapService,
     private areaService: AreaService,
     private messageService: MessageService,
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private googleAnalyticsService: GoogleAnalyticsService,
   ) {
+    // Examples
+    // this.googleAnalyticsService.eventEmitter("changeLayer", "VisibilityLayer", register_event, 1);
+    // this.googleAnalyticsService.eventEmitter("changeRegion", "Select-Region", register_event, 7);
+    // this.googleAnalyticsService.eventEmitter("printAnalyzedAreaReport", "Print_Report", this.layerFromConsulta.token, 10);
+    // this.googleAnalyticsService.eventEmitter("analyzeConsultaUploadLayer", "Analyze-Consulta-Upload", this.layerFromConsulta.token, 5);
+    // this.googleAnalyticsService.eventEmitter("uploadLayer", "Upload", "uploadLayer", 4);
+    // this.googleAnalyticsService.eventEmitter("changeSourceLayer", "UpdateSourceLayer", register_event, 2);
+
     this.env = environment;
     this.showFormPoint = false;
     this.loadingDown = false;
@@ -603,6 +613,9 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
     for (let groups of this._descriptor.groups) {
       for (let layer of groups.layers) {
+        layer.types.forEach(typeLayer => {
+          typeLayer.download['loading'] = false;
+        })
         layer.selectedTypeObject = layer.types.find(type => type.valueType === layer.selectedType);
         layer.selectedTypeObject!.visible = layer.visible;
         for (let types of layer.types) {
@@ -958,12 +971,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   }
 
   private selectedFilterFromLayerType(layerName) {
-    console.log(layerName)
     for (let layerType of this.layersTypes) {
       if (layerType.valueType == layerName) {
         if (layerType.hasOwnProperty('filters')) {
           for (let filter of layerType.filters) {
-            console.log(filter)
             if (filter.valueFilter == layerType.filterSelected) {
               return filter;
             }
@@ -974,8 +985,20 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     return undefined;
   }
 
+  getFileName(parameters){
+    let name = "";
+    if (parameters.filter != undefined) {
+      name = parameters.layer.valueType.trim() + "_" + parameters.region.value + "_" + parameters.filter.viewValueFilter
+    } else if(parameters.layer.typeLayer === 'raster') {
+      name = parameters.layer.valueType.trim()
+    } else {
+      name = parameters.layer.valueType.trim() + "_" + parameters.region.value
+    }
+    return this.normalize(name);
+  }
+
   downloadSHP(layer, format) {
-    this.loadingDown = true;
+    layer.download.loading = true;
     let parameters = {
       "layer": layer,
       "region": this.selectRegion,
@@ -983,25 +1006,26 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       "typeDownload": format
     };
 
-    let name = "";
-
-    if (parameters.filter != undefined) {
-      name = parameters.layer.valueType + "_" + parameters.region.value + "_" + parameters.filter.viewValueFilter
-    } else {
-      name = parameters.layer.valueType + "_" + parameters.region.value
-    }
+    const name = this.getFileName(parameters);
 
     this.downloadService.downloadRequest(parameters).toPromise()
       .then(blob => {
         saveAs(blob, name + '.zip');
-        this.loadingDown = false;
+        layer.download.loading = false;
       }).catch(error => {
-        this.loadingDown = false;
+        this.messageService.add({
+          life: 8000,
+          severity:'error',
+          summary: this.localizationService.translate('left_sidebar.layer.down_error_title'),
+          detail: this.localizationService.translate('left_sidebar.layer.down_error_msg', {name: name + '.zip'})
+        });
+        layer.download.loading = false;
       });
   }
 
   downloadCSV(layer, format) {
-    this.loadingDown = true;
+    layer.download.loading = true;
+
     let parameters = {
       "layer": layer,
       "region": this.selectRegion,
@@ -1009,25 +1033,25 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       "typeDownload": format
     };
 
-    let name = "";
-
-    if (parameters.filter != undefined) {
-      name = parameters.layer.valueType + "_" + parameters.region.value + "_" + parameters.filter.viewValueFilter
-    } else {
-      name = parameters.layer.valueType + "_" + parameters.region.value
-    }
+    const name = this.getFileName(parameters);
 
     this.downloadService.downloadRequest(parameters).toPromise()
       .then(blob => {
         saveAs(blob, name + '.csv');
-        this.loadingDown = false;
+        layer.download.loading = false;
       }).catch(error => {
-      this.loadingDown = false;
+      this.messageService.add({
+        life: 8000,
+        severity:'error',
+        summary: this.localizationService.translate('left_sidebar.layer.down_error_title'),
+        detail: this.localizationService.translate('left_sidebar.layer.down_error_msg', {name: name + '.csv'})
+      });
+        layer.download.loading = false;
     });
   }
 
   downloadGPKG(layer, format) {
-    this.loadingDown = true;
+    layer.download.loading = true;
     let parameters = {
       "layer": layer,
       "region": this.selectRegion,
@@ -1035,25 +1059,27 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       "typeDownload": format
     };
 
-    let name = "";
-
-    if (parameters.filter != undefined) {
-      name = parameters.layer.valueType + "_" + parameters.region.value + "_" + parameters.filter.viewValueFilter
-    } else {
-      name = parameters.layer.valueType + "_" + parameters.region.value
-    }
+    const name = this.getFileName(parameters);
 
     this.downloadService.downloadRequest(parameters).toPromise()
       .then(blob => {
         saveAs(blob, name + '.zip');
-        this.loadingDown = false;
+        layer.download.loading = false;
       }).catch(error => {
-      this.loadingDown = false;
+      this.messageService.add({
+        life: 8000,
+        severity:'error',
+        summary: this.localizationService.translate('left_sidebar.layer.down_error_title'),
+        detail: this.localizationService.translate('left_sidebar.layer.down_error_msg', {name: name + '.zip'})
+      });
+        layer.download.loading = false;
     });
   }
 
+
   downloadRaster(layer, format) {
-    this.loadingDown = true;
+    layer.download.loading = true;
+
     let parameters = {
       "layer": layer,
       "region": this.selectRegion,
@@ -1061,20 +1087,20 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       "typeDownload": format
     };
 
-    let name = "";
-
-    if (parameters.filter != undefined) {
-      name = parameters.layer.valueType + "_" + parameters.region.value + "_" + parameters.filter.viewValueFilter
-    } else {
-      name = parameters.layer.valueType + "_" + parameters.region.value
-    }
+    const name = this.getFileName(parameters);
 
     this.downloadService.downloadRequest(parameters).toPromise()
       .then(blob => {
         saveAs(blob, name + '.zip');
-        this.loadingDown = false;
+        layer.download.loading = false;
       }).catch(error => {
-      this.loadingDown = false;
+      this.messageService.add({
+        life: 8000,
+        severity:'error',
+        summary: this.localizationService.translate('left_sidebar.layer.down_error_title'),
+        detail: this.localizationService.translate('left_sidebar.layer.down_error_msg', {name: name + '.zip'})
+      });
+        layer.download.loading = false;
     });
   }
 

@@ -25,8 +25,9 @@ export interface DescriptorDownload {
   csv: boolean;
   gpkg: boolean;
   layertypename: string;
-  raster: boolean
-  shp: boolean
+  raster: boolean;
+  shp: boolean;
+  loading?:boolean;
 }
 
 export interface DescriptorType {
