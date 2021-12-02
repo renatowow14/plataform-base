@@ -50,7 +50,7 @@ module.exports = function(app) {
         if(layer.filterHandler === 'layername'){
             builder.setTypeName(layer.filterSelected);
         } else {
-            builder.setTypeName(layer.download.layertypename);
+            builder.setTypeName(layer.download.layerTypeName);
         }
 
         if (region.type === 'city') {

@@ -24,7 +24,7 @@ export interface DescriptorMapCardAttributes {
 export interface DescriptorDownload {
   csv: boolean;
   gpkg: boolean;
-  layertypename: string;
+  layerTypeName: string;
   raster: boolean;
   shp: boolean;
   loading?:boolean;
