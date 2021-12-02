@@ -47,15 +47,11 @@ module.exports = function(app) {
 
         let builder = new DownloadBuilder(typeDownload);
 
-        console.log(layer.filterHandler)
-
         if(layer.filterHandler === 'layername'){
             builder.setTypeName(layer.filterSelected);
         } else {
             builder.setTypeName(layer.download.layertypename);
         }
-
-        console.log(builder.getTypeName())
 
         if (region.type === 'city') {
             builder.addFilter('cd_geocmu', "'" + region.value + "'");
