@@ -17,7 +17,7 @@
             {
                 "idLayer": "pecuaria_censitaria",
                 "labelLayer": "translate",
-                "visible": true,
+                "visible": false,
                 "selectedType": "lotacao_bovina_regions",
                 "types": [
                     "lotacao_bovina_regions"

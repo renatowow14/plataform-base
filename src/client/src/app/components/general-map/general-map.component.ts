@@ -611,19 +611,20 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.limitsNames = [];
     this.selectedLayers = [];
     const defaultLayers = environment.DEFAULT_LAYERS;
+
     for (let groups of this._descriptor.groups) {
       for (let layer of groups.layers) {
         layer.types.forEach(typeLayer => {
           typeLayer.download['loading'] = false;
         })
 
-        defaultLayers.forEach(idLayer => {
-          if(layer.idLayer == idLayer){
-            layer.visible = true;
-          }else {
-            layer.visible = false;
-          }
-        })
+        // defaultLayers.forEach(idLayer => {
+        //   if(layer.idLayer == idLayer){
+        //     layer.visible = true;
+        //   }else {
+        //     layer.visible = false;
+        //   }
+        // })
 
         layer.selectedTypeObject = layer.types.find(type => type.valueType === layer.selectedType);
         layer.selectedTypeObject!.visible = layer.visible;
