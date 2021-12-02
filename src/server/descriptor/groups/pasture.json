@@ -13,6 +13,61 @@
                     "pasture",
                     "pasture_quality"
                 ]
+            },
+            {
+                "idLayer": "pecuaria_censitaria",
+                "labelLayer": "translate",
+                "visible": true,
+                "selectedType": "lotacao_bovina_regions",
+                "types": [
+                    "lotacao_bovina_regions"
+                ]
+            }
+        ]
+    },
+    {
+        "idGroup": "pasture_carbon_general",
+        "labelGroup": "translate",
+        "groupExpanded": false,
+        "layers": [
+            {
+                "idLayer": "biomassa",
+                "labelLayer": "translate",
+                "visible": false,
+                "selectedType": "pasture_carbon_aglivc",
+                "types": [
+                    "pasture_carbon_aglivc",
+                    "pasture_carbon_stdeadc",
+                    "pasture_carbon_somsc",
+                    "pasture_carbon_bglivs"
+                ]
+            }
+        ]
+    },
+    {
+        "idGroup": "validacao_general",
+        "labelGroup": "translate",
+        "groupExpanded": false,
+        "layers": [
+            {
+                "idLayer": "pontos_campo",
+                "labelLayer": "translate",
+                "visible": false,
+                "selectedType": "pontos_campo_parada",
+                "types": [
+                    "pontos_campo_parada",
+                    "pontos_campo_sem_parada"
+                ]
+            },
+            {
+                "idLayer": "validacao_inspecao_visual",
+                "labelLayer": "translate",
+                "visible": false,
+                "selectedType": "pontos_tvi_validacao",
+                "types": [
+                    "pontos_tvi_validacao",
+                    "pontos_tvi_treinamento"
+                ]
             }
         ]
     }

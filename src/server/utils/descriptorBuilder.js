@@ -83,8 +83,10 @@ module.exports = function (app) {
 
     Internal.getGroupsOrder = function () {
 
-        return ['areas_especiais',
+        return [
             'agropecuaria',
+            'pasture',
+            'areas_especiais',
             'areas_declaradas',
             'imagens'
         ]

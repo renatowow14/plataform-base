@@ -251,6 +251,36 @@
             }
           }
         }
+      },
+      "pasture_general": {
+        "labelGroup": "Pasture Maps ",
+        "layers": {
+          "pasture": {
+            "labelLayer": "Regular"
+          },
+          "pecuaria_censitaria": {
+            "labelLayer": "Census Livestock - IBGE"
+          }
+        }
+      },
+      "pasture_carbon_general": {
+        "labelGroup": "carbon stock",
+        "layers": {
+          "biomassa": {
+            "labelLayer": "Biomass"
+          }
+        }
+      },
+      "validacao_general": {
+        "labelGroup": "Validations",
+        "layers": {
+          "pontos_campo": {
+            "labelLayer": "Field"
+          },
+          "validacao_inspecao_visual": {
+            "labelLayer": "Visual Inspection"
+          }
+        }
       }
     },
     "basemaps": {

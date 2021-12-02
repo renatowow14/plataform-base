@@ -252,6 +252,36 @@
             "labelLayer": "Planejamento Hídrico"
           }
         }
+      },
+      "pasture_general": {
+        "labelGroup": "Mapas de Pastagens ",
+        "layers": {
+          "pasture": {
+            "labelLayer": "Pastagens Regular"
+          },
+          "pecuaria_censitaria": {
+            "labelLayer": "Pecuária Censitária - IBGE"
+          }
+        }
+      },
+      "pasture_carbon_general": {
+        "labelGroup": "Estoque de Carbono",
+        "layers": {
+          "biomassa": {
+            "labelLayer": "Biomassas"
+          }
+        }
+      },
+      "validacao_general": {
+        "labelGroup": "Validações",
+        "layers": {
+          "pontos_campo": {
+            "labelLayer": "Em Campo"
+          },
+          "validacao_inspecao_visual": {
+            "labelLayer": "Inspeção Visual"
+          }
+        }
       }
     },
     "basemaps": {
