@@ -331,7 +331,8 @@ export class LeftSideBarComponent implements AfterViewInit {
     const img = this.renderer.createElement('img');
     this.renderer.addClass(div, 'header');
     this.renderer.addClass(img, 'logo');
-    this.renderer.setProperty(img, 'src', '../../../assets/logos/base_logo.png')
+    // this.renderer.setProperty(img, 'src', '../../../assets/logos/base_logo.png')
+    this.renderer.setProperty(img, 'src', '../../../assets/logos/atlas_logo_01.png')
     this.renderer.setProperty(img, 'alt', 'Logo')
     this.renderer.appendChild(div, img);
     this.renderer.insertBefore(this.el.nativeElement.querySelector(".p-sidebar-header"), div, this.el.nativeElement.querySelector(".p-sidebar-close"))
@@ -428,6 +429,7 @@ export class LeftSideBarComponent implements AfterViewInit {
   }
 
   showMetadata(layer: DescriptorLayer) {
+    console.log('showMetadata', layer)
     this.metadata = { header: {title: '', description: ''}, data:[]};
     const layerType = layer.types.find(type => {
       return type.valueType === layer.selectedType;

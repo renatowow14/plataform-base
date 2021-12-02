@@ -4,7 +4,8 @@ module.exports = class DownloadBuilder {
     constructor(typeDownload) {
 
         this._url = process.env.OWS;
-
+        this._width = "256";
+        this._height = "256";
         if (typeDownload === 'shp') {
             this._request = "GetFeature";
             this._service = "wfs";
@@ -178,6 +179,9 @@ module.exports = class DownloadBuilder {
                 });
             }
         }
+
+        url += (this._width != null || this._width != undefined) ? "&WIDTH=" + this._width : "";
+        url += (this._height != null || this._height != undefined) ? "&HEIGHT=" + this._height : "";
         return url;
     }
 

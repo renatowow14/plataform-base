@@ -9,7 +9,7 @@ module.exports = function (app) {
 
     Controller.callServiceToObtainLayerTypes = async function (language, type = 'layers') {
         let res = {}
-        let url = String(process.env.LAPIG_API_ADDRESS + "/service/map/" + type + "?lang=" + language)
+        let url = String(process.env.LAPIG_API_ADDRESS + "/map/" + type + "?lang=" + language)
         try {
             const response = await got(url);
             res = JSON.parse(response.body)

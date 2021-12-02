@@ -2,7 +2,8 @@
   <div class="sidebar">
     <div [class]="open ? 'open ' : '' ">
       <div class="logo-details">
-        <img src="../../../assets/logos/base_icon.png" (click)='toggleMenu()'>
+<!--        <img src="../../../assets/logos/base_icon.png" (click)='toggleMenu()'>-->
+        <img src="../../../assets/logos/atlas_icon.png" (click)='toggleMenu()'>
 <!--        <i class='bx bxl-c-plus-plus icon' (click)='toggleMenu()'></i>-->
       </div>
       <ul #leftSidebar class="nav-list">
@@ -23,21 +24,21 @@
           </li>
         </drag-scroll>
       </ul>
-      <ul class="nav-list footer">
-        <div class="footer-drag">
-          <li (click)="handleLang('pt')">
-            <div [class]="lang == 'pt' ? 'lng lng-active' : 'lng'">
-              <span class="lng_name">PT</span>
-            </div>
-            <span class="tooltip">Filtrar</span>
-          </li>
-          <li (click)="handleLang('en')">
-            <div [class]="lang == 'en' ? 'lng lng-active' : 'lng'">
-              <span class="lng_name">EN</span>
-            </div>
-          </li>
-        </div>
-      </ul>
+<!--      <ul class="nav-list footer">-->
+<!--        <div class="footer-drag">-->
+<!--          <li (click)="handleLang('pt')">-->
+<!--            <div [class]="lang == 'pt' ? 'lng lng-active' : 'lng'">-->
+<!--              <span class="lng_name">PT</span>-->
+<!--            </div>-->
+<!--            <span class="tooltip">Filtrar</span>-->
+<!--          </li>-->
+<!--          <li (click)="handleLang('en')">-->
+<!--            <div [class]="lang == 'en' ? 'lng lng-active' : 'lng'">-->
+<!--              <span class="lng_name">EN</span>-->
+<!--            </div>-->
+<!--          </li>-->
+<!--        </div>-->
+<!--      </ul>-->
     </div>
   </div>
   <p-sidebar [appendTo]="leftSidebar" [modal]="false" [transitionOptions]="'2ms cubic-bezier(0, 0, 0.2, 1)'"

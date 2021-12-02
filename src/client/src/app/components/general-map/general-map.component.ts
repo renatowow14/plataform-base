@@ -235,10 +235,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.selectRegion = this.defaultRegion;
 
     this.urls = [
-      environment.OWS_o1,
-      environment.OWS_o2,
-      environment.OWS_o3,
-      environment.OWS_o4
+      environment.OWS_O1,
+      environment.OWS_O2,
+      environment.OWS_O3,
+      environment.OWS_O4
     ];
 
     this.projection = Proj.get('EPSG:900913');
@@ -610,12 +610,21 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.basemapsAvaliable = [];
     this.limitsNames = [];
     this.selectedLayers = [];
-
+    const defaultLayers = environment.DEFAULT_LAYERS;
     for (let groups of this._descriptor.groups) {
       for (let layer of groups.layers) {
         layer.types.forEach(typeLayer => {
           typeLayer.download['loading'] = false;
         })
+
+        defaultLayers.forEach(idLayer => {
+          if(layer.idLayer == idLayer){
+            layer.visible = true;
+          }else {
+            layer.visible = false;
+          }
+        })
+
         layer.selectedTypeObject = layer.types.find(type => type.valueType === layer.selectedType);
         layer.selectedTypeObject!.visible = layer.visible;
         for (let types of layer.types) {
@@ -1726,7 +1735,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
               if(featureCollection && featureCollection.features.length > 0){
                 this.popupRegion.geojson = featureCollection;
                 this.popupRegion.properties = featureCollection.features[0].properties;
-                const url = `${environment.PLATAFORMAS_API}/service/map/layerfromname?lang=${this.localizationService.currentLang()}&layertype=municipios_info`;
+                const url = `${environment.PLATAFORMAS_API}/map/layerfromname?lang=${this.localizationService.currentLang()}&layertype=municipios_info`;
                 this.httpService.getData(url).subscribe((descriptionLayer: DescriptorType) => {
                   if(descriptionLayer){
                     this.popupRegion.attributes = descriptionLayer.displayMapCardAttributes;
