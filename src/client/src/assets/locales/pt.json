@@ -309,6 +309,20 @@
     "timeseries_card": {
       "prodes": {
         "text": "O #typeRegionTranslate# #textRegionTranslate# possui uma Área Antrópica de #anthropicArea# ha, o que representa #percentArea# % da sua área total."
+      },
+      "pastureAndLotacaoBovina": {
+        "text": "",
+        "title": "Pastagem",
+        "labelOfQuery": {
+          "pasture": "Pastagem",
+          "lotacao_bovina_regions": "Lotação Bovina"
+        }
+      },
+      "pasture_quality": {
+        "text": "De acordo com o LAPIG, o #typeRegionTranslate# #textRegionTranslate# possui uma área total de #areaMun# ha, distribuída entre as seguintes classes de degradação de Pastagem:",
+        "Severa": "Severa",
+        "Intermediário": "Intermediário",
+        "Ausente": "Ausente"
       }
     },
     "lulc_pie_card": {

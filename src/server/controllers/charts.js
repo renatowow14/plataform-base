@@ -63,60 +63,60 @@ module.exports = function (app) {
     }
 
     Internal.buildGraphResult = function (allQueriesResult, chartDescription) {
+        var dataInfo = {}
+
         try {
 
             let arrayLabels = []
             let arrayData = []
             for (let query of chartDescription.idsOfQueriesExecuted) {
 
+
                 let queryInd = allQueriesResult[query.idOfQuery]
 
-                arrayLabels.push(...queryInd.map(a => a.label))
+                // console.log("QUERY IND: ", queryInd)
+
+                arrayLabels.push(...queryInd.map(a => String(a.label)))
+                let colors = [...new Set(queryInd.map(a => a.color))]
 
                 if (chartDescription.type == 'line') {
 
                     arrayData.push({
                         label: query.labelOfQuery,
-                        data: [...queryInd.map(a => a.value)],
+                        data: [...queryInd.map(a => parseFloat(a.value))],
                         fill: false,
-                        borderColor: [new Set(...queryInd.map(a => a.color))],
+                        borderColor: colors.length > 1 ? colors : colors[0],
                         tension: .4
                     })
                 }
 
-                else if (chartDescription.type == 'pie') {
+                else if (chartDescription.type == 'pie' || chartDescription.type == 'doughnut') {
+                    arrayData.push({
+                        label: query.labelOfQuery,
+                        data: [...queryInd.map(a => parseFloat(a.value))],
+                        backgroundColor: [...queryInd.map(a => a.color)],
+                        hoverBackgroundColor: [...queryInd.map(a => a.color)]
 
+                    })
                 }
-
             }
 
-            let dataInfo = {
+            dataInfo = {
                 labels: [...new Set(arrayLabels)],
-                datasets: arrayData
+                datasets: [...arrayData]
             }
 
-            chart['indicators'] = queryInd.filter(val => {
-                return parseFloat(val.value) > 10
-            })
-            chart['show'] = false
-
-            if (chart['indicators'].length > 0) {
-
-                // chart['indicators'] = chart['indicators'].map(o => ({ ...o, lab el: Internal.languageOb["deforestation_timeseries_card"][chart.id][o.label] }));
-                chart['show'] = true
-                chart['text'] = chart.getText(chart)
-                chartFinal.push(chart);
-            }
+            // chart['indicators'] = queryInd.filter(val => {
+            //     return parseFloat(val.value) > 10
+            // })
         }
         catch (e) {
-            chart['indicators'] = [];
-            chart['show'] = false;
-            chart['text'] = "erro."
-
-            chartFinal.push(chart);
-
+            dataInfo = null
         }
 
+        console.log(dataInfo)
+
+        return dataInfo;
     }
 
     Controller.timeseries = function (request, response) {
@@ -136,16 +136,17 @@ module.exports = function (app) {
             {
                 "id": "pastureAndLotacaoBovina",
                 "idsOfQueriesExecuted": [
-                    { idOfQuery: 'pasture', labelOfQuery: Internal.languageOb["timeseries_card"]["pastureAndLotacaoBovina"]['pasture'] },
-                    { idOfQuery: 'lotacao_bovina_regions', labelOfQuery: Internal.languageOb["timeseries_card"]["prodes"]['lotacao_bovina_regions'] },
+                    { idOfQuery: 'pasture', labelOfQuery: Internal.languageOb["timeseries_card"]["pastureAndLotacaoBovina"].labelOfQuery['pasture'] },
+                    { idOfQuery: 'lotacao_bovina_regions', labelOfQuery: Internal.languageOb["timeseries_card"]["pastureAndLotacaoBovina"].labelOfQuery['lotacao_bovina_regions'] },
                 ],
                 "title": "PRODES-Cerrado",
                 "getText": function (chart) {
-                    replacements['areaMun'] = Number(chart['indicators'][0]["area_mun"])
-                    replacements['anthropicArea'] = chart['indicators'].reduce((a, { value }) => a + value, 0);
-                    replacements['percentArea'] = (replacements['anthropicArea'] / replacements['areaMun']) * 100.0;
+                    // replacements['areaMun'] = Number(chart['indicators'][0]["area_mun"])
+                    // replacements['anthropicArea'] = chart['indicators'].reduce((a, { value }) => a + value, 0);
+                    // replacements['percentArea'] = (replacements['anthropicArea'] / replacements['areaMun']) * 100.0;
 
-                    const text = Internal.replacementStrings(Internal.languageOb["timeseries_card"]["prodes"].text, replacements)
+                    // const text = Internal.replacementStrings(Internal.languageOb["timeseries_card"]["prodes"].text, replacements)
+                    const text = "TO DO"
                     return text
                 },
                 "type": 'line',
@@ -155,92 +156,31 @@ module.exports = function (app) {
                     }
                 }
             }
-            // {
-            //     "id": "pasture",
-            //     "title": Internal.languageOb["timeseries_card"]["pasture"].title,
-            //     "getText": function (chart) {
-            //         replacements['areaMun'] = Number(chart['indicators'][0]["area_mun"])
-            //         replacements['anthropicArea'] = chart['indicators'].reduce((a, { value }) => a + value, 0);
-            //         replacements['percentArea'] = (replacements['anthropicArea'] / replacements['areaMun']) * 100.0;
-
-            //         const text = Internal.replacementStrings(Internal.languageOb["timeseries_card"]["pasture"].text, replacements)
-            //         return text
-            //     },
-            //     "type": 'line',
-            //     "options": {
-            //         legend: {
-            //             display: false
-            //         }
-            //     }
-            // }
-            // {
-            //     "id": "pastureAndLotacaoBovina",
-            //     "idsOfQueriesExecuted": ['pasture', 'lotacao_bovina_regions'],
-            //     "title": Internal.languageOb["timeseries_card"]["pasture_quality"].title,
-            //     "getText": function (chart) {
-            //         replacements['areaMun'] = Number(chart['indicators'][0]["area_mun"])
-            //         replacements['anthropicArea'] = chart['indicators'].reduce((a, { value }) => a + value, 0);
-            //         replacements['percentArea'] = (replacements['anthropicArea'] / replacements['areaMun']) * 100.0;
-
-            //         const text = Internal.replacementStrings(Internal.languageOb["timeseries_card"]["pasture"].text, replacements)
-            //         return text
-            //     },
-            //     "type": 'line',
-            //     "options": {
-            //         legend: {
-            //             display: false
-            //         }
-            //     }
-            // }
         ]
 
         // let chartFinal = Internal.buildGraphResult(request.queryResult, chartResult)
 
         for (let chart of chartResult) {
             chart['data'] = Internal.buildGraphResult(request.queryResult, chart)
-        }
+            chart['show'] = false
 
-        for (let chart of chartResult) {
-            try {
+            console.log("CHEGOU: ", chart['data'])
 
-
-                // for (let query of chart.queries) {
-                //     let queryInd = request.queryResult[chart.query]
-                // }
-
-                let queryInd = request.queryResult[chart.id]
-
-                chart['indicators'] = queryInd.filter(val => {
-                    return parseFloat(val.value) > 10
-                })
-                chart['show'] = false
-
-                if (chart['indicators'].length > 0) {
-
-                    // chart['indicators'] = chart['indicators'].map(o => ({ ...o, lab el: Internal.languageOb["deforestation_timeseries_card"][chart.id][o.label] }));
-                    chart['show'] = true
-                    chart['text'] = chart.getText(chart)
-                    chartFinal.push(chart);
-                }
-            }
-            catch (e) {
-                chart['indicators'] = [];
+            if (chart['data']) {
+                chart['show'] = true
+                chart['text'] = chart.getText(chart)
+            } else {
+                chart['data'] = {};
                 chart['show'] = false;
                 chart['text'] = "erro."
-
-                chartFinal.push(chart);
-
             }
 
         }
 
-        response.send(chartFinal)
+        response.send(chartResult)
         response.end();
 
     };
-
-    Controller.pastureTimeseries = function (request, response) {
-    }
 
 
     Controller.lulc = function (request, response) {

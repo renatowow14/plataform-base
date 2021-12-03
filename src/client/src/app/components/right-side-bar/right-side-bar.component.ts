@@ -295,24 +295,24 @@ export class RightSideBarComponent implements OnInit {
     params.push('textRegion=' + this.selectRegion.text)
     let textParam = params.join('&');
 
-    this.chartService.getDeforestation(textParam).subscribe(result => {
+    this.chartService.getTimeseries(textParam).subscribe(result => {
       this.tempDeforestation = result;
       for (let graphic of this.tempDeforestation) {
 
-        graphic.data = {
-          labels: graphic.indicators.map(element => element.label),
-          datasets: [
-            {
-              label: graphic.title,
-              data: graphic.indicators.map(element => element.value),
-              fill: false,
-              borderColor: '#289628',
-              backgroundColor: '#289628'
+        // graphic.data = {
+        //   labels: graphic.indicators.map(element => element.label),
+        //   datasets: [
+        //     {
+        //       label: graphic.title,
+        //       data: graphic.indicators.map(element => element.value),
+        //       fill: false,
+        //       borderColor: '#289628',
+        //       backgroundColor: '#289628'
 
-            }
-          ],
+        //     }
+        //   ],
 
-        }
+        // }
 
       }
     }, error => {

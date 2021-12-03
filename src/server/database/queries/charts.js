@@ -67,20 +67,24 @@ module.exports = function (app) {
         },
         {
             source: 'lapig',
-            id: 'teste',
-            sql: " SELECT true ",
+            id: 'lotacao_bovina_regions',
+            sql: " SELECT  a.year as label, b.color, b.name as classe, sum(a.ua) as value,  (SELECT CAST(SUM(pol_ha) as double precision) FROM regions " + regionFilter + ") as area_mun " +
+                " FROM lotacao_bovina_regions a " + "INNER JOIN graphic_colors as b on b.table_rel = 'rebanho_bovino' " +
+                regionFilter +
+                // " AND " + yearFilter +
+                " GROUP BY 1,2,3 ORDER BY 1 ASC;",
             mantain: true
-        }
-            // {
-            //     source: 'lapig',
-            //     id: 'pasture',
-            //     sql: " SELECT a.year as label, sum(a.area_ha) as value, b.color, b.name as classe, (SELECT CAST(SUM(pol_ha) / 1000 as double precision) FROM regions " + regionFilter + ") as area_mun " +
-            //         " FROM pasture a " + "INNER JOIN graphic_colors as b on b.table_rel = 'pasture'" +
-            //         regionFilter +
-            //         // " AND " + yearFilter +
-            //         " GROUP BY 1 ORDER BY 1 ASC;",
-            //     mantain: true
-            // },
+        },
+        {
+            source: 'lapig',
+            id: 'pasture',
+            sql: " SELECT  a.year as label, b.color, b.name as classe, sum(a.area_ha) as value,  (SELECT CAST(SUM(pol_ha) as double precision) FROM regions " + regionFilter + ") as area_mun " +
+                " FROM pasture_col6 a " + "INNER JOIN graphic_colors as b on b.table_rel = 'pasture' " +
+                regionFilter +
+                // " AND " + yearFilter +
+                " GROUP BY 1,2,3 ORDER BY 1 ASC;",
+            mantain: true
+        },
             // {
             //     source: 'lapig',
             //     id: 'pasture_quality',

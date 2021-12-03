@@ -4,7 +4,6 @@ module.exports = function (app) {
     var charts = app.controllers.charts;
 
     app.get('/service/charts/lulc', dataInjector, charts.lulc);
-    app.get('/service/charts/pasturetimeseries', dataInjector, charts.pastureTimeseries);
     app.get('/service/charts/timeseries', dataInjector, charts.timeseries);
 
 }

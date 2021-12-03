@@ -30,8 +30,8 @@ export class ChartService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getDeforestation(parameters): Observable<any> {
-    return this.httpClient.get<any>(this.apiURL + '/deforestation?' + parameters, this.httpOptions)
+  getTimeseries(parameters): Observable<any> {
+    return this.httpClient.get<any>(this.apiURL + '/timeseries?' + parameters, this.httpOptions)
       .pipe(
         catchError(this.errorHandler),
       );
