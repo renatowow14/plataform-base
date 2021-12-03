@@ -11,13 +11,13 @@
                 "selectedType": "pasture",
                 "types": [
                     "pasture",
-                    "pasture_quality"
+                    "pasture_quality_s100"
                 ]
             },
             {
                 "idLayer": "pecuaria_censitaria",
                 "labelLayer": "translate",
-                "visible": true,
+                "visible": false,
                 "selectedType": "lotacao_bovina_regions",
                 "types": [
                     "lotacao_bovina_regions"
@@ -53,9 +53,8 @@
                 "idLayer": "pontos_campo",
                 "labelLayer": "translate",
                 "visible": false,
-                "selectedType": "pontos_campo_parada",
+                "selectedType": "pontos_campo_sem_parada",
                 "types": [
-                    "pontos_campo_parada",
                     "pontos_campo_sem_parada"
                 ]
             },
