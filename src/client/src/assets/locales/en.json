@@ -305,7 +305,7 @@
       "country": "Country",
       "fronteira": "Border Region"
     },
-    "deforestation_timeseries_card": {
+    "timeseries_card": {
       "prodes": {
         "text": "The #typeRegionTranslate# #textRegionTranslate# presents an Anthropic area of #value# ha, which represents #percent_area# % of its total area."
       }
@@ -342,6 +342,12 @@
         "Vegetação Secundária": "Secondary Vegetation",
         "Formações Pioneiras": "Pioneer Formations",
         "Agricultura": "Agriculture"
+      },
+      "pasture_quality": {
+        "text": "According to LAPIG, the #typeRegionTranslate# #textRegionTranslate# has a total area of #areaMun# ha, distributed among the following Pasture Degradation classes:",
+        "Severa": "Severe",
+        "Intermediário": "Intermediary",
+        "Ausente": "Absent"
       }
     },
     "table_example_card": {

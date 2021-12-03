@@ -17,7 +17,7 @@ import { Descriptor, Layer, Legend, Menu } from "../../@core/interfaces";
 import Map from 'ol/Map';
 
 import { UIChart } from 'primeng/chart';
-import {GoogleAnalyticsService} from "../services/google-analytics.service";
+import { GoogleAnalyticsService } from "../services/google-analytics.service";
 
 @Component({
   selector: 'app-right-side-bar',
@@ -186,8 +186,6 @@ export class RightSideBarComponent implements OnInit {
     this.expendGroup2 = false;
     this.expendGroup3 = false;
 
-    // this.updateDeforestationTimeSeries();
-    // this.updateLulcTimeSeries();
   }
 
   @HostListener('window:resize', ['$event'])

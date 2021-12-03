@@ -42,7 +42,13 @@ export class ChartService {
     return this.httpClient.get<any>(this.apiURL + '/lulc?' + parameters, this.httpOptions)
       .pipe(map(response => response))
       .pipe(catchError(this.errorHandler));
+  }
 
+  getPastureQuality(parameters): Observable<any> {
+
+    return this.httpClient.get<any>(this.apiURL + '/pasturequality?' + parameters, this.httpOptions)
+      .pipe(map(response => response))
+      .pipe(catchError(this.errorHandler));
   }
 
 
