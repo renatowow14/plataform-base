@@ -308,6 +308,14 @@
     "timeseries_card": {
       "prodes": {
         "text": "The #typeRegionTranslate# #textRegionTranslate# presents an Anthropic area of #value# ha, which represents #percent_area# % of its total area."
+      },
+      "pastureAndLotacaoBovina": {
+        "text": "",
+        "title": "Pasture",
+        "labelOfQuery": {
+          "pasture": "Pasture",
+          "lotacao_bovina_regions": "Bovine"
+        }
       }
     },
     "lulc_pie_card": {
