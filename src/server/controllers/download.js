@@ -14,7 +14,6 @@ module.exports = function(app) {
 
     self.requestFileFromMapServer = function(url, pathFile, response) {
         console.log('URL', url)
-
         let file = fs.createWriteStream(pathFile + ".zip");
 
         const downloadPromise = new Promise((resolve, reject) => {
@@ -67,7 +66,7 @@ module.exports = function(app) {
             fileParam = layer.valueType + "_" + filter.valueFilter;
         } else {
             builder.addFilterDirect("1=1");
-            fileParam = layer.valueType + "_" + "1=1";
+            fileParam = layer.valueType;
         }
 
         directory = config.downloadDataDir + region.type + '/' + region.value + '/' + typeDownload + '/' + layer.valueType + '/';
