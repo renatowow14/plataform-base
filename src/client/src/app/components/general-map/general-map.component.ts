@@ -729,6 +729,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       if (layerType!.filterHandler == 'msfilter' && layerType!.filters) {
         filters.push(layerType!.filterSelected)
       }
+
       if (layerType!.regionFilter)
         filters.push(layerType!.regionFilter)
 
@@ -1671,19 +1672,36 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     });
   }
 
+  handleFilters(layerType: DescriptorType): string {
+    let msFilter = "1=1";
+
+    let filters:any[] = [];
+
+    if(layerType.filters!.length > 0){
+
+      if (layerType!.filterHandler == 'msfilter' && layerType!.filters)
+        filters.push(layerType!.filterSelected);
+
+      if (layerType!.regionFilter && this.msFilterRegion)
+        filters.push(this.msFilterRegion);
+
+      msFilter = filters.join('%20AND%20');
+    }
+
+    return '&MSFILTER=' + msFilter
+  }
+
   getFeatures(layer, bbox): Promise<any> {
     return new Promise<any>((resolve) => {
       let typeName = "";
-      let msFilter = "";
+      let msFilter = "&MSFILTER=1=1";
       if(typeof layer === 'string'){
         typeName = layer
       } else {
         let layerType: DescriptorType = layer.get('descriptorLayer');
         typeName = layerType.valueType
         if(layerType.hasOwnProperty('filters')){
-          if(layerType.filters!.length > 0){
-            msFilter = '&MSFILTER=' + layerType.filterSelected;
-          }
+          msFilter = this.handleFilters(layerType);
         }
       }
       const url = `${environment.OWS}/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=${typeName}&outputFormat=application/json&bbox=${bbox},EPSG:4326${msFilter}`.trim();
