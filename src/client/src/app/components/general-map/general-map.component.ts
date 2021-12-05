@@ -1115,6 +1115,27 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     });
   }
 
+  downloadSLD(layer: DescriptorType) {
+    let name: string | undefined = '';
+    if(layer.filterHandler === 'layername') {
+      name = layer.filterSelected;
+    } else {
+      name = layer.valueType;
+    }
+    this.downloadService.downloadRequestSLD(name).toPromise()
+      .then(blob => {
+        saveAs(blob, name + '.sld');
+        layer.download.loading = false;
+      }).catch(error => {
+      this.messageService.add({
+        life: 8000,
+        severity:'error',
+        summary: this.localizationService.translate('sld.msg_error_title'),
+        detail: this.localizationService.translate('sld.msg_error', {name: name + '.zip'})
+      });
+    });
+  }
+
   buttonDownload(ev) {
     let { tipo, layer } = ev;
     switch (tipo) {
@@ -1731,8 +1752,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
         geojson:{}
       };
       this.map.getLayers().forEach(layer => {
-        if (layer.get('key') === 'popup-vector') {
-          this.map.removeLayer(layer);
+        if(layer){
+          if (layer.get('key') === 'popup-vector') {
+            this.map.removeLayer(layer);
+          }
         }
       });
       this.popupRegion.coordinate = transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
@@ -1843,8 +1866,10 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       geojson:{}
     };
     this.map.getLayers().forEach(layer => {
-      if (layer.get('key') === 'popup-vector') {
-        this.map.removeLayer(layer);
+      if(layer){
+        if (layer.get('key') === 'popup-vector') {
+          this.map.removeLayer(layer);
+        }
       }
     });
   }

@@ -107,6 +107,11 @@
   },
   "minimize": "Minimizar",
   "maximize": "Maximizar",
+  "sld": {
+    "title": "Baixar Descritor de Estilo da Camada (SLD)",
+    "msg_error_title": "Erro",
+    "msg_error": "Não foi possível realizar o download do Descritor de Estilo da Camada (SLD)"
+  },
   "planet": "Mosaicos Planet",
   "options": {
     "basemaps": "Mapas Base",
