@@ -40,12 +40,11 @@
                         
                         //BUILD APPLICATION 
                         echo "Build main site distribution"
-                        sh "rm -rfv package-lock.json"
-                        sh "cd  src/client && rm -rfv node_modules/ >> /dev/null && rm -rfv package-lock.json && npm install"
-                        sh "cd  src/server && rm -rfv node_modules/ >> /dev/null && rm -rfv package-lock.json && npm install"
+                        sh "cd  src/server && rm -rfv package-lock.json && npm install" 
+                        sh "cd  src/client && rm -rfv package-lock.json && npm install"
 
                         //VERIFY IF BUILD IS COMPLETE AND NOTIFY IN DISCORD ABOUT OF THE RESULT
-                        def status = sh(returnStatus: true, script: "cd  src/client && ng build")
+                        def status = sh(returnStatus: true, script: "cd src/client && ng build  --aot --output-hashing=all --build-optimizer=false")
                         if (status != 0) {
                             echo "FAILED BUILD!"
                             currentBuild.result = 'FAILED'
