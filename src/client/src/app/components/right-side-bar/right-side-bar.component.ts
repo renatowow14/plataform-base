@@ -42,19 +42,12 @@ export class RightSideBarComponent implements OnInit {
   public map: Map;
   public _displayOptions: boolean;
   public innerHeigth: number;
-  public timeSeriesResultDeforestation: any = {};
 
-  public tempLulc = [] as any;
-  public tempDeforestation = [] as any;
-
-  public lulcCharts = [] as any;
-  public deforestationCharts = [] as any;
+  public chartsArea2 = [] as any;
+  public chartsArea1 = [] as any;
 
   //Charts Variables
   public selectRegion: any;
-  public optionsTimeSeriesDeforestation: any = {};
-  public optionsTimeSeriesLulc: any = {};
-  public changeTabSelected = ""
   public data: any;
   public ob: any = {};
 
@@ -102,7 +95,6 @@ export class RightSideBarComponent implements OnInit {
     this.displayFullScreenCharts = false;
     this.displayDashboard = false;
     this.chartObject = {};
-    this.changeTabSelected = "";
 
     this.selectRegion = {
       type: 'country',
@@ -131,11 +123,7 @@ export class RightSideBarComponent implements OnInit {
     this.updateStatistics(this.selectRegion)
 
 
-    this.expendGroup = false;
-
     //End charts
-
-
 
 
     this.layersSideBar = false;
@@ -247,14 +235,6 @@ export class RightSideBarComponent implements OnInit {
     return this.customers ? this.first === 0 : true;
   }
 
-  triggerSeriesChartLulc() {
-    this.lulcCharts = this.tempLulc;
-  }
-
-  triggerSeriesChartDeforestation() {
-    this.deforestationCharts = this.tempDeforestation
-  }
-
 
   handleMenu(menu, mobile = false) {
 
@@ -286,8 +266,8 @@ export class RightSideBarComponent implements OnInit {
   }
 
 
-
-  updateDeforestationTimeSeries() {
+  updateArea1Charts() {
+    this.chartsArea1 = []
     let params: string[] = [];
     params.push('lang=' + this.localizationService.currentLang())
     params.push('typeRegion=' + this.selectRegion.type)
@@ -295,26 +275,27 @@ export class RightSideBarComponent implements OnInit {
     params.push('textRegion=' + this.selectRegion.text)
     let textParam = params.join('&');
 
-    this.chartService.getTimeseries(textParam).subscribe(result => {
-      this.tempDeforestation = result;
-      for (let graphic of this.tempDeforestation) {
+    this.chartService.getArea1(textParam).subscribe(tempChartsArea1 => {
+      for (let graphic of tempChartsArea1) {
 
-        // graphic.data = {
-        //   labels: graphic.indicators.map(element => element.label),
-        //   datasets: [
-        //     {
-        //       label: graphic.title,
-        //       data: graphic.indicators.map(element => element.value),
-        //       fill: false,
-        //       borderColor: '#289628',
-        //       backgroundColor: '#289628'
+        graphic.data = {
+          labels: graphic.indicators.map(element => element.label),
+          datasets: [
+            {
+              label: graphic.title,
+              data: graphic.indicators.map(element => element.value),
+              fill: false,
+              borderColor: '#289628',
+              backgroundColor: '#289628'
 
-        //     }
-        //   ],
+            }
+          ],
 
-        // }
+        }
 
       }
+
+      this.chartsArea1 = tempChartsArea1;
     }, error => {
       console.log(error)
     });
@@ -325,38 +306,32 @@ export class RightSideBarComponent implements OnInit {
 
   }
 
-  updateStatistics(region) {
-    this.selectRegion = region;
+  updateStatistics(region?) {
 
-    this.updateDeforestationTimeSeries();
-    this.updateLulcTimeSeries();
-    this.triggerSeriesChartDeforestation();
-    this.triggerSeriesChartLulc();
+    if (region) {
+      this.selectRegion = region;
+    } else {
+      this.selectRegion = {
+        type: 'country',
+        text: 'BRASIL',
+        value: 'Brasil'
+      };
+    }
+
+    // this.expendGroup = false;
+    // this.expendGroup2 = false;
+    // this.expendGroup3 = false;
+
+    this.updateArea1Charts();
+    this.updateArea2Charts();
+
+
   }
 
-  triggerChartsDeforestation() {
-    this.updateDeforestationTimeSeries();
-    this.triggerSeriesChartDeforestation();
-  }
 
-  triggerChartsLulc() {
-    this.updateLulcTimeSeries();
-    this.triggerSeriesChartLulc();
-  }
+  updateArea2Charts() {
 
-  updateAndTriggerCharts() {
-    this.updateDeforestationTimeSeries();
-    this.updateLulcTimeSeries();
-    this.triggerSeriesChartDeforestation();
-    this.triggerSeriesChartLulc();
-
-    this.expendGroup = false;
-    this.expendGroup2 = false;
-    this.expendGroup3 = false;
-  }
-
-  updateLulcTimeSeries() {
-
+    this.chartsArea2 = []
     let params: string[] = [];
 
     params.push('lang=' + this.localizationService.currentLang())
@@ -365,9 +340,8 @@ export class RightSideBarComponent implements OnInit {
     params.push('textRegion=' + this.selectRegion.text)
     let textParam = params.join('&');
 
-    this.chartService.getLulc(textParam).subscribe(result => {
-      this.tempLulc = result;
-      for (let graphic of this.tempLulc) {
+    this.chartService.getArea2(textParam).subscribe(tempChartsArea2 => {
+      for (let graphic of tempChartsArea2) {
 
         graphic.data = {
           labels: graphic.indicators.map(element => element.label),
@@ -400,6 +374,8 @@ export class RightSideBarComponent implements OnInit {
         }
 
       }
+
+      this.chartsArea2 = tempChartsArea2;
 
     }, error => {
       console.log(error)

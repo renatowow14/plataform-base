@@ -50,7 +50,7 @@ module.exports = function (app) {
 
     }
 
-    Query.timeseries = function (params) {
+    Query.area1 = function (params) {
 
         var regionFilter = Internal.getRegionFilter(params['typeRegion'], params['valueRegion']);
         // var yearFilter = Internal.getYearFilter(params['year']);
@@ -58,11 +58,16 @@ module.exports = function (app) {
         return [{
             source: 'lapig',
             id: 'prodes',
-            sql: " SELECT a.year as label, b.color, CAST(SUM(pol_ha) / 1000 as double precision) as value, (SELECT CAST(SUM(pol_ha) / 1000 as double precision) FROM regions " + regionFilter + ") as area_mun " +
-                " FROM desmatamento_prodes a " +
-                "INNER JOIN graphic_colors as B on 'prodes_cerrado' = b.name AND b.table_rel = 'desmatamento_prodes' " + regionFilter +
+            // sql: " SELECT a.year as label, b.color, CAST(SUM(pol_ha) / 1000 as double precision) as value, (SELECT CAST(SUM(pol_ha) / 1000 as double precision) FROM regions " + regionFilter + ") as area_mun " +
+            //     " FROM desmatamento_prodes a " +
+            //     "INNER JOIN graphic_colors as B on 'prodes_cerrado' = b.name AND b.table_rel = 'desmatamento_prodes' " + regionFilter +
+            //     // " AND " + yearFilter +
+            //     " GROUP BY 1,2;",
+            sql: " SELECT year as label, 'prodes_cerrado' source, CAST(SUM(pol_ha) / 1000 as double precision) as value, (SELECT CAST(SUM(pol_ha) / 1000 as double precision) FROM regions " + regionFilter + ") as area_mun " +
+                " FROM desmatamento_prodes " +
+                regionFilter +
                 // " AND " + yearFilter +
-                " GROUP BY 1,2;",
+                " GROUP BY 1;",
             mantain: true
         },
         {
@@ -79,7 +84,7 @@ module.exports = function (app) {
             source: 'lapig',
             id: 'pasture',
             sql: " SELECT  a.year as label, b.color, b.name as classe, sum(a.area_ha) as value,  (SELECT CAST(SUM(pol_ha) as double precision) FROM regions " + regionFilter + ") as area_mun " +
-                " FROM pasture_col6 a " + "INNER JOIN graphic_colors as b on b.table_rel = 'pasture' " +
+                " FROM pasture a " + "INNER JOIN graphic_colors as b on b.table_rel = 'pasture' " +
                 regionFilter +
                 // " AND " + yearFilter +
                 " GROUP BY 1,2,3 ORDER BY 1 ASC;",
@@ -99,7 +104,7 @@ module.exports = function (app) {
 
     }
 
-    Query.lulc = function (params) {
+    Query.area2 = function (params) {
 
         var regionFilter = Internal.getRegionFilter(params['typeRegion'], params['valueRegion']);
 

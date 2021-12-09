@@ -299,8 +299,8 @@
   "right_sidebar": {
     "title": "Statistics",
     "cards_titles": {
-      "deforestation_timeseries": "Timeseries",
-      "lulc_pie": "Land Use and Land Cover",
+      "area1Title": "Timeseries",
+      "area2Title": "Land Use and Land Cover",
       "table_example": "Example of Table"
     },
     "region_types": {
@@ -310,7 +310,7 @@
       "country": "Country",
       "fronteira": "Border Region"
     },
-    "timeseries_card": {
+    "area1_card": {
       "prodes": {
         "text": "The #typeRegionTranslate# #textRegionTranslate# presents an Anthropic area of #value# ha, which represents #percent_area# % of its total area."
       },
@@ -323,7 +323,7 @@
         }
       }
     },
-    "lulc_pie_card": {
+    "area2_card": {
       "uso_solo_terraclass": {
         "text": "According to the Terraclass Cerrado project, the #textRegionTranslate# #typeRegionTranslate# has a total area of #areaMun# ha, distribuited between the followind land uses:",
         "Mosaíco de Ocupações": "Occupations Mosaic",
