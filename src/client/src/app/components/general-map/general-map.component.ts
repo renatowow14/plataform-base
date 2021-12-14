@@ -878,6 +878,18 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
     const layerType: DescriptorType = layer;
 
+    if (!layer.hasOwnProperty('layer')) {
+      if (layer.visible) {
+
+        let register_event = layer.viewValueType + "_" + layer.valueType
+        if (layer.filterSelected) {
+          register_event += "_" + layer.filterSelected
+        }
+
+        this.googleAnalyticsService.eventEmitter("VisualizeLayer", "Layer", register_event);
+      }
+    }
+
     if (updateSource) {
       this.updateSourceLayer(layerType);
     } else {
@@ -913,30 +925,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
             this.swiperControl.addLayer(this.OlLayers[layerType.valueType], false);
           }
         }
-
-        if (layer.visible) {
-
-          console.log(layer)
-
-          // let register_event = ''
-
-          // if (layer.id != 'satelite') {
-          //   let layerTested = this.layersNames.find(element => element.id === layer.id);
-          //   let time_selected = this.selectedFilterFromLayerType(layerTested.selectedType)
-          //   register_event = layerTested.selectedType
-          //   if (time_selected) {
-          //     register_event += "_" + time_selected.value
-          //   }
-          // }
-          // else {
-          //   register_event = layer.selectedType + "_" + (layer.selectedType === 'landsat' ? layer.types[0].timeSelected : layer.types[1].timeSelected)
-          // }
-
-          // // console.log(layerTested.selectedType, time_selected, register_event)
-          // this.googleAnalyticsService.eventEmitter("pegar Layer", "VisualizeLayer", register_event, 1);
-
-        }
-
       } else {
         if (layer.layer.get('type') === 'bmap') {
           this.map.getLayers().forEach(layer => {
@@ -1157,11 +1145,17 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
   buttonDownload(ev) {
     let { tipo, layer } = ev;
 
-    // let register_event = tipo + "_" + layer.selectedType
+    if (!layer.hasOwnProperty('layer')) {
+      if (layer.visible) {
 
-    console.log("Download - ", ev)
+        let register_event = tipo + "_" + layer.viewValueType + "_" + layer.valueType
+        if (layer.filterSelected) {
+          register_event += "_" + layer.filterSelected
+        }
 
-    // this.googleAnalyticsService.eventEmitter(tipo, "Download", layer.selectedType, 3);
+        this.googleAnalyticsService.eventEmitter("DownloadLayer", "Layer", register_event, 1);
+      }
+    }
 
     switch (tipo) {
       case 'csv':
@@ -1208,6 +1202,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.getSwipeLayers();
     this.controlOptions = true;
     this.mapControls.swipe = !this.mapControls.swipe
+    this.googleAnalyticsService.eventEmitter("Activate", "GeoTools", "Swipe");
   }
 
   onSearch(show) {
@@ -1219,6 +1214,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.mapControls.measure = !this.mapControls.measure;
     if (this.mapControls.measure) {
       this.addInteraction(new RulerCtrl(this).getDraw());
+      this.googleAnalyticsService.eventEmitter("Activate", "GeoTools", "RulerLine");
     } else {
       this.unselect()
     }
@@ -1228,6 +1224,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.mapControls.measureArea = !this.mapControls.measureArea
     if (this.mapControls.measureArea) {
       this.addInteraction(new RulerAreaCtrl(this).getDraw());
+      this.googleAnalyticsService.eventEmitter("Activate", "GeoTools", "RulerArea");
     } else {
       this.unselect()
     }
@@ -1239,6 +1236,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.mapControls.point = !this.mapControls.point
     if (this.mapControls.point) {
       this.addDrawInteraction('Point');
+      this.googleAnalyticsService.eventEmitter("Activate", "GeoTools", "DrawPoint");
     } else {
       this.unselect()
     }
@@ -1249,6 +1247,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     this.mapControls.drawArea = !this.mapControls.drawArea
     if (this.mapControls.drawArea) {
       this.addDrawInteraction('Polygon');
+      this.googleAnalyticsService.eventEmitter("Activate", "GeoTools", "DrawArea");
     } else {
       this.unselect()
     }
@@ -1425,20 +1424,6 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
       sourceLayers.setUrls(this.parseUrls(layer));
       sourceLayers.refresh();
     }
-
-    if (layer.visible) {
-
-      console.log("UPDATE SOURCE LAYER", layer)
-
-      let register_event = layer.viewValueType + "_" + layer.valueType
-      if (layer.filterSelected) {
-        register_event += "_" + layer.filterSelected
-      }
-
-      this.googleAnalyticsService.eventEmitter("updateSourceLayer", "Layer", register_event, 2);
-    }
-
-
   }
 
   private updateSourceAllLayers() {
@@ -1472,10 +1457,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
 
     this.onChangeRegion.emit(this.selectRegion);
 
-    // let register_event = this.selectRegion.type + "_" + this.selectRegion.text
-
-    console.log("UPDATE REGION - ", this.selectRegion)
-    this.googleAnalyticsService.eventEmitter(this.selectRegion.type, "Select-Region", this.selectRegion.text, 4);
+    this.googleAnalyticsService.eventEmitter(this.selectRegion.type, "Select-Region", this.selectRegion.text);
 
     this.zoomExtent();
     this.updateSourceAllLayers()
@@ -1687,7 +1669,7 @@ export class GeneralMapComponent implements OnInit, Ruler, AfterContentChecked {
     // pdfMake.createPdf(dd).open({}, win);
     pdfMake.createPdf(dd).download(filename);
 
-    this.googleAnalyticsService.eventEmitter("Print_Identification_Token_Layer", "Upload", "uploadLayer", 8);
+    this.googleAnalyticsService.eventEmitter("Print_Identification_Token_Layer", "Upload", "uploadLayer");
   }
 
   onCancel() {

@@ -152,7 +152,7 @@ export class AreaComponent implements OnInit {
       ]
     });
 
-    this.googleAnalyticsService.eventEmitter("UploadLayer", "Upload", "Submit_Token", 5);
+    this.googleAnalyticsService.eventEmitter("UploadLayer", "Upload", "Submit_Token");
   }
 
   changeTextUpload($e) {
@@ -227,7 +227,7 @@ export class AreaComponent implements OnInit {
       // this.layerFromConsulta.heavyAnalysis = resultHeavyAnalysis;
       // this.layerFromConsulta.heavyAnalysisLoading = false;
 
-      this.googleAnalyticsService.eventEmitter("Analyze-Consulta-Upload-Layer", "Upload", this.layerFromConsulta.token, 6);
+      this.googleAnalyticsService.eventEmitter("Analyze-Consulta-Upload-Layer", "Upload", this.layerFromConsulta.token);
     } else {
       this.layerFromUpload.analyzedAreaLoading = true;
       params.push('token=' + this.layerFromUpload.token)
@@ -248,7 +248,7 @@ export class AreaComponent implements OnInit {
       // this.layerFromUpload.heavyAnalysis = resultHeavyAnalysis
       // this.layerFromUpload.heavyAnalysisLoading = false;
 
-      this.googleAnalyticsService.eventEmitter("Analyze-Upload-Layer", "Upload", this.layerFromUpload.token, 7);
+      this.googleAnalyticsService.eventEmitter("Analyze-Upload-Layer", "Upload", this.layerFromUpload.token);
     }
 
   }
@@ -347,7 +347,7 @@ export class AreaComponent implements OnInit {
     this.loadingPrintReport = true;
     this.loadingPrintReport = false;
 
-    // this.googleAnalyticsService.eventEmitter("Print-Report-Analyzed-Upload", "Upload", this.layerFromConsulta.token, 10);
+    this.googleAnalyticsService.eventEmitter("Print-Report-Analyzed-Upload", "Upload", this.layerFromConsulta.token);
   }
 
   async searchUploadShape() {
@@ -370,7 +370,7 @@ export class AreaComponent implements OnInit {
       this.layerFromConsulta.analyzedAreaLoading = false;
       this.loadLayerFromConsultaToMap();
 
-      this.googleAnalyticsService.eventEmitter("Get-Upload-Token-FromDB", "Upload", this.layerFromConsulta.token, 5);
+      this.googleAnalyticsService.eventEmitter("Get-Upload-Token-FromDB", "Upload", this.layerFromConsulta.token);
 
     } catch (err) {
       self.layerFromConsulta.analyzedAreaLoading = false;
