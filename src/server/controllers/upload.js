@@ -939,6 +939,36 @@ module.exports = function (app) {
 
     };
 
+    Uploader.getAnalysis = function (request, response) {
+        try {
+
+            queryResult = request.queryResult
+            let res = false
+            if (queryResult.length > 0) {
+                res = JSON.parse(Buffer(queryResult[0].analysis, 'base64'));
+            }
+
+            console.log(res)
+
+            response.status(200).send(res);
+            response.end()
+
+        } catch (err) {
+            response.status(400).send(languageJson['upload_messages']['spatial_relation_error'][Internal.language]);
+            response.end()
+        }
+    }
+
+    Uploader.saveAnalysis = function (request, response) {
+
+
+        let token = request.queryResult['store'];
+
+        response.send(token);
+        response.end()
+    };
+
+
 
     return Uploader;
 };
