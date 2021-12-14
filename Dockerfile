@@ -1,4 +1,4 @@
-FROM renatogomes256/app-base:latest
+FROM renatogomes256/app-base:4
 
 ADD ./src/client/dist/client /APP/src/client/dist/client
 
