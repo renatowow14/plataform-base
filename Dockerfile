@@ -2,7 +2,7 @@ FROM renatogomes256/app-base:4
 
 ADD ./src/client/dist/client /APP/src/client/dist/client
 
-RUN cd /APP/src/server && npm install 
+RUN cd /APP/src/server && npm install && \
      rm -rfv /root/.npm && \
      rm -rfv .nvm/versions/node/*
 
