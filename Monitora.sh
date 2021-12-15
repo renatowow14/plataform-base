@@ -48,7 +48,7 @@ do
 	
     sleep 10
     valor=$(ps | grep '/usr/local/bin/node /APP/plataform-base/src/server/app-cluster.js' | wc -l)
-    if [ $valor -ge 1 ]; then
+    if [ $valor -ge 2 ]; then
      echo "APP is running."
      clear
     else 
