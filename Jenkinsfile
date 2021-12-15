@@ -33,22 +33,22 @@
                         sh "npm set progress=false"
                         if (exists) {
                             echo 'Yes'
-                             sh "cd src/server && npm ci"
+                             sh "cd /APP/plataform-base/src/server && npm ci"
                         } else {
                             echo 'No'
-                            sh "cd src/server && npm install" 
+                            sh "cd /APP/plataform-base/src/server && npm install" 
                         }
                          if (exists2) {
                             echo 'Yes'
-                             sh "cd src/client && npm ci"
+                             sh "cd /APP/plataform-base/src/client && npm ci"
                         } else {
                             echo 'No'
-                            sh "cd src/client && npm install" 
+                            sh "cd /APP/plataform-base/src/client && npm install" 
                         }
             
                         //VERIFY IF BUILD IS COMPLETE AND NOTIFY IN DISCORD ABOUT OF THE RESULT
                         sh "export NODE_OPTIONS=--max-old-space-size=8096"
-                        def status = sh(returnStatus: true, script: "cd src/client && ng build --stats-json --source-map=false --no-progress")
+                        def status = sh(returnStatus: true, script: "cd /APP/plataform-base/src/client && ng build --stats-json --source-map=false --no-progress")
                         if (status != 0) {
                             echo "FAILED BUILD!"
                             currentBuild.result = 'FAILED'
