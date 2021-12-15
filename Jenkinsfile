@@ -1,15 +1,7 @@
     node {
         
-        def newApp
-        def registryhomol = 'qghouse.duckdns.org/library/plataform-base'
-        def registryCredential = 'harbor'
-        def dockerImage = ''
-        def NODE_VERSION='v16.4.2'
-        def autoCancelled = false
-        def SonarUrl = 'https://qgvalidator.duckdns.org'
-        def SonarKeyProject = 'd3d4454508d8c971f93f08c578b05d21fa6b63ba'
-        def SERVER_HOMOL='192.168.25.3:4243'
-        
+    load "$JENKINS_HOME/.envvars"
+
         stage('Checkout') {
             git branch: 'develop',
                 url: 'https://github.com/renatowow14/plataform-base.git'
@@ -28,23 +20,35 @@
                     -Dsonar.css.node=. \
                     -Dsonar.host.url=$SonarUrl \
                     -Dsonar.login=$SonarKeyProject"
-
-			}
-            }
+                    }
+        }
         stage('Build') {
                         //INSTALL NVM BINARY AND INSTALL NODE VERSION AND USE NODE VERSION
                         nvm(nvmInstallURL: 'https://raw.githubusercontent.com/creationix/nvm/master/install.sh', 
                         nvmIoJsOrgMirror: 'https://iojs.org/dist',
                         nvmNodeJsOrgMirror: 'https://nodejs.org/dist', 
                         version: NODE_VERSION) {
-                        
                         //BUILD APPLICATION 
                         echo "Build main site distribution"
-                        sh "cd  src/server && rm -rfv package-lock.json && npm install" 
-                        sh "cd  src/client && rm -rfv package-lock.json && npm install"
-
+                        sh "npm set progress=false"
+                        if (exists) {
+                            echo 'Yes'
+                             sh "cd src/server && npm ci"
+                        } else {
+                            echo 'No'
+                            sh "cd src/server && npm install" 
+                        }
+                         if (exists2) {
+                            echo 'Yes'
+                             sh "cd src/client && npm ci"
+                        } else {
+                            echo 'No'
+                            sh "cd src/client && npm install" 
+                        }
+            
                         //VERIFY IF BUILD IS COMPLETE AND NOTIFY IN DISCORD ABOUT OF THE RESULT
-                        def status = sh(returnStatus: true, script: "cd src/client && ng build  --aot --output-hashing=all --build-optimizer=false")
+                        sh "export NODE_OPTIONS=--max-old-space-size=8096"
+                        def status = sh(returnStatus: true, script: "cd src/client && ng build --stats-json --source-map=false --no-progress")
                         if (status != 0) {
                             echo "FAILED BUILD!"
                             currentBuild.result = 'FAILED'
@@ -62,7 +66,7 @@
                                             //Variaveis de ambiente do Jenkins - NOME DO JOB E NÚMERO DO JOB
                                             def discordFooter = "${env.JOB_BASE_NAME} (#${BUILD_NUMBER})"
                                             def discordTitle = "${env.JOB_BASE_NAME} (build #${BUILD_NUMBER})"
-                                            def urlWebhook = "https://discord.com/api/webhooks/799479979448336445/onr86IjH0zBoxzRZfsVnbQJIKBuygmKNAQkkJ1WTqQ0pB4abcOdjvUmRZHHi1Z_luM_E"
+                                            def urlWebhook = "https://discord.com/api/webhooks/$DiscordKey"
 
                             discordSend description: discordDesc,
                                     footer: discordFooter,
@@ -83,7 +87,7 @@
         }
         stage('Push Image to Registry') {
             
-            docker.withRegistry( 'https://qghouse.duckdns.org', registryCredential ) {
+            docker.withRegistry( "$Url_Private_Registry", registryCredential ) {
             dockerImage.push("${env.BUILD_NUMBER}")
             dockerImage.push("latest")
                         
@@ -106,7 +110,7 @@
 
         stage('Deploy container on DEV') {
                 
-                        configFileProvider([configFile(fileId: '431b4b00-d94a-4837-87d4-0f019dd583f7', targetLocation: 'container.json')]) {
+                        configFileProvider([configFile(fileId: "$File_Json_Id", targetLocation: 'container.json')]) {
 
                             def url = "http://$SERVER_HOMOL/containers/plataform-base?force=true"
                             def response = sh(script: "curl -v -X DELETE $url", returnStdout: true).trim()
@@ -143,7 +147,7 @@
                                         //Variaveis de ambiente do Jenkins - NOME DO JOB E NÚMERO DO JOB
                                         def discordFooter = "${env.JOB_BASE_NAME} (#${BUILD_NUMBER})"
                                         def discordTitle = "${env.JOB_BASE_NAME} (build #${BUILD_NUMBER})"
-                                        def urlWebhook = "https://discord.com/api/webhooks/799479979448336445/onr86IjH0zBoxzRZfsVnbQJIKBuygmKNAQkkJ1WTqQ0pB4abcOdjvUmRZHHi1Z_luM_E"
+                                        def urlWebhook = "https://discord.com/api/webhooks/$DiscordKey"
 
                         discordSend description: discordDesc,
                                 footer: discordFooter,
