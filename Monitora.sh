@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #Include telegram chat id and bot token ID here
-API_KEY="652213835:AAEIELQe_qndSEHZdbcY_7ZIHfarSUnsLBs"
-CHAT_ID="-330183489"
+API_KEY=""
+CHAT_ID=""
 
 APP_BASEDIR='/APP/plataform-base'
 
