@@ -1,4 +1,4 @@
-FROM renatogomes256/app-base:5
+FROM renatogomes256/app-base:6
 
 LABEL maintainer="Renato Gomes <renatogomessilverio@gmail.com>"
 
