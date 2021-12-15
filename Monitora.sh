@@ -1,9 +1,8 @@
 #!/bin/bash
 
 #Include telegram chat id and bot token ID here
-chat_id="-330183489"
-token="652213835:AAEIELQe_qndSEHZdbcY_7ZIHfarSUnsLBs"
-bot_token="652213835:AAEIELQe_qndSEHZdbcY_7ZIHfarSUnsLBs"
+API_KEY="652213835:AAEIELQe_qndSEHZdbcY_7ZIHfarSUnsLBs"
+CHAT_ID="-330183489"
 
 APP_BASEDIR='/APP/plataform-base'
 
@@ -11,10 +10,31 @@ APP_BASEDIR='/APP/plataform-base'
 
 function ALERT_APP
 {
-curl --silent --output /dev/null  "https://api.telegram.org/bot$bot_token/sendMessage?chat_id=$chat_id&text=$SUBJECT3" 
-curl --silent --output /dev/null  "https://api.telegram.org/bot$bot_token/sendMessage?chat_id=$chat_id&text=$SUBJECT4" 
-curl --silent --output /dev/null  "https://api.telegram.org/bot$bot_token/sendMessage?chat_id=$chat_id&text=$SUBJECT5" 
+if [ -e boot.png ]
+then
+    echo "ok" >> /dev/null
+else
+    echo "nok" >> /dev/null
+    wget https://m.com-magazin.de/img/1/5/5/2/5/0/8/Security-Alert_w480_h300.jpg -O boot.png
+fi
+curl --silent --output /dev/null -F "chat_id=$CHAT_ID" -F "photo=@boot.png" \
+https://api.telegram.org/bot$API_KEY/sendphoto
+
+read -r -d '' msg01 <<EOT
+<a href=>❌Detected APP is not running on 172.18.0.71 Server Time : $(date +" %d %b %Y %T")</a>
+EOT
+read -r -d '' msg02 <<EOT
+<a href=>⚠️ Restarting APP on 172.18.0.71 Server Time : $(date +" %d %b %Y %T")</a>
+EOT
+read -r -d '' msg03 <<EOT
+<a href=>✅ APP is UP! on 172.18.0.71 Server Time : $(date +" %d %b %Y %T")</a>
+EOT
+
+curl --silent --output /dev/null --data chat_id="$CHAT_ID" --data-urlencode "text=${msg01}" "https://api.telegram.org/bot${API_KEY}/sendMessage?parse_mode=HTML"
+curl --silent --output /dev/null --data chat_id="$CHAT_ID" --data-urlencode "text=${msg02}" "https://api.telegram.org/bot${API_KEY}/sendMessage?parse_mode=HTML"
+curl --silent --output /dev/null --data chat_id="$CHAT_ID" --data-urlencode "text=${msg03}" "https://api.telegram.org/bot${API_KEY}/sendMessage?parse_mode=HTML"
 }
+
 
 function START_APP
 {
@@ -28,15 +48,10 @@ do
 	
     sleep 10
     valor=$(ps | grep '/usr/local/bin/node /APP/plataform-base/src/server/app-cluster.js' | wc -l)
-    if [ $valor -ge 2 ]; then
+    if [ $valor -ge 1 ]; then
      echo "APP is running."
      clear
     else 
-     SUBJECT3="❌ Detected APP is not running on 172.18.0.71 Server Time : $(date +" %d %b %Y %T")" 
-     sleep 2
-     SUBJECT4="⚠️ Restarting APP on 172.18.0.71 Server Time : $(date +" %d %b %Y %T")"
-     sleep 5
-     SUBJECT5="✅ APP is UP! on 172.18.0.71 Server Time : $(date +" %d %b %Y %T")"
      START_APP
      ALERT_APP
      sleep 2
