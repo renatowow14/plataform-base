@@ -27,7 +27,7 @@ while :
 do
 	
     sleep 10
-    valor=$(ps -aux | grep '/usr/local/bin/node /APP/plataform-base/src/server/app-cluster.js' | awk {'print $8'} | grep 'Sl' | wc -l)
+    valor=$(ps | grep '/usr/local/bin/node /APP/plataform-base/src/server/app-cluster.js' | wc -l)
     if [ $valor -ge 1 ]; then
      echo "APP is running."
      clear
