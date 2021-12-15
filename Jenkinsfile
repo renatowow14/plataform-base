@@ -1,6 +1,8 @@
     node {
         
     load "$JENKINS_HOME/.envvars"
+    def exists=fileExists "src/server/package-lock.json"
+    def exists2=fileExists "src/client/package-lock.json"
 
         stage('Checkout') {
             git branch: 'develop',
@@ -12,7 +14,7 @@
         }
         stage('SonarQube analysis') {
 
-				 def scannerHome = tool 'sonarqube-scanner';
+				def scannerHome = tool 'sonarqube-scanner';
                     withSonarQubeEnv("sonarqube") {
                     sh "${tool("sonarqube-scanner")}/bin/sonar-scanner \
                     -Dsonar.projectKey=plataforma-base \
@@ -33,14 +35,14 @@
                         sh "npm set progress=false"
                         if (exists) {
                             echo 'Yes'
-                             sh "cd src/server && npm ci"
+                            sh "cd src/server && npm ci" 
                         } else {
                             echo 'No'
                             sh "cd src/server && npm install" 
                         }
-                         if (exists2) {
+                        if (exists2) {
                             echo 'Yes'
-                             sh "cd src/client && npm ci"
+                            sh "cd src/client && npm ci"
                         } else {
                             echo 'No'
                             sh "cd src/client && npm install" 
