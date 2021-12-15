@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #Include telegram chat id and bot token ID here
-chat_id=""
-token=""
-bot_token=""
+chat_id="-330183489"
+token="652213835:AAEIELQe_qndSEHZdbcY_7ZIHfarSUnsLBs"
+bot_token="652213835:AAEIELQe_qndSEHZdbcY_7ZIHfarSUnsLBs"
 
-APP_BASEDIR='/APP'
+APP_BASEDIR='/APP/plataform-base'
 
 #Functions for Telegram API to send notificaiton.
 
@@ -27,7 +27,7 @@ while :
 do
 	
     sleep 10
-    valor=$(ps -aux | grep '/usr/bin/node /APP/src/server/app-cluster.js' | awk {'print $8'} | grep 'Sl' | wc -l)
+    valor=$(ps -aux | grep '/usr/local/bin/node /APP/plataform-base/src/server/app-cluster.js' | awk {'print $8'} | grep 'Sl' | wc -l)
     if [ $valor -ge 1 ]; then
      echo "APP is running."
      clear
