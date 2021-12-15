@@ -111,6 +111,12 @@
       bottom: 19px;
       right: 11px;
 
+      .legend-tools{
+        i {
+          margin: 5px;
+        }
+      }
+
       .legends-container {
         color: black;
         background: rgba(22, 38, 35, 0.6);

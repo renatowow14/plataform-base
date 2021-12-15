@@ -1,6 +1,8 @@
 const fs = require("fs");
 const DownloadBuilder = require('../models/downloadBuilder');
 const request = require('request');
+const AdmZip = require("adm-zip");
+const https = require('https');
 
 module.exports = function(app) {
     let Controller = {};
@@ -12,7 +14,7 @@ module.exports = function(app) {
         fs.mkdirSync(config.downloadDataDir);
     }
 
-    self.requestFileFromMapServer = function(url, pathFile, response) {
+    self.requestFileFromMapServer = function(url, pathFile, layerName, type, response) {
         console.log('URL', url)
         let file = fs.createWriteStream(pathFile + ".zip");
 
@@ -26,7 +28,30 @@ module.exports = function(app) {
                         reject('Error on mapserver');
                         fs.unlinkSync(pathFile + '.zip');
                     }
-                    resolve();
+                    if(type !== 'csv') {
+                        const url = `${process.env.OWS}?request=GetStyles&layers=${layerName}&service=wms&version=1.1.1`;
+                        https.get(url, (resp) => {
+                            let data = '';
+
+                            // A chunk of data has been received.
+                            resp.on('data', (chunk) => {
+                                data += chunk;
+                            });
+
+                            // The whole response has been received. Print out the result.
+                            resp.on('end', () => {
+                                let zip = new AdmZip(pathFile + '.zip');
+                                zip.addFile(layerName +".sld", Buffer.from(data, "utf8"), "Styled Layer Descriptor (SLD) of " + layerName);
+                                zip.writeZip(pathFile + '.zip');
+                                resolve();
+                            });
+
+                        }).on("error", (err) => {
+                            reject(err);
+                        });
+                    } else {
+                        resolve();
+                    }
                 }).on('error', (error) => {
                     reject(error);
                 })
@@ -42,15 +67,17 @@ module.exports = function(app) {
     };
 
     Controller.downloadGeoFile = function(request, response) {
-        let directory, fileParam, pathFile = '';
+        let directory, fileParam, pathFile, layerName = '';
         let { layer, region, filter, typeDownload} = request.body;
 
         let builder = new DownloadBuilder(typeDownload);
 
         if(layer.filterHandler === 'layername'){
             builder.setTypeName(layer.filterSelected);
+            layerName = layer.filterSelected;
         } else {
             builder.setTypeName(layer.download.layerTypeName);
+            layerName = layer.valueType;
         }
 
         if (region.type === 'city') {
@@ -77,9 +104,34 @@ module.exports = function(app) {
         }
 
         if (fs.existsSync(pathFile + '.zip')) {
-            response.download(pathFile + '.zip');
+            if(typeDownload !== 'csv') {
+                const url = `${process.env.OWS}?request=GetStyles&layers=${layerName}&service=wms&version=1.1.1`;
+                https.get(url, (resp) => {
+                    let data = '';
+
+                    // A chunk of data has been received.
+                    resp.on('data', (chunk) => {
+                        data += chunk;
+                    });
+
+                    // The whole response has been received. Print out the result.
+                    resp.on('end', () => {
+                        let zip = new AdmZip(pathFile + '.zip');
+                        zip.addFile(layerName +".sld", Buffer.from(data, "utf8"), "Styled Layer Descriptor (SLD) of " + layerName);
+                        zip.writeZip(pathFile + '.zip');
+                        response.download(pathFile + '.zip');
+                    });
+
+                }).on("error", (err) => {
+                    response.status(400).json({ msg: err })
+                    response.end();
+                });
+            } else {
+                response.download(pathFile + '.zip');
+            }
+
         } else {
-            self.requestFileFromMapServer(builder.getMapserverURL(), pathFile, response);
+            self.requestFileFromMapServer(builder.getMapserverURL(), pathFile, layerName, typeDownload, response);
         }
     };
 

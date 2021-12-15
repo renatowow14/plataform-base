@@ -29,9 +29,7 @@ export class AreaService {
 
   getGeoJsonByToken(params): Observable<any> {
 
-    let parameters = params.join('&')
-
-    return this.httpClient.get<any>(this.apiURL + '/findgeojsonbytoken?' + parameters, this.httpOptions)
+    return this.httpClient.get<any>(this.apiURL + '/findgeojsonbytoken?' + params, this.httpOptions)
       .pipe(map(response => response))
       .pipe(catchError(this.errorHandler));
   }

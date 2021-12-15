@@ -107,6 +107,11 @@
   },
   "minimize": "Minimizar",
   "maximize": "Maximizar",
+  "sld": {
+    "title": "Baixar Descritor de Estilo da Camada (SLD)",
+    "msg_error_title": "Erro",
+    "msg_error": "Não foi possível realizar o download do Descritor de Estilo da Camada (SLD)"
+  },
   "planet": "Mosaicos Planet",
   "options": {
     "basemaps": "Mapas Base",
@@ -295,8 +300,8 @@
   "right_sidebar": {
     "title": "Estatísticas",
     "cards_titles": {
-      "deforestation_timeseries": "Séries Temporais",
-      "lulc_pie": "Uso do Solo",
+      "area1Title": "Séries Temporais",
+      "area2Title": "Uso do Solo",
       "table_example": "Examplo de Tabela"
     },
     "region_types": {
@@ -306,9 +311,10 @@
       "country": "País",
       "fronteira": "Região de Fronteira"
     },
-    "timeseries_card": {
+    "area1_card": {
       "prodes": {
-        "text": "O #typeRegionTranslate# #textRegionTranslate# possui uma Área Antrópica de #anthropicArea# ha, o que representa #percentArea# % da sua área total."
+        "text": "O #typeRegionTranslate# #textRegionTranslate# possui uma Área Antrópica de #anthropicArea# ha, o que representa #percentArea# % da sua área total.",
+        "title": "PRODES-Cerrado"
       },
       "pastureAndLotacaoBovina": {
         "text": "",
@@ -320,12 +326,13 @@
       },
       "pasture_quality": {
         "text": "De acordo com o LAPIG, o #typeRegionTranslate# #textRegionTranslate# possui uma área total de #areaMun# ha, distribuída entre as seguintes classes de degradação de Pastagem:",
+        "title": "Qualidade de Pastagem",
         "Severa": "Severa",
         "Intermediário": "Intermediário",
         "Ausente": "Ausente"
       }
     },
-    "lulc_pie_card": {
+    "area2_card": {
       "uso_solo_terraclass": {
         "text": "De acordo com o projeto Terraclass Cerrado, o #typeRegionTranslate# #textRegionTranslate# possui uma área total de #areaMun# ha, distribuída entre os seguintes usos do solo:",
         "Mosaíco de Ocupações": "Mosaico de Ocupações",

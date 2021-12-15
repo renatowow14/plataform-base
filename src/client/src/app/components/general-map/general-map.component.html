@@ -46,13 +46,16 @@
             <div *ngFor="let layer of selectedLayers" cdkDrag
               [class]="layer.visible ? 'legend-card legend-card-active' :'legend-card'">
               <div class="legend-card-content">
-                <div (click)="layer.visible = !layer.visible" class="abstract">
+                <div  class="abstract">
                   <span>
                     <i tooltipPosition="left" pTooltip="{{'legend.move' | translate}}" class='bx bx-move'></i>
                     <div class="legend-label">
                       {{ layer.get('key') === 'planet' ? localizationService.translate('planet') : layer.get('label') }}
                     </div>
-                    <i tooltipPosition="left" [pTooltip]="layer.visible? localizationService.translate('minimize') : localizationService.translate('maximize')" [class]="layer.visible  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+                    <div class="legend-tools">
+                      <i tooltipPosition="left" [pTooltip]="localizationService.translate('sld.title')" (click)="downloadSLD(layer.get('descriptorLayer'))" class="bx bxs-download"></i>
+                      <i (click)="layer.visible = !layer.visible" tooltipPosition="left" [pTooltip]="layer.visible? localizationService.translate('minimize') : localizationService.translate('maximize')" [class]="layer.visible  ? 'bx bxs-up-arrow-circle' :'bx bxs-down-arrow-circle'"></i>
+                    </div>
                   </span>
                 </div>
                 <div class="details">

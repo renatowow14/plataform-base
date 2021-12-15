@@ -14,4 +14,6 @@ module.exports = function (app) {
 	app.get('/service/upload/mapbiomas', dataInjector, uploader.mapbiomas);
 	app.get('/service/upload/prodes', dataInjector, uploader.prodes);
 	app.post('/service/upload/savegeom', uploader.saveDrawedGeom);
+	app.get('/service/upload/getanalysis', dataInjector, uploader.getAnalysis);
+	app.post('/service/upload/saveanalysis', dataInjector, uploader.saveAnalysis);
 }

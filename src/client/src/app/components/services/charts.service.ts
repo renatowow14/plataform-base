@@ -30,16 +30,16 @@ export class ChartService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getTimeseries(parameters): Observable<any> {
-    return this.httpClient.get<any>(this.apiURL + '/timeseries?' + parameters, this.httpOptions)
+  getArea1(parameters): Observable<any> {
+    return this.httpClient.get<any>(this.apiURL + '/area1?' + parameters, this.httpOptions)
       .pipe(
         catchError(this.errorHandler),
       );
   }
 
-  getLulc(parameters): Observable<any> {
+  getArea2(parameters): Observable<any> {
 
-    return this.httpClient.get<any>(this.apiURL + '/lulc?' + parameters, this.httpOptions)
+    return this.httpClient.get<any>(this.apiURL + '/area2?' + parameters, this.httpOptions)
       .pipe(map(response => response))
       .pipe(catchError(this.errorHandler));
   }

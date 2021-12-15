@@ -14,7 +14,8 @@ import Stroke from 'ol/style/Stroke';
 
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { AreaService } from '../../services/area.service';
-import {Descriptor} from "../../../@core/interfaces";
+import { Descriptor } from "../../../@core/interfaces";
+import { GoogleAnalyticsService } from '../../services/google-analytics.service';
 
 
 @Component({
@@ -71,7 +72,7 @@ export class AreaComponent implements OnInit {
 
   selectedIndexUpload: number;
 
-  constructor(private http: HttpClient, private areaService: AreaService) {
+  constructor(private http: HttpClient, private areaService: AreaService, private googleAnalyticsService: GoogleAnalyticsService,) {
     this.httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
@@ -151,7 +152,7 @@ export class AreaComponent implements OnInit {
       ]
     });
 
-    //	this.googleAnalyticsService.eventEmitter("uploadLayer", "Upload", "uploadLayer", 4);
+    this.googleAnalyticsService.eventEmitter("UploadLayer", "Upload", "Submit_Token");
   }
 
   changeTextUpload($e) {
@@ -226,7 +227,7 @@ export class AreaComponent implements OnInit {
       // this.layerFromConsulta.heavyAnalysis = resultHeavyAnalysis;
       // this.layerFromConsulta.heavyAnalysisLoading = false;
 
-      // this.googleAnalyticsService.eventEmitter("analyzeConsultaUploadLayer", "Analyze-Consulta-Upload", this.layerFromConsulta.token, 5);
+      this.googleAnalyticsService.eventEmitter("Analyze-Consulta-Upload-Layer", "Upload", this.layerFromConsulta.token);
     } else {
       this.layerFromUpload.analyzedAreaLoading = true;
       params.push('token=' + this.layerFromUpload.token)
@@ -246,7 +247,8 @@ export class AreaComponent implements OnInit {
       // let resultHeavyAnalysis = await this.http.get(urlParamsHeavyAnalysis).toPromise();
       // this.layerFromUpload.heavyAnalysis = resultHeavyAnalysis
       // this.layerFromUpload.heavyAnalysisLoading = false;
-      // this.googleAnalyticsService.eventEmitter("analyzeUploadLayer", "Analyze-Upload", this.layerFromUpload.token, 6);
+
+      this.googleAnalyticsService.eventEmitter("Analyze-Upload-Layer", "Upload", this.layerFromUpload.token);
     }
 
   }
@@ -344,27 +346,31 @@ export class AreaComponent implements OnInit {
   async printAnalyzedAreaReport(fromConsulta = false) {
     this.loadingPrintReport = true;
     this.loadingPrintReport = false;
+
+    this.googleAnalyticsService.eventEmitter("Print-Report-Analyzed-Upload", "Upload", this.layerFromConsulta.token);
   }
 
   async searchUploadShape() {
     let params: string[] = [];
     let self = this;
-    let urlParams = '';
 
 
     this.layerFromConsulta.analyzedAreaLoading = true;
     params.push('token=' + this.layerFromConsulta.token)
     this.layerFromConsulta.error = false;
-    urlParams = '/service/upload/findgeojsonbytoken?' + params.join('&');
+    // let urlParams = '/service/upload/findgeojsonbytoken?' + params.join('&');
 
     try {
       // let result = await this.http.get(urlParams, this.httpOptions).toPromise()
 
-      let result = await this.areaService.getGeoJsonByToken(params).toPromise()
+      let parameters = params.join('&')
+      let result = await this.areaService.getGeoJsonByToken(parameters).toPromise()
 
       this.layerFromConsulta.analyzedArea = result;
       this.layerFromConsulta.analyzedAreaLoading = false;
       this.loadLayerFromConsultaToMap();
+
+      this.googleAnalyticsService.eventEmitter("Get-Upload-Token-FromDB", "Upload", this.layerFromConsulta.token);
 
     } catch (err) {
       self.layerFromConsulta.analyzedAreaLoading = false;
