@@ -1,4 +1,4 @@
-FROM renatogomes256/app-base:6
+FROM registry.lapig.iesa.ufg.br/lapig-images-prod/app-base:latest
 
 LABEL maintainer="Renato Gomes <renatogomessilverio@gmail.com>"
 
